@@ -39,3 +39,6 @@ export const getShapeUtil = <T extends TDShape>(shape: T | T['type']) => {
   if (typeof shape === 'string') return shapeUtils[shape] as unknown as TDShapeUtil<T>
   return shapeUtils[shape.type] as unknown as TDShapeUtil<T>
 }
+
+export * from './shared'
+export * from './TDShapeUtil'
