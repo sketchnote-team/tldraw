@@ -38,7 +38,7 @@ export function Tooltip({
   )
 }
 
-const StyledContent = styled(RadixTooltip.Content, {
+export const StyledContent = styled(RadixTooltip.Content, {
   borderRadius: 3,
   padding: '$3 $3 $3 $3',
   fontSize: '$1',
@@ -51,7 +51,7 @@ const StyledContent = styled(RadixTooltip.Content, {
   userSelect: 'none',
 })
 
-const StyledArrow = styled(RadixTooltip.Arrow, {
+export const StyledArrow = styled(RadixTooltip.Arrow, {
   fill: '$tooltip',
   margin: '0 8px',
 })

@@ -8,6 +8,7 @@ export const DMRadioItem = styled(RadioItem, {
   borderRadius: '4px',
   padding: '0',
   margin: '0',
+  marginLeft:'-1px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

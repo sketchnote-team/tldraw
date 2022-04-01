@@ -3,15 +3,15 @@ import { styled } from '~styles/stitches.config'
 export const Panel = styled('div', {
   backgroundColor: '$panel',
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
   boxShadow: '$panel',
-  padding: '$2',
+  paddingLeft: '24px',
   border: '1px solid $panelContrast',
   gap: 0,
   variants: {
     side: {
       center: {
-        borderRadius: '$4',
+        borderRadius: '4px',
       },
       left: {
         padding: 0,

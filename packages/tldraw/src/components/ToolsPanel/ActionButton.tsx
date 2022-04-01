@@ -179,7 +179,7 @@ export function ActionButton(): JSX.Element {
   )
 
   return (
-    <DropdownMenu.Root dir="ltr" onOpenChange={handleMenuOpenChange}>
+    <DropdownMenu.Root dir="rtl" onOpenChange={handleMenuOpenChange}>
       <DropdownMenu.Trigger dir="ltr" asChild id="TD-Tools-Dots">
         <ToolButton variant="circle">
           <DotsHorizontalIcon />

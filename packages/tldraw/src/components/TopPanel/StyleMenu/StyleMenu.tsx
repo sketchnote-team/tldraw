@@ -307,7 +307,7 @@ export const StyleMenu = React.memo(function ColorMenu(): JSX.Element {
   )
 })
 
-const ColorGrid = styled('div', {
+export const ColorGrid = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(4, auto)',
   gap: 0,
@@ -346,14 +346,32 @@ export const StyledRow = styled('div', {
     },
   },
 })
-
-const StyledGroup = styled(DropdownMenu.DropdownMenuRadioGroup, {
+export const ButtonColorOptions = styled('button', {
   display: 'flex',
   flexDirection: 'row',
-  gap: '$1',
+  border: 'none',
+  margin: 'auto',
+  // padding: '4px 2px 4px 2px',
+  padding: '4px',
+  outline: 'none',
+  cursor: 'pointer',
+  pointerEvents: 'all',
+  [`&:hover:not(:disabled)`]: {
+    backgroundColor: '$hover',
+  },
+})
+export const StyledGroup = styled(DropdownMenu.DropdownMenuRadioGroup, {
+  // display: 'flex',
+  // flexDirection: 'row',
+  // gap: '$1',
+  borderBottom: '2px solid #878A92',
+  marginRight: '8px',
+  marginLeft: '8px',
+  paddingTop: '8px',
+  paddingBottom: '8px',
 })
 
-const OverlapIcons = styled('div', {
+export const OverlapIcons = styled('div', {
   display: 'grid',
   '& > *': {
     gridColumn: 1,
@@ -361,7 +379,7 @@ const OverlapIcons = styled('div', {
   },
 })
 
-const FontIcon = styled('div', {
+export const FontIcon = styled('div', {
   width: 32,
   height: 32,
   display: 'flex',

@@ -60,7 +60,7 @@ export function TopPanel({
   )
 }
 
-const StyledTopPanel = styled('div', {
+export const StyledTopPanel = styled('div', {
   width: '100%',
   position: 'absolute',
   top: 0,
@@ -74,12 +74,12 @@ const StyledTopPanel = styled('div', {
   },
 })
 
-const StyledSpacer = styled('div', {
+export const StyledSpacer = styled('div', {
   flexGrow: 2,
   pointerEvents: 'none',
 })
 
-const MobileOnly = styled('div', {
+export const MobileOnly = styled('div', {
   display: 'flex',
   flexDirection: 'row',
   variants: {

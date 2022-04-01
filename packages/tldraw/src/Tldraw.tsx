@@ -525,7 +525,7 @@ const OneOff = React.memo(function OneOff({
   return null
 })
 
-const StyledLayout = styled('div', {
+export const StyledLayout = styled('div', {
   position: 'absolute',
   height: '100%',
   width: '100%',
@@ -554,7 +554,7 @@ const StyledLayout = styled('div', {
   },
 })
 
-const StyledUI = styled('div', {
+export const StyledUI = styled('div', {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -571,6 +571,6 @@ const StyledUI = styled('div', {
   },
 })
 
-const StyledSpacer = styled('div', {
+export const StyledSpacer = styled('div', {
   flexGrow: 2,
 })
