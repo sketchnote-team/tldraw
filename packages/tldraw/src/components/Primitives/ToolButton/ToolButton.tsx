@@ -1,3 +1,4 @@
+import { autoAction } from 'mobx/dist/internal'
 import * as React from 'react'
 import { breakpoints } from '~components/breakpoints'
 import { Tooltip } from '~components/Primitives/Tooltip'
@@ -85,7 +86,7 @@ export function ToolButtonWithTooltip({
   }, [])
 
   return (
-    <Tooltip label={label[0].toUpperCase() + label.slice(1)} kbd={kbd}>
+    <Tooltip label={label[0].toUpperCase() + label.slice(1)}>
       <ToolButton
         {...rest}
         variant="primary"
@@ -119,7 +120,7 @@ export const StyledToolButton = styled('button', {
   color: '$text',
   fontSize: '$0',
   background: 'none',
-  margin: '0',
+  margin: 'auto',
   padding: '$2',
   display: 'flex',
   alignItems: 'center',

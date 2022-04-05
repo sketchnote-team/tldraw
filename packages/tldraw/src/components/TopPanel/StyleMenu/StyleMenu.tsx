@@ -322,17 +322,14 @@ export const StyledRow = styled('div', {
   minHeight: '32px',
   outline: 'none',
   color: '$text',
-  fontFamily: '$ui',
-  fontWeight: 400,
-  fontSize: '$1',
   padding: '$2 0 $2 $3',
   borderRadius: 4,
   userSelect: 'none',
   margin: 0,
   display: 'flex',
   gap: '$3',
-  flexDirection: 'row',
-  alignItems: 'center',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
   justifyContent: 'space-between',
   variants: {
     variant: {
@@ -346,32 +343,14 @@ export const StyledRow = styled('div', {
     },
   },
 })
-export const ButtonColorOptions = styled('button', {
+
+const StyledGroup = styled(DropdownMenu.DropdownMenuRadioGroup, {
   display: 'flex',
   flexDirection: 'row',
-  border: 'none',
-  margin: 'auto',
-  // padding: '4px 2px 4px 2px',
-  padding: '4px',
-  outline: 'none',
-  cursor: 'pointer',
-  pointerEvents: 'all',
-  [`&:hover:not(:disabled)`]: {
-    backgroundColor: '$hover',
-  },
-})
-export const StyledGroup = styled(DropdownMenu.DropdownMenuRadioGroup, {
-  // display: 'flex',
-  // flexDirection: 'row',
-  // gap: '$1',
-  borderBottom: '2px solid #878A92',
-  marginRight: '8px',
-  marginLeft: '8px',
-  paddingTop: '8px',
-  paddingBottom: '8px',
+  gap: '$1',
 })
 
-export const OverlapIcons = styled('div', {
+const OverlapIcons = styled('div', {
   display: 'grid',
   '& > *': {
     gridColumn: 1,
@@ -379,7 +358,7 @@ export const OverlapIcons = styled('div', {
   },
 })
 
-export const FontIcon = styled('div', {
+const FontIcon = styled('div', {
   width: 32,
   height: 32,
   display: 'flex',

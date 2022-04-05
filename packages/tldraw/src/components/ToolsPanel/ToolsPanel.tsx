@@ -38,10 +38,7 @@ export const ToolsPanel = React.memo(function ToolsPanel({ onBlur }: ToolsPanelP
 })
 
 export const StyledToolsPanelContainer = styled('div', {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
+  margin: 'auto',
   width: '100%',
   minWidth: 0,
   maxWidth: '100%',
@@ -59,13 +56,10 @@ export const StyledToolsPanelContainer = styled('div', {
 })
 
 export const StyledCenterWrap = styled('div', {
-  gridRow: 1,
-  gridColumn: 2,
-  display: 'flex',
+  position: 'absolute',
   width: 'fit-content',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column',
+  bottom: 0,
+  left: '50%',
   gap: '$4',
 })
 
@@ -75,8 +69,8 @@ export const StyledStatusWrap = styled('div', {
 })
 
 export const StyledPrimaryTools = styled('div', {
-  position: 'relative',
-  display: 'flex',
   alignItems: 'center',
+  justifyContent: 'center',
   gap: '$2',
+  paddingLeft: '18px',
 })
