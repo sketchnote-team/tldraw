@@ -344,13 +344,13 @@ export const StyledRow = styled('div', {
   },
 })
 
-const StyledGroup = styled(DropdownMenu.DropdownMenuRadioGroup, {
+export const StyledGroup = styled(DropdownMenu.DropdownMenuRadioGroup, {
   display: 'flex',
   flexDirection: 'row',
   gap: '$1',
 })
 
-const OverlapIcons = styled('div', {
+export const OverlapIcons = styled('div', {
   display: 'grid',
   '& > *': {
     gridColumn: 1,
@@ -358,7 +358,7 @@ const OverlapIcons = styled('div', {
   },
 })
 
-const FontIcon = styled('div', {
+export const FontIcon = styled('div', {
   width: 32,
   height: 32,
   display: 'flex',

@@ -5,7 +5,7 @@ export const Panel = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   boxShadow: '$panel',
-  paddingLeft: '24px',
+  padding: '$2',
   border: '1px solid $panelContrast',
   gap: 0,
   variants: {
