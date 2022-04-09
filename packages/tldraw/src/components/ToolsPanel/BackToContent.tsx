@@ -26,7 +26,7 @@ export const BackToContent = React.memo(function BackToContent() {
   )
 })
 
-const BackToContentContainer = styled(MenuContent, {
+export const BackToContentContainer = styled(MenuContent, {
   pointerEvents: 'all',
   width: 'fit-content',
   minWidth: 0,
