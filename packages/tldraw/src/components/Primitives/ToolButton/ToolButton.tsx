@@ -1,4 +1,3 @@
-import { autoAction } from 'mobx/dist/internal'
 import * as React from 'react'
 import { breakpoints } from '~components/breakpoints'
 import { Tooltip } from '~components/Primitives/Tooltip'
@@ -19,6 +18,45 @@ export interface ToolButtonProps {
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>
 }
 
+export const PrimaryToolButton = React.forwardRef<HTMLButtonElement, ToolButtonProps>(
+  (
+    {
+      onSelect,
+      onClick,
+      onDoubleClick,
+      variant,
+      children,
+      isToolLocked = false,
+      disabled = false,
+      isActive = false,
+      isSponsor = false,
+      onKeyDown,
+      id,
+      ...rest
+    },
+    ref
+  ) => {
+    return (
+      <PrimaryStyledToolButton
+        ref={ref}
+        isActive={isActive}
+        isSponsor={isSponsor}
+        variant={variant}
+        onClick={onClick}
+        disabled={disabled}
+        onPointerDown={onSelect}
+        onDoubleClick={onDoubleClick}
+        onKeyDown={onKeyDown}
+        bp={breakpoints}
+        id={id}
+        {...rest}
+      >
+        <PrimaryStyledToolButtonInner>{children}</PrimaryStyledToolButtonInner>
+        {/* {isToolLocked && <ToolLockIndicator />} */}
+      </PrimaryStyledToolButton>
+    )
+  }
+)
 export const ToolButton = React.forwardRef<HTMLButtonElement, ToolButtonProps>(
   (
     {
@@ -53,7 +91,7 @@ export const ToolButton = React.forwardRef<HTMLButtonElement, ToolButtonProps>(
         {...rest}
       >
         <StyledToolButtonInner>{children}</StyledToolButtonInner>
-        {isToolLocked && <ToolLockIndicator />}
+        {/* {isToolLocked && <ToolLockIndicator />} */}
       </StyledToolButton>
     )
   }
@@ -87,7 +125,7 @@ export function ToolButtonWithTooltip({
 
   return (
     <Tooltip label={label[0].toUpperCase() + label.slice(1)}>
-      <ToolButton
+      <PrimaryToolButton
         {...rest}
         variant="primary"
         isToolLocked={isLocked && rest.isActive}
@@ -97,7 +135,6 @@ export function ToolButtonWithTooltip({
     </Tooltip>
   )
 }
-
 export const StyledToolButtonInner = styled('div', {
   position: 'relative',
   height: '100%',
@@ -120,8 +157,8 @@ export const StyledToolButton = styled('button', {
   color: '$text',
   fontSize: '$0',
   background: 'none',
-  margin: 'auto',
-  // padding: '$2',
+  margin: '0',
+  padding: '$2',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -129,8 +166,8 @@ export const StyledToolButton = styled('button', {
   cursor: 'pointer',
   pointerEvents: 'all',
   border: 'none',
-  // height: '40px',
-  // width: '40px',
+  height: '40px',
+  width: '40px',
 
   [`&:disabled ${StyledToolButtonInner}`]: {
     opacity: 0.618,
@@ -192,6 +229,149 @@ export const StyledToolButton = styled('button', {
       variant: 'primary',
       bp: 'mobile',
       css: {
+        height: '40px',
+        width: '40px',
+        [`& ${StyledToolButtonInner} > svg`]: {
+          width: 16,
+          height: 16,
+        },
+      },
+    },
+    {
+      variant: 'primary',
+      bp: 'small',
+      css: {
+        height: '44px',
+        width: '44px',
+        [`& ${StyledToolButtonInner} > svg`]: {
+          width: 20,
+          height: 20,
+        },
+      },
+    },
+    {
+      isActive: true,
+      isSponsor: false,
+      css: {
+        [`${StyledToolButtonInner}`]: {
+          backgroundColor: '$selected',
+          color: '$selectedContrast',
+        },
+      },
+    },
+    {
+      isActive: false,
+      isSponsor: false,
+      bp: 'small',
+      css: {
+        [`&:hover:not(:disabled) ${StyledToolButtonInner}`]: {
+          backgroundColor: '$hover',
+          border: '1px solid $panel',
+        },
+        [`&:focus:not(:disabled) ${StyledToolButtonInner}`]: {
+          backgroundColor: '$hover',
+        },
+      },
+    },
+  ],
+})
+
+
+
+export const PrimaryStyledToolButtonInner = styled('div', {
+  position: 'relative',
+  // height: '100%',
+  // width: '100%',
+  backgroundColor: '$panel',
+  borderRadius: '$2',
+  margin: '0',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontFamily: '$ui',
+  color: 'inherit',
+  userSelect: 'none',
+  boxSizing: 'border-box',
+  border: '1px solid transparent',
+})
+
+export const PrimaryStyledToolButton = styled('button', {
+  position: 'relative',
+  color: '$text',
+  fontSize: '$0',
+  background: 'none',
+  margin: 'auto',
+  padding: '$2',
+ 
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  outline: 'none',
+  cursor: 'pointer',
+  pointerEvents: 'all',
+  border: 'none',
+  height: '100%',
+  width: '100%',
+
+  [`&:disabled ${StyledToolButtonInner}`]: {
+    opacity: 0.618,
+  },
+
+  variants: {
+    variant: {
+      primary: {
+        marginTop: '0',
+      },
+      icon: {
+        [`& ${StyledToolButtonInner}`]: {
+          display: 'grid',
+          '& > *': {
+            gridRow: 1,
+            gridColumn: 1,
+          },
+        },
+      },
+      text: {
+        width: 'auto',
+        [`& ${StyledToolButtonInner}`]: {
+          fontSize: '$1',
+          padding: '0 $3',
+          gap: '$3',
+        },
+      },
+      circle: {
+        [`& ${StyledToolButtonInner}`]: {
+          border: '1px solid $panelContrast',
+          borderRadius: '100%',
+          boxShadow: '$panel',
+        },
+        [`& ${StyledToolButtonInner} > svg`]: {
+          width: 14,
+          height: 14,
+        },
+      },
+    },
+    isSponsor: {
+      true: {
+        [`${StyledToolButtonInner}`]: {
+          backgroundColor: '$sponsorContrast',
+        },
+      },
+    },
+    isActive: {
+      true: {},
+      false: {},
+    },
+    bp: {
+      mobile: {},
+      small: {},
+    },
+  },
+  compoundVariants: [
+    {
+      variant: 'primary',
+      bp: 'mobile',
+      css: {
         // height: '40px',
         // width: '40px',
         // [`& ${StyledToolButtonInner} > svg`]: {
@@ -204,12 +384,12 @@ export const StyledToolButton = styled('button', {
       variant: 'primary',
       bp: 'small',
       css: {
-        // height: '44px',
-        // width: '44px',
-        // [`& ${StyledToolButtonInner} > svg`]: {
-        //   width: 20,
-        //   height: 20,
-        // },
+        height: '28px',
+        width: '28px',
+        [`& ${StyledToolButtonInner} > svg`]: {
+          width: 20,
+          height: 20,
+        },
       },
     },
     {
@@ -218,6 +398,7 @@ export const StyledToolButton = styled('button', {
       css: {
         [`${StyledToolButtonInner}`]: {
           backgroundColor: '$selected',
+
           color: '$selectedContrast',
         },
       },
