@@ -124,15 +124,14 @@ export function ToolButtonWithTooltip({
   }, [])
 
   return (
-    <Tooltip label={label[0].toUpperCase() + label.slice(1)}>
+    // <Tooltip label={label[0].toUpperCase() + label.slice(1)}>
       <PrimaryToolButton
         {...rest}
-        variant="primary"
         isToolLocked={isLocked && rest.isActive}
         onDoubleClick={handleDoubleClick}
         onKeyDown={handleKeyDown}
       />
-    </Tooltip>
+    // </Tooltip>
   )
 }
 export const StyledToolButtonInner = styled('div', {
@@ -284,7 +283,7 @@ export const PrimaryStyledToolButtonInner = styled('div', {
   // width: '100%',
   backgroundColor: '$panel',
   borderRadius: '$2',
-  margin: '0',
+  margin: 0,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -300,9 +299,8 @@ export const PrimaryStyledToolButton = styled('button', {
   color: '$text',
   fontSize: '$0',
   background: 'none',
-  margin: 'auto',
-  padding: '$2',
- 
+  margin: 0,
+  padding: 0,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -310,8 +308,8 @@ export const PrimaryStyledToolButton = styled('button', {
   cursor: 'pointer',
   pointerEvents: 'all',
   border: 'none',
-  height: '100%',
-  width: '100%',
+  // height: '40px',
+  // width: '40px',
 
   [`&:disabled ${StyledToolButtonInner}`]: {
     opacity: 0.618,
@@ -335,7 +333,7 @@ export const PrimaryStyledToolButton = styled('button', {
         width: 'auto',
         [`& ${StyledToolButtonInner}`]: {
           fontSize: '$1',
-          padding: '0 $3',
+          // padding: '0 $3',
           gap: '$3',
         },
       },
@@ -384,12 +382,12 @@ export const PrimaryStyledToolButton = styled('button', {
       variant: 'primary',
       bp: 'small',
       css: {
-        height: '28px',
-        width: '28px',
-        [`& ${StyledToolButtonInner} > svg`]: {
-          width: 20,
-          height: 20,
-        },
+        // height: '28px',
+        // width: '28px',
+        // [`& ${StyledToolButtonInner} > svg`]: {
+        //   width: 20,
+        //   height: 20,
+        // },
       },
     },
     {
@@ -398,7 +396,6 @@ export const PrimaryStyledToolButton = styled('button', {
       css: {
         [`${StyledToolButtonInner}`]: {
           backgroundColor: '$selected',
-
           color: '$selectedContrast',
         },
       },
