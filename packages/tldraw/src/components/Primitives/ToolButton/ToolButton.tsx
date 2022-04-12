@@ -121,7 +121,7 @@ export const StyledToolButton = styled('button', {
   fontSize: '$0',
   background: 'none',
   margin: 'auto',
-  padding: '$2',
+  // padding: '$2',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -129,8 +129,8 @@ export const StyledToolButton = styled('button', {
   cursor: 'pointer',
   pointerEvents: 'all',
   border: 'none',
-  height: '40px',
-  width: '40px',
+  // height: '40px',
+  // width: '40px',
 
   [`&:disabled ${StyledToolButtonInner}`]: {
     opacity: 0.618,
@@ -192,24 +192,24 @@ export const StyledToolButton = styled('button', {
       variant: 'primary',
       bp: 'mobile',
       css: {
-        height: '40px',
-        width: '40px',
-        [`& ${StyledToolButtonInner} > svg`]: {
-          width: 16,
-          height: 16,
-        },
+        // height: '40px',
+        // width: '40px',
+        // [`& ${StyledToolButtonInner} > svg`]: {
+        //   width: 16,
+        //   height: 16,
+        // },
       },
     },
     {
       variant: 'primary',
       bp: 'small',
       css: {
-        height: '44px',
-        width: '44px',
-        [`& ${StyledToolButtonInner} > svg`]: {
-          width: 20,
-          height: 20,
-        },
+        // height: '44px',
+        // width: '44px',
+        // [`& ${StyledToolButtonInner} > svg`]: {
+        //   width: 20,
+        //   height: 20,
+        // },
       },
     },
     {
