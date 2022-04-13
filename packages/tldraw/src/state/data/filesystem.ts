@@ -112,7 +112,7 @@ export async function openAssetFromFileSystem() {
   const fileOpen = browserFS.fileOpen
   return fileOpen({
     description: 'Image or Video',
-    extensions: [...IMAGE_EXTENSIONS, ...VIDEO_EXTENSIONS],
+    extensions: [...IMAGE_EXTENSIONS],
     multiple: false,
   })
 }
