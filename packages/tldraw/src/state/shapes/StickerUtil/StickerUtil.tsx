@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Utils, HTMLContainer } from '@tldraw/core'
-import { TDShapeType, TDMeta, ImageShape, TDImageAsset } from '~types'
+import { TDShapeType, TDMeta, StickerShape, TDSnapshot } from '~types'
 import { GHOSTED_OPACITY } from '~constants'
 import { TDShapeUtil } from '../TDShapeUtil'
 import {
@@ -11,11 +11,11 @@ import {
 } from '~state/shapes/shared'
 import { styled } from '@stitches/react'
 
-type T = ImageShape
+type T = StickerShape
 type E = HTMLDivElement
 
-export class ImageUtil extends TDShapeUtil<T, E> {
-  type = TDShapeType.Image as const
+export class StickerUtil extends TDShapeUtil<T, E> {
+  type = TDShapeType.Sticker as const
 
   canBind = true
 
@@ -29,24 +29,24 @@ export class ImageUtil extends TDShapeUtil<T, E> {
     return Utils.deepMerge<T>(
       {
         id: 'image',
-        type: TDShapeType.Image,
+        type: TDShapeType.Sticker,
         name: 'Image',
         parentId: 'page',
         childIndex: 1,
         point: [0, 0],
-        size: [1, 1],
+        size: [32, 32],
         rotation: 0,
         style: { ...defaultStyle, isFilled: true },
         assetId: 'assetId',
+        svg:''
       },
       props
     )
   }
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
-    ({ shape, asset = { src: '' }, isBinding, isGhost, meta, events, onShapeChange }, ref) => {
+    ({ shape, isBinding, isGhost, meta, events, onShapeChange }, ref) => {
       const { size, style } = shape
-
       const rImage = React.useRef<HTMLImageElement>(null)
       const rWrapper = React.useRef<HTMLDivElement>(null)
 
@@ -58,6 +58,7 @@ export class ImageUtil extends TDShapeUtil<T, E> {
         wrapper.style.height = `${height}px`
       }, [size])
       
+
       return (
         <HTMLContainer ref={ref} {...events}>
           {isBinding && (
@@ -73,21 +74,20 @@ export class ImageUtil extends TDShapeUtil<T, E> {
               }}
             />
           )}
+
           <Wrapper
             ref={rWrapper}
-            isDarkMode={meta.isDarkMode} //
-            isFilled={style.isFilled}
-            isGhost={isGhost}
-          >
-            <ImageElement
-              id={shape.id + '_image'}
-              ref={rImage}
-              src={(asset as TDImageAsset).src}
-              alt="tl_image_asset"
-              draggable={false}
-              // onLoad={onImageLoad}
+            
+          >          
+            <div style={{
+              display:"flex",
+              justifyContent:"center",
+              alignItems:"center"
+            }} dangerouslySetInnerHTML={{__html: shape.svg}}
+            
             />
           </Wrapper>
+ 
         </HTMLContainer>
       )
     }
@@ -115,76 +115,21 @@ export class ImageUtil extends TDShapeUtil<T, E> {
 
   transformSingle = transformSingleRectangle
 
-  getSvgElement = (shape: ImageShape) => {
-    const bounds = this.getBounds(shape)
-    const elm = document.createElementNS('http://www.w3.org/2000/svg', 'image')
-    elm.setAttribute('width', `${bounds.width}`)
-    elm.setAttribute('height', `${bounds.height}`)
-    elm.setAttribute('xmlns:xlink', `http://www.w3.org/1999/xlink`)
-    return elm
-  }
+
 }
 
 const Wrapper = styled('div', {
   pointerEvents: 'all',
   position: 'relative',
   fontFamily: 'sans-serif',
-  fontSize: '2em',
-  height: '100%',
-  width: '100%',
-  borderRadius: '3px',
-  perspective: '800px',
-  overflow: 'hidden',
-  p: {
-    userSelect: 'none',
-  },
-  img: {
-    userSelect: 'none',
-  },
-  variants: {
-    isGhost: {
-      false: { opacity: 1 },
-      true: { transition: 'opacity .2s', opacity: GHOSTED_OPACITY },
-    },
-    isFilled: {
-      true: {},
-      false: {},
-    },
-    isDarkMode: {
-      true: {},
-      false: {},
-    },
-  },
-  compoundVariants: [
-    {
-      isFilled: true,
-      isDarkMode: true,
-      css: {
-        boxShadow:
-          '2px 3px 12px -2px rgba(0,0,0,.3), 1px 1px 4px rgba(0,0,0,.3), 1px 1px 2px rgba(0,0,0,.3)',
-      },
-    },
-    {
-      isFilled: true,
-      isDarkMode: false,
-      css: {
-        boxShadow:
-          '2px 3px 12px -2px rgba(0,0,0,.2), 1px 1px 4px rgba(0,0,0,.16),  1px 1px 2px rgba(0,0,0,.16)',
-      },
-    },
-  ],
+  width:'32px',
+  height:'32px',
+  background: '#FFFFFF',
+  border: '1px solid #E2E4E9',
+  boxShadow: '0px 2px 4px rgba(19, 23, 32, 0.06)',
+  display:'flex',
+  justifyContent:'center',
+  alignItems:'center',
+  borderRadius:'999px'
 })
 
-const ImageElement = styled('img', {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  maxWidth: '100%',
-  minWidth: '100%',
-  pointerEvents: 'none',
-  objectFit: 'cover',
-  userSelect: 'none',
-  borderRadius: 2,
-})

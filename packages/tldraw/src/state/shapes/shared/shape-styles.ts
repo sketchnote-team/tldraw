@@ -6,18 +6,18 @@ const canvasLight = '#fafafa'
 const canvasDark = '#343d45'
 
 const colors = {
-  [ColorStyle.White]: '#f0f1f3',
-  [ColorStyle.LightGray]: '#c6cbd1',
-  [ColorStyle.Gray]: '#788492',
-  [ColorStyle.Black]: '#1d1d1d',
-  [ColorStyle.Green]: '#36b24d',
-  [ColorStyle.Cyan]: '#0e98ad',
-  [ColorStyle.Blue]: '#1c7ed6',
-  [ColorStyle.Indigo]: '#4263eb',
-  [ColorStyle.Violet]: '#7746f1',
-  [ColorStyle.Red]: '#ff2133',
-  [ColorStyle.Orange]: '#ff9433',
-  [ColorStyle.Yellow]: '#ffc936',
+  // [ColorStyle.White]: '#f0f1f3',
+  // [ColorStyle.LightGray]: '#c6cbd1',
+  // [ColorStyle.Gray]: '#788492',
+  // [ColorStyle.Black]: '#1d1d1d',
+  [ColorStyle.Green]: '#3DD456',
+  // [ColorStyle.Cyan]: '#0e98ad',
+  [ColorStyle.Blue]: '#254DDA',
+  [ColorStyle.Pink]: '#FF4A7B',
+  [ColorStyle.Violet]: '#E4C0FF',
+  [ColorStyle.Red]: '#F87463',
+  [ColorStyle.Orange]: '#FF9700',
+  [ColorStyle.Yellow]: '#FFDA47',
 }
 
 export const stickyFills: Record<Theme, Record<ColorStyle, string>> = {
@@ -44,6 +44,7 @@ export const strokes: Record<Theme, Record<ColorStyle, string>> = {
   light: {
     ...colors,
     [ColorStyle.White]: '#1d1d1d',
+    [ColorStyle.Black]: '#3d3d3d'
   },
   dark: {
     ...(Object.fromEntries(
@@ -141,10 +142,10 @@ export function getStickyShapeStyle(style: ShapeStyles, isDarkMode = false) {
 
   const theme: Theme = isDarkMode ? 'dark' : 'light'
   const adjustedColor =
-    color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Yellow : color
-
+    color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Violet : color
+  
   return {
-    fill: stickyFills[theme][adjustedColor],
+    fill: strokes[theme][adjustedColor],
     stroke: strokes[theme][adjustedColor],
     color: isDarkMode ? '#1d1d1d' : '#0d0d0d',
   }

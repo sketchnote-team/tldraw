@@ -50,6 +50,32 @@ export function styleShapes(
       }
     })
 
+    
+    const shapeStyle = {
+      currentShapeStyle: changes,
+    }
+
+    let appState:any = {
+      currentStyle: changes   
+    }
+
+    if(app.currentTool.type == "draw") {
+      appState = {
+        currentDrawStyle: changes
+      }}
+    if(app.currentTool.type == "sticky") {
+      appState = {
+        currentStickyStyle: changes
+      }}
+    if(
+      app.currentTool.type == "rectangle" ||
+      app.currentTool.type == "triangle" ||
+      app.currentTool.type == "ellipse" ||
+      app.currentTool.type == "line"
+    ) {appState = {...shapeStyle}}
+   
+    console.log('ACTIVE TOOLL::', app.currentTool)
+
   return {
     id: 'style',
     before: {
@@ -82,9 +108,7 @@ export function styleShapes(
           },
         },
       },
-      appState: {
-        currentStyle: changes,
-      },
+      appState,
     },
   }
 }

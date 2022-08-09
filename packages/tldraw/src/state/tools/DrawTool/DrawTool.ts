@@ -40,7 +40,7 @@ export class DrawTool extends BaseTool {
     if (this.status !== Status.Idle) return
     const {
       currentPoint,
-      appState: { currentPageId, currentStyle },
+      appState: { currentPageId, currentDrawStyle },
     } = this.app
     const previous = this.lastShapeId && this.app.getShape(this.lastShapeId)
     if (info.shiftKey && previous) {
@@ -56,7 +56,7 @@ export class DrawTool extends BaseTool {
         parentId: currentPageId,
         childIndex,
         point: currentPoint,
-        style: { ...currentStyle },
+        style: { ...currentDrawStyle },
       })
       this.lastShapeId = id
       this.app.patchCreate([newShape])

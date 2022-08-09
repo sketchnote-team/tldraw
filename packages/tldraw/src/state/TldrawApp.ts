@@ -81,6 +81,7 @@ import { ArrowTool } from './tools/ArrowTool'
 import { StickyTool } from './tools/StickyTool'
 import { StateManager } from './StateManager'
 import { clearPrevSize } from './shapes/shared/getTextSize'
+import { StickerTool } from './tools/StickerTool'
 
 const uuid = Utils.uniqueId()
 
@@ -182,6 +183,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     [TDShapeType.Line]: new LineTool(this),
     [TDShapeType.Arrow]: new ArrowTool(this),
     [TDShapeType.Sticky]: new StickyTool(this),
+    [TDShapeType.Sticker]: new StickerTool(this),
   }
 
   currentTool: BaseTool = this.tools.select
@@ -1117,11 +1119,19 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       {
         appState: {
           activeTool: type,
-          isToolLocked: false,
+          isToolLocked: false,    
         },
       },
       `selected_tool:${type}`
     )
+  }
+
+  selectSticker = (svg:string): this =>{
+    return this.patchState({
+      appState:{
+        selectedSticker: svg
+      }
+    })
   }
 
   /**
@@ -2497,6 +2507,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   }
 
   createTextShapeAtPoint(point: number[], id?: string): this {
+
     const {
       shapes,
       appState: { currentPageId, currentStyle },
@@ -2628,7 +2639,9 @@ export class TldrawApp extends StateManager<TDSnapshot> {
    * @param ids The ids of the shapes to change (defaults to selection).
    */
   style = (style: Partial<ShapeStyles>, ids = this.selectedIds): this => {
+
     return this.setState(Commands.styleShapes(this, ids, style))
+
   }
 
   /**
@@ -3692,12 +3705,16 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       hoveredId: undefined,
       currentPageId: 'page',
       currentStyle: defaultStyle,
+      currentStickyStyle:defaultStyle,
+      currentShapeStyle:defaultStyle,
+      currentDrawStyle:defaultStyle,
       isToolLocked: false,
       isMenuOpen: false,
       isEmptyCanvas: false,
       snapLines: [],
       isLoading: false,
       disableAssets: false,
+      selectedSticker: ''
     },
     document: TldrawApp.defaultDocument,
   }

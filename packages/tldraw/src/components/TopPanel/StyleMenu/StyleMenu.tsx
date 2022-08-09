@@ -200,7 +200,9 @@ export const StyleMenu = React.memo(function ColorMenu(): JSX.Element {
                 <ToolButton
                   variant="icon"
                   isActive={displayedStyle.color === style}
-                  onClick={() => app.style({ color: style as ColorStyle })}
+                  onClick={() => {
+                    app.style({ color: style as ColorStyle })
+                  }}
                 >
                   <CircleIcon
                     size={18}
