@@ -2506,6 +2506,97 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     )
   }
 
+  createEmbedShapeAtPoint(
+    id: string,
+    type: TDShapeType.Embed,
+    point: number[],
+    size: number[],
+    src: string,
+    faviconSrc: string
+  ): this {
+    const {
+      shapes,
+      appState: { currentPageId, currentStyle },
+    } = this
+
+    const childIndex =
+      shapes.length === 0
+        ? 1
+        : shapes
+            .filter((shape) => shape.parentId === currentPageId)
+            .sort((a, b) => b.childIndex - a.childIndex)[0].childIndex + 1
+
+    const Shape = shapeUtils[type]
+
+    const newShape = Shape.create({
+      id,
+      parentId: currentPageId,
+      childIndex,
+      point,
+      size,
+      style: { ...currentStyle },
+      src,
+      faviconSrc
+    })
+    const bounds = Shape.getBounds(newShape as never)
+    newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
+    this.createShapes(newShape)
+
+    this.startSession(SessionType.Translate)
+
+    this.setStatus(TDStatus.Creating)
+    return this
+  }
+
+
+
+  createLinkShapeAtPoint(
+    id: string,
+    type: TDShapeType.Link,
+    point: number[],
+    size: number[],
+    url: string,
+    title:string,
+    description:string,
+    imageUrl:string
+  ): this {
+    const {
+      shapes,
+      appState: { currentPageId, currentStyle },
+    } = this
+
+    const childIndex =
+      shapes.length === 0
+        ? 1
+        : shapes
+            .filter((shape) => shape.parentId === currentPageId)
+            .sort((a, b) => b.childIndex - a.childIndex)[0].childIndex + 1
+
+    const Shape = shapeUtils[type]
+
+    const newShape = Shape.create({
+      id,
+      parentId: currentPageId,
+      childIndex,
+      point,
+      size,
+      style: { ...currentStyle },
+      url,
+      title,
+      description,
+      imageUrl
+    })
+    const bounds = Shape.getBounds(newShape as never)
+    newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
+    this.createShapes(newShape)
+
+    this.startSession(SessionType.Translate)
+
+    this.setStatus(TDStatus.Creating)
+
+    return this
+  }
+
   createTextShapeAtPoint(point: number[], id?: string): this {
 
     const {
@@ -2955,6 +3046,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
             },
           })
         } else assetId = match.id
+
         this.createImageOrVideoShapeAtPoint(id, shapeType, pagePoint, size, assetId)
       }
     } catch (error) {
@@ -2966,6 +3058,42 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     this.setIsLoading(false)
     return this
   }
+
+  async createLink(preview:{
+    url: string,
+    title: string,
+    description: string,
+    images: string[]
+  }){
+    const id = Utils.uniqueId()
+    if(preview.images.length===0){
+      this.createLinkShapeAtPoint(id,TDShapeType.Link,[0,0],[303,120],preview.url,preview.title,preview.description,preview.images[0])
+      this.setStatus(TDStatus.Idle)
+      this.completeSession()
+      this.selectTool('select')
+      return
+    }
+    const [width,height] = await getImageSizeFromSrc(preview.images[0])
+    const newHeight = (height/(width/303))+120;
+    this.createLinkShapeAtPoint(id,TDShapeType.Link,[0,0],[303,newHeight],preview.url,preview.title,preview.description,preview.images[0])
+    this.setStatus(TDStatus.Idle)
+    this.completeSession()
+    this.selectTool('select')
+    return 
+  }
+
+  async createVideoEmbed(videoSrc:{
+    url:string,
+    favicons:string[]
+  }){
+    const id = Utils.uniqueId();
+    const faviconSrc = videoSrc.favicons[0]
+    this.createEmbedShapeAtPoint(id,TDShapeType.Embed,[0,0],[301,201],videoSrc.url,faviconSrc)
+    this.setStatus(TDStatus.Idle)
+    this.completeSession()
+    this.selectTool('select')
+  }
+
 
   private getViewboxFromSVG = (svgStr: string | ArrayBuffer | null) => {
     const viewBoxRegex = /.*?viewBox=["'](-?[\d.]+[, ]+-?[\d.]+[, ][\d.]+[, ][\d.]+)["']/

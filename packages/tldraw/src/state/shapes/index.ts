@@ -11,6 +11,8 @@ import { ImageUtil } from './ImageUtil'
 import { TDShape, TDShapeType } from '~types'
 import { VideoUtil } from './VideoUtil'
 import { StickerUtil } from './StickerUtil'
+import { LinkUtil } from './LinkUtil'
+import { EmbedUtil } from './EmbedUtil'
 
 export const Rectangle = new RectangleUtil()
 export const Triangle = new TriangleUtil()
@@ -23,6 +25,8 @@ export const Sticky = new StickyUtil()
 export const Image = new ImageUtil()
 export const Video = new VideoUtil()
 export const Sticker = new StickerUtil();
+export const Link = new LinkUtil();
+export const Embed = new EmbedUtil();
 
 export const shapeUtils = {
   [TDShapeType.Rectangle]: Rectangle,
@@ -36,6 +40,8 @@ export const shapeUtils = {
   [TDShapeType.Image]: Image,
   [TDShapeType.Video]: Video,
   [TDShapeType.Sticker]: Sticker,
+  [TDShapeType.Link]: Link,
+  [TDShapeType.Embed]: Embed
 }
 
 export const getShapeUtil = <T extends TDShape>(shape: T | T['type']) => {

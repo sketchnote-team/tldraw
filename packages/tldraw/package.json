@@ -1,11 +1,11 @@
 {
-  "name": "@tldraw/tldraw",
-  "version": "1.9.3",
+  "name": "sn-wb-tldraw",
+  "version": "1.10.0",
   "description": "A tiny little drawing app (editor)",
   "author": "@steveruizok",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tldraw/tldraw.git"
+    "url": "git+https://github.com/tldraw/tldraw.git"
   },
   "license": "MIT",
   "keywords": [
@@ -52,6 +52,7 @@
     "@tldraw/core": "^1.9.1",
     "@tldraw/intersect": "^1.7.1",
     "@tldraw/vec": "^1.7.0",
+    "embed-video": "^2.0.4",
     "idb-keyval": "^6.1.0",
     "perfect-freehand": "^1.0.16",
     "react-hotkey-hook": "^1.0.2",
@@ -60,12 +61,12 @@
     "zustand": "^3.6.9"
   },
   "devDependencies": {
-    "@tldraw/core": "*",
-    "@tldraw/intersect": "*",
-    "@tldraw/vec": "*",
     "@swc-node/jest": "^1.4.3",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
+    "@tldraw/core": "*",
+    "@tldraw/intersect": "*",
+    "@tldraw/vec": "*",
     "@types/node": "^17.0.14",
     "@types/react": "^17.0.38",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
@@ -101,5 +102,8 @@
       "\\~(.*)": "<rootDir>/src/$1"
     }
   },
-  "gitHead": "4b1137849ad07da36fc8f0f19cb64e7535a79296"
+  "bugs": {
+    "url": "https://github.com/tldraw/tldraw/issues"
+  },
+  "homepage": "https://github.com/tldraw/tldraw#readme"
 }

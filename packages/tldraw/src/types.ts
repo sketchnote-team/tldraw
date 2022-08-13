@@ -291,7 +291,9 @@ export enum TDShapeType {
   Group = 'group',
   Image = 'image',
   Video = 'video',
-  Sticker = 'sticker'
+  Sticker = 'sticker',
+  Link='link',
+  Embed = 'embed'
 }
 
 export enum Decoration {
@@ -399,6 +401,22 @@ export interface StickyShape extends TDBaseShape {
   text: string
 }
 
+export interface LinkShape extends TDBaseShape {
+  type: TDShapeType.Link
+  size: number[]
+  url: string,
+  title:string|undefined,
+  imageUrl: string|undefined,
+  description:string|undefined
+}
+
+export interface EmbedShape extends TDBaseShape {
+  type: TDShapeType.Embed
+  size: number[]
+  src: string,
+  faviconSrc: string
+}
+
 // The shape created when multiple shapes are grouped
 export interface GroupShape extends TDBaseShape {
   type: TDShapeType.Group
@@ -419,6 +437,8 @@ export type TDShape =
   | ImageShape
   | VideoShape
   | StickerShape
+  | LinkShape
+  | EmbedShape
 
 /* ------------------ Shape Styles ------------------ */
 

@@ -45,8 +45,7 @@ export class StickerTool extends BaseTool {
         style: { ...currentStickyStyle },
         svg: this.app.appState.selectedSticker
       })
-
-      console.log(this.app.appState)
+      
       const bounds = Sticker.getBounds(newShape)
 
       newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])

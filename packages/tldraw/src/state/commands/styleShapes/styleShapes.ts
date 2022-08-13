@@ -73,8 +73,6 @@ export function styleShapes(
       app.currentTool.type == "ellipse" ||
       app.currentTool.type == "line"
     ) {appState = {...shapeStyle}}
-   
-    console.log('ACTIVE TOOLL::', app.currentTool)
 
   return {
     id: 'style',

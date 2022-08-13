@@ -12,6 +12,7 @@ import { FocusButton } from '~components/FocusButton'
 import { TLDR } from '~state/TLDR'
 import { GRID_SIZE } from '~constants'
 import { Loading } from '~components/Loading'
+import { SelectedPanel } from '~components/ToolsPanel/SelectedPanel'
 
 export interface TldrawProps extends TDCallbacks {
   /**
@@ -498,6 +499,7 @@ const InnerTldraw = React.memo(function InnerTldraw({
               />
               <StyledSpacer />
               {showTools && !readOnly && <ToolsPanel />}
+              { (selectedIds.length > 0) && < SelectedPanel selectedIds={selectedIds} /> }
             </>
           )}
         </StyledUI>
