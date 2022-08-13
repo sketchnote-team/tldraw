@@ -2,14 +2,13 @@ import * as React from 'react'
 import { useTldrawApp } from '~hooks'
 import { styled } from '~styles'
 import { TDStatus } from '~types';
-import { PrimaryTools } from './PrimaryTools';
 import { SelectionTools } from './SelectionTools';
 
 interface SelectedPanelProps {
   selectedIds: string[]
 }
 
-export  function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
+export function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
   const app = useTldrawApp()
   const zoom = app.useStore(s=>s.document.pageStates.page.camera.zoom)
 
@@ -37,7 +36,7 @@ export  function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
   return content 
 }
 
-export const StyledToolsPanelContainer = styled('div', {
+const StyledToolsPanelContainer = styled('div', {
   length: '',
   position: 'absolute',
   top: '0px',
