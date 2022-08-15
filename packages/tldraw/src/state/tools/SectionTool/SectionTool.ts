@@ -1,4 +1,4 @@
-import { Utils, TLPointerEventHandler, TLBoundsCorner } from '@tldraw/core'
+import { Utils, TLPointerEventHandler, TLBoundsCorner, TLKeyboardEventHandler } from '@tldraw/core'
 import Vec from '@tldraw/vec'
 import { TldrawApp } from '~state/internal'
 import { Section } from '~state/shapes'
@@ -121,7 +121,7 @@ export class SectionTool extends BaseTool<Status> {
       }
     }
     this.app.setSectionAndChildren(this.shape.id, this.selectedShapes)
-    this.app.select(...this.selectedShapes)
+    this.app.select(...[...this.selectedShapes, this.shape.id])
     this.setStatus(Status.Idle)
   }
 
@@ -143,8 +143,6 @@ export class SectionTool extends BaseTool<Status> {
       }
     })
   }
-
-
 }
 
 

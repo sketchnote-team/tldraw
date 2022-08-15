@@ -413,8 +413,21 @@ export class SelectTool extends BaseTool<Status> {
       }
     }
 
+  
+
     // Complete the current session, if any; and reset the status
     this.app.completeSession()
+    if(this.status === Status.Transforming){
+
+
+      if(this.app.document.pageStates.page.selectedIds){
+        const selectedShape = this.app.document.pageStates.page.selectedIds
+        selectedShape.forEach(shape=>{
+          const toBeSelectedShapes = new Set([...this.app.appState.sections[shape], shape])
+          this.app.select(...toBeSelectedShapes)
+        })
+      }
+    }
     this.setStatus(Status.Idle)
     this.pointedBoundsHandle = undefined
     this.pointedHandleId = undefined

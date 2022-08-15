@@ -77,16 +77,10 @@ export class SectionUtil extends TDShapeUtil<T, E> {
       )
       return (
         <FullWrapper ref={ref} {...events}>
-          <TextLabel
-            isEditing={isEditing}
-            onChange={handleLabelChange}
-            onBlur={onShapeBlur}
-            font={font}
-            text={label}
-            color={styles.stroke}
-            offsetX={(labelPoint[0] - 0.5) * bounds.width}
-            offsetY={(labelPoint[1] - 0.5) * bounds.height}
-          />
+          <div style={{position:"absolute", top:"30px", left:"20%", zIndex:"9999"}}>
+            <button>Section</button>
+          </div>
+          
           <SVGContainer id={shape.id + '_svg'} opacity={isGhost ? GHOSTED_OPACITY : 1}>
             {isBinding && <BindingIndicator strokeWidth={styles.strokeWidth} size={size} />}
             <Component
@@ -141,4 +135,4 @@ export class SectionUtil extends TDShapeUtil<T, E> {
   } 
 }
 
-const FullWrapper = styled('div', { width: '100%', height: '100%' })
+const FullWrapper = styled('div', { width: '100%', height: '100%', position:'relative' })
