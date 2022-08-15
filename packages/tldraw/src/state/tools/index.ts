@@ -10,6 +10,7 @@ import { StickyTool } from './StickyTool'
 import { TextTool } from './TextTool'
 import { EraseTool } from './EraseTool'
 import { StickerTool } from './StickerTool'
+import { SectionTool } from './SectionTool'
 
 export interface ToolsMap {
   select: typeof SelectTool
@@ -23,6 +24,7 @@ export interface ToolsMap {
   [TDShapeType.Arrow]: typeof ArrowTool
   [TDShapeType.Sticky]: typeof StickyTool
   [TDShapeType.Sticker]: typeof StickerTool
+  [TDShapeType.Section]: typeof SectionTool
 }
 
 export type ToolOfType<K extends TDToolType> = ToolsMap[K]
@@ -41,4 +43,5 @@ export const tools: { [K in TDToolType]: ToolsMap[K] } = {
   [TDShapeType.Arrow]: ArrowTool,
   [TDShapeType.Sticky]: StickyTool,
   [TDShapeType.Sticker]: StickerTool,
+  [TDShapeType.Section]: SectionTool
 }

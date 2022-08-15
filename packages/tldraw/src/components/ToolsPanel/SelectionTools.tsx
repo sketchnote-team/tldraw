@@ -6,11 +6,13 @@ import {styled} from '~styles';
 
 export const SelectionTools = React.memo(function SelectionTools(): JSX.Element {
   const app = useTldrawApp()
+  const [isFilled,setFilled] = React.useState(false)
 
   return (
     
     <StyledToolBarContainer>
-      Hello
+      <button onClick={()=>app.style({isFilled:true})}>Fill</button>
+      <button onClick={()=>app.style({isFilled:false})}>UnFill</button>
     </StyledToolBarContainer>
 
   )

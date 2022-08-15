@@ -6,7 +6,8 @@ import {
   Pencil2Icon,
   TextIcon,
   SunIcon,
-  Link1Icon
+  Link1Icon,
+  SectionIcon
 } from '@radix-ui/react-icons'
 import { TDSnapshot, TDShapeType, ColorStyle } from '~types'
 import { useTldrawApp } from '~hooks'
@@ -19,13 +20,30 @@ import { EraserIcon } from '~components/Primitives/icons'
 const activeToolSelector = (s: TDSnapshot) => s.appState.activeTool
 const toolLockedSelector = (s: TDSnapshot) => s.appState.isToolLocked
 
+const video ={
+  url: 'https://www.youtube.com/watch?v=EueeNj98E6I',
+  title: 'Seth MacFarlane Monologue: The Voices - Saturday Night Live',
+  siteName: 'YouTube',
+  description: 'Subscribe to SaturdayNightLive: http://j.mp/1bjU39dMonologues: http://j.mp/17rzZgvSEASON 38: http://j.mp/17rz13DSeth MacFarlane has a hard time fighting the ...',
+  mediaType: 'video.other',
+  contentType: 'text/html',
+  images: [ 'https://i.ytimg.com/vi/EueeNj98E6I/maxresdefault.jpg' ],
+  videos: [],
+  favicons: [
+    'https://www.youtube.com/s/desktop/e06db45c/img/favicon_32x32.png',
+    'https://www.youtube.com/s/desktop/e06db45c/img/favicon_48x48.png',
+    'https://www.youtube.com/s/desktop/e06db45c/img/favicon_96x96.png',
+    'https://www.youtube.com/s/desktop/e06db45c/img/favicon_144x144.png',
+    'https://www.youtube.com/s/desktop/e06db45c/img/favicon.ico'
+  ]
+}
+
+
 export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
-
   const activeTool = app.useStore(activeToolSelector)
-
   const isToolLocked = app.useStore(toolLockedSelector)
-
+  // console.log(app.useStore(s=>s.appState))
 
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
@@ -52,8 +70,8 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectLinkTool = React.useCallback(() => {
-    // app.createLink(preview)
-    app.selectTool(TDShapeType.Sticky)
+    app.createVideoEmbed(video)
+    
   }, [app])
 
   const selectStickerTool = React.useCallback((svg:string) => {
@@ -61,9 +79,8 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     app.selectTool(TDShapeType.Sticker)
   }, [app])
 
-  const selectVideoEmbed = React.useCallback(() => {
-    // if(videosrc.mediaType.includes('video'))  app.createVideoEmbed(videosrc)
-   
+  const selectSectionTool = React.useCallback(() => {
+    app.selectTool(TDShapeType.Section)
   }, [app])
 
   return (
@@ -135,12 +152,13 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
         <Link1Icon />
       </ToolButtonWithTooltip>
       <ToolButtonWithTooltip
-        onClick={selectVideoEmbed}
-        label='sticker'
+        kbd={'0'}
+        label={TDShapeType.Sticky}
+        onClick={selectSectionTool}
         isActive={activeTool === TDShapeType.Sticky}
-        id="TD-PrimaryTools-Pencil3"
+        id="TD-PrimaryTools-Pencil2"
       >
-        <SunIcon />
+        <SectionIcon></SectionIcon>
       </ToolButtonWithTooltip>
     </Panel>
   )

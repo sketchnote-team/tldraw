@@ -110,7 +110,10 @@ export interface TDSnapshot {
     isLoading: boolean
     disableAssets: boolean
     selectByContain?: boolean,
-    selectedSticker: string
+    selectedSticker: string,
+    sections: {
+      [key: string]: string[]
+    }
   }
   document: TDDocument
   room?: {
@@ -222,6 +225,7 @@ export type TDToolType =
   | TDShapeType.Arrow
   | TDShapeType.Sticky
   | TDShapeType.Sticker
+  | TDShapeType.Section
 
 export type Easing =
   | 'linear'
@@ -293,7 +297,8 @@ export enum TDShapeType {
   Video = 'video',
   Sticker = 'sticker',
   Link='link',
-  Embed = 'embed'
+  Embed = 'embed',
+  Section= 'section'
 }
 
 export enum Decoration {
@@ -417,6 +422,14 @@ export interface EmbedShape extends TDBaseShape {
   faviconSrc: string
 }
 
+export interface SectionShape extends TDBaseShape {
+  type: TDShapeType.Section
+  size: number[]
+  children: string[]
+  label?: string
+  labelPoint?: number[]
+}
+
 // The shape created when multiple shapes are grouped
 export interface GroupShape extends TDBaseShape {
   type: TDShapeType.Group
@@ -439,6 +452,7 @@ export type TDShape =
   | StickerShape
   | LinkShape
   | EmbedShape
+  | SectionShape
 
 /* ------------------ Shape Styles ------------------ */
 

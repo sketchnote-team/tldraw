@@ -260,9 +260,13 @@ export class SelectTool extends BaseTool<Status> {
           } else {
             // Stat a transform session
             this.setStatus(Status.Transforming)
-            const idsToTransform = this.app.selectedIds.flatMap((id) =>
+            let idsToTransform = this.app.selectedIds.flatMap((id) =>
               TLDR.getDocumentBranch(this.app.state, id, this.app.currentPageId)
             )
+            if(idsToTransform.some(id=>this.app.getShape(id).name === 'Section' )){
+              idsToTransform = idsToTransform.filter(id=>this.app.getShape(id).name === 'Section' )
+            }
+            
             if (idsToTransform.length === 1) {
               // if only one shape is selected, transform single
               this.app.startSession(
@@ -582,7 +586,6 @@ export class SelectTool extends BaseTool<Status> {
       }
 
       this.app.startSession(SessionType.Brush)
-
       this.setStatus(Status.Brushing)
       return
     }

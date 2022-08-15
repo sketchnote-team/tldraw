@@ -13,7 +13,7 @@ enum Status {
 export class DrawTool extends BaseTool {
   type = TDShapeType.Draw as const
 
-  private lastShapeId?: string
+  private lastShapeId?: string 
 
   onEnter = () => {
     this.lastShapeId = undefined
@@ -76,6 +76,8 @@ export class DrawTool extends BaseTool {
 
   onPointerUp: TLPointerEventHandler = () => {
     this.app.completeSession()
+    if (this.lastShapeId)
+      this.app.checkIfInsideSectionandAddToState(this.lastShapeId)
     this.setStatus(Status.Idle)
   }
 }

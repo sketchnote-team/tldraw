@@ -71,10 +71,10 @@ export class LinkUtil extends TDShapeUtil<T, E> {
             <StyledLinkContent>
               
               {shape.title  &&  <StyledTitleContainer>
-                {shape.title.length>=35? shape.title.slice(0,35) + '...' :shape.title }
+                {shape.title.length>=26? shape.title.slice(0,26) + '...' :shape.title }
               </StyledTitleContainer>}
              {shape.description  &&  <StyledDescription>
-                {shape.description.length>=110? shape.description.slice(0,115) + '...' :shape.description }
+                {shape.description.length>=90? shape.description.slice(0,90) + '...' :shape.description }
               </StyledDescription>}
               <StyledLink {...events} onClick={()=>window.open(shape.url,"_blank")}>
                 {shape.url}
@@ -139,9 +139,9 @@ const StyledLinkContainer = styled('div', {
   position: 'relative',
   border: '1px solid #E2E4E9',
   borderRadius:'4px',
-  fontFamily:"Graphik",
+  fontFamily:"Graphik Web",
   height:"100%",
-  background:'#ffffff',
+  backgroundColor:'#ffffff',
 })
 
 const StyledLinkContent = styled('div',{

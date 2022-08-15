@@ -127,5 +127,6 @@ const StyledFrame = styled('div',{
   flexDirection:"column",
   alignItems:"start",
   padding:"5px",
+  background:'#fff'
 })
 

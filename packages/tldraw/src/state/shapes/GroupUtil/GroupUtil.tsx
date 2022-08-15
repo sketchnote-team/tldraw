@@ -67,8 +67,8 @@ export class GroupUtil extends TDShapeUtil<T, E> {
               pointerEvents="all"
             />
             <ScaledLines
-              stroke={ColorStyle.Black}
-              opacity={isHovered || isSelected ? 1 : 0}
+              stroke={ColorStyle.Blue}
+              opacity={1 }
               strokeLinecap="round"
               pointerEvents="stroke"
             >
