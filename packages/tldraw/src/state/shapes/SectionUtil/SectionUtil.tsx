@@ -149,4 +149,4 @@ export class SectionUtil extends TDShapeUtil<T, E> {
 }
 
 const FullWrapper = styled('div', { width: '100%', height: '100%', position:'relative' })
-const SectionButton = styled('div', {position:"absolute", top:"42px", left:"30%", zIndex:"99", pointerEvents:"all", cursor:"pointer"})
+const SectionButton = styled('div', {position:"absolute", fontFamily:"Graphik Web", top:"42px", left:"30%", zIndex:"99", pointerEvents:"all", cursor:"pointer"})

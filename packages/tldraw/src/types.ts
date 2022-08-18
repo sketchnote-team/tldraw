@@ -300,7 +300,8 @@ export enum TDShapeType {
   Sticker = 'sticker',
   Link='link',
   Embed = 'embed',
-  Section= 'section'
+  Section= 'section',
+  File = 'file'
 }
 
 export enum Decoration {
@@ -417,6 +418,13 @@ export interface LinkShape extends TDBaseShape {
   description:string|undefined
 }
 
+export interface FileShape extends TDBaseShape {
+  type: TDShapeType.File
+  size: number[]
+  url: string,
+  title:string|undefined
+}
+
 export interface EmbedShape extends TDBaseShape {
   type: TDShapeType.Embed
   size: number[]
@@ -455,6 +463,7 @@ export type TDShape =
   | LinkShape
   | EmbedShape
   | SectionShape
+  | FileShape
 
 /* ------------------ Shape Styles ------------------ */
 

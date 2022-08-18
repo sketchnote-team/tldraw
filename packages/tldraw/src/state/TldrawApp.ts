@@ -2737,6 +2737,47 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     return this
   }
 
+  createFileShapeAtPoint(  
+    id: string,
+    type: TDShapeType.File,
+    point: number[], 
+    size: number[],
+    url: string,
+    title:string,
+
+  ):this{
+    const {
+      shapes,
+      appState: { currentPageId, currentStyle },
+    } = this
+    const childIndex =
+    shapes.length === 0
+      ? 1
+      : shapes
+          .filter((shape) => shape.parentId === currentPageId)
+          .sort((a, b) => b.childIndex - a.childIndex)[0].childIndex + 1
+
+  const Shape = shapeUtils[type]
+  const newShape = Shape.create({
+    id,
+    parentId: currentPageId,
+    childIndex,
+    point,
+    size,
+    style: { ...currentStyle },
+    url,
+    title,
+  })
+  const bounds = Shape.getBounds(newShape as never)
+  newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
+  this.createShapes(newShape)
+
+  this.startSession(SessionType.Translate)
+
+  this.setStatus(TDStatus.Creating)
+
+  return this
+  }
 
 
   createLinkShapeAtPoint(
@@ -3274,6 +3315,19 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     this.completeSession()
     this.selectTool('select')
     return 
+  }
+
+  async createFile(
+    url:string,
+    title:string
+  ){
+    const id = Utils.uniqueId()
+    const [xPoint,yPoint]= this.document.pageStates.page.camera.point
+    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[303,100], url, title)   
+    this.setStatus(TDStatus.Idle)
+    this.completeSession()
+    this.selectTool('select')
+    return  
   }
 
   async createVideoEmbed(videoSrc:{

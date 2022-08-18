@@ -14,6 +14,7 @@ import { StickerUtil } from './StickerUtil'
 import { LinkUtil } from './LinkUtil'
 import { EmbedUtil } from './EmbedUtil'
 import {SectionUtil} from './SectionUtil'
+import { FileUtil } from './FileUtil'
 
 export const Rectangle = new RectangleUtil()
 export const Triangle = new TriangleUtil()
@@ -29,6 +30,7 @@ export const Sticker = new StickerUtil();
 export const Link = new LinkUtil();
 export const Embed = new EmbedUtil();
 export const Section = new SectionUtil();
+export const File = new FileUtil();
 
 export const shapeUtils = {
   [TDShapeType.Rectangle]: Rectangle,
@@ -45,6 +47,7 @@ export const shapeUtils = {
   [TDShapeType.Link]: Link,
   [TDShapeType.Embed]: Embed,
   [TDShapeType.Section]: Section,
+  [TDShapeType.File]: File
 }
 
 export const getShapeUtil = <T extends TDShape>(shape: T | T['type']) => {
