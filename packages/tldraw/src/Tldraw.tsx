@@ -13,6 +13,7 @@ import { TLDR } from '~state/TLDR'
 import { GRID_SIZE } from '~constants'
 import { Loading } from '~components/Loading'
 import { SelectedPanel } from '~components/ToolsPanel/SelectedPanel'
+import { CursorSVG } from '~components/ToolsPanel/CursorSvg'
 
 export interface TldrawProps extends TDCallbacks {
   /**
@@ -326,6 +327,8 @@ const InnerTldraw = React.memo(function InnerTldraw({
   const { document, settings, appState, room } = state
 
   const isSelecting = state.appState.activeTool === 'select'
+  const activeTool = state.appState.activeTool
+  const selectedSticker = state.appState.selectedSticker
 
   const page = document.pages[appState.currentPageId]
   const pageState = document.pageStates[page.id]
@@ -500,6 +503,7 @@ const InnerTldraw = React.memo(function InnerTldraw({
               <StyledSpacer />
               {showTools && !readOnly && <ToolsPanel />}
               { (selectedIds.length > 0) && < SelectedPanel selectedIds={selectedIds} /> }
+              { activeTool === 'sticker'&& <CursorSVG sticker={selectedSticker} />  }
             </>
           )}
         </StyledUI>

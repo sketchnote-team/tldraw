@@ -62,7 +62,10 @@ export class StickerTool extends BaseTool {
     if (this.status === Status.Creating) {
       this.setStatus(Status.Idle)
       this.app.completeSession()
-      this.app.selectTool('select')
     }
+  }
+
+  onPointerMove: TLPointerEventHandle=()=>{
+    this.app.changeCursorStickerPosition()
   }
 }

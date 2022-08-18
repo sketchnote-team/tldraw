@@ -277,6 +277,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+  changeCursorStickerPosition = () => {
+    this.patchState({
+      appState: {
+        currentStickerPoint: this.currentPoint
+      }
+    })
+  }
+
   removeEditing = () => {
     this.patchState(
       {
@@ -292,6 +300,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     )
   }
 
+  
 
   checkIfInsideSectionandAddToState = (id:string) => {
     if(this.appState.sections && Object.keys(this.appState.sections)){
@@ -335,8 +344,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
           (shape) =>(
               shape.isLocked ||
               shape.isHidden ||
-              shape.parentId !== this.currentPageId ||
-              shape.type === 'section'
+              shape.parentId === this.currentPageId
             )
         )
         .map((shape) => ({
@@ -374,6 +382,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
               })
             }
         }
+        this.select(...[...this.appState.sections[id],id] )
       })
     }
   }
@@ -2538,11 +2547,13 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   completeSession = (): this => {
     const { session } = this
 
-    this.pageState.selectedIds.forEach(id=>{
-      if(id){
-        this.checkIfInsideSectionandAddToState(id)
-      }
-    })
+    if (Vec.dist(this.originPoint, this.currentPoint) > 2){
+      this.pageState.selectedIds.forEach(id=>{
+        if(id){
+          this.checkIfInsideSectionandAddToState(id)
+        }
+      })
+    }
 
     if (!session) return this
     this.session = undefined
@@ -4028,7 +4039,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       isLoading: false,
       disableAssets: false,
       selectedSticker: '',
-      sections: {}
+      sections: {},
+      currentStickerPoint: [0,0]
     },
     document: TldrawApp.defaultDocument,
   }

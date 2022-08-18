@@ -120,8 +120,11 @@ export class SectionTool extends BaseTool<Status> {
         this.app.selectTool('select')
       }
     }
-    this.app.setSectionAndChildren(this.shape.id, this.selectedShapes)
-    this.app.select(...[...this.selectedShapes, this.shape.id])
+    if (Vec.dist(this.app.originPoint, this.app.currentPoint) > 2){  
+      this.app.setSectionAndChildren(this.shape.id, this.selectedShapes)
+      this.app.select(...[...this.selectedShapes, this.shape.id])
+    }
+  
     this.setStatus(Status.Idle)
   }
 

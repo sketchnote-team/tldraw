@@ -114,7 +114,8 @@ export interface TDSnapshot {
     selectedSticker: string,
     sections: {
       [key: string]: string[]
-    }
+    },
+    currentStickerPoint: number[]
   }
   document: TDDocument
   room?: {

@@ -34,7 +34,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
         parentId: 'page',
         childIndex: 1,
         point: [0, 0],
-        size: [32, 32],
+        size: [50, 50],
         rotation: 0,
         style: { ...defaultStyle, isFilled: true },
         assetId: 'assetId',
@@ -49,6 +49,8 @@ export class StickerUtil extends TDShapeUtil<T, E> {
       const { size, style } = shape
       const rImage = React.useRef<HTMLImageElement>(null)
       const rWrapper = React.useRef<HTMLDivElement>(null)
+      
+
 
       React.useLayoutEffect(() => {
         const wrapper = rWrapper.current
@@ -57,6 +59,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
         wrapper.style.width = `${width}px`
         wrapper.style.height = `${height}px`
       }, [size])
+
       
 
       return (
@@ -77,7 +80,6 @@ export class StickerUtil extends TDShapeUtil<T, E> {
 
           <Wrapper
             ref={rWrapper}
-            
           >          
             <div style={{
               display:"flex",
@@ -122,8 +124,8 @@ const Wrapper = styled('div', {
   pointerEvents: 'all',
   position: 'relative',
   fontFamily: 'sans-serif',
-  width:'32px',
-  height:'32px',
+  width:'45px',
+  height:'45px',
   background: '#FFFFFF',
   border: '1px solid #E2E4E9',
   boxShadow: '0px 2px 4px rgba(19, 23, 32, 0.06)',
