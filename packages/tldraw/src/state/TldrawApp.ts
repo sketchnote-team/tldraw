@@ -57,7 +57,7 @@ import {
 } from './data'
 import { TLDR } from './TLDR'
 import { shapeUtils } from '~state/shapes'
-import { defaultStyle } from '~state/shapes/shared/shape-styles'
+import { defaultSectionStyle, defaultStyle } from '~state/shapes/shared/shape-styles'
 import * as Commands from './commands'
 import { SessionArgsOfType, getSession, TldrawSession } from './sessions'
 import {
@@ -277,9 +277,24 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+  removeEditing = () => {
+    this.patchState(
+      {
+        document: {
+          pageStates: {
+            [this.currentPageId]: {
+              editingId: undefined,
+            },
+          },
+        },
+      },
+      `set_editing_id`
+    )
+  }
+
 
   checkIfInsideSectionandAddToState = (id:string) => {
-    if(Object.keys(this.appState.sections)){
+    if(this.appState.sections && Object.keys(this.appState.sections)){
       const bounds = this.getShapeUtil(this.getShape(id)).getBounds(this.getShape(id))
       Object.keys(this.appState.sections).forEach(section=>{
         const sectionShape = this.getShapeUtil(this.getShape(section)).getBounds(this.getShape(section))
@@ -300,7 +315,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
             })
           }
         } else{
-  
           if(this.appState.sections[section].includes(id)){
             this.patchState({
               appState: {
@@ -318,11 +332,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       const sectionShape = this.getShapeUtil(this.getShape(id)).getBounds(this.getShape(id))
       const shapesToTest = this.shapes
         .filter(
-          (shape) =>
-            !(
+          (shape) =>(
               shape.isLocked ||
               shape.isHidden ||
-              shape.parentId !== this.currentPageId 
+              shape.parentId !== this.currentPageId ||
+              shape.type === 'section'
             )
         )
         .map((shape) => ({
@@ -334,7 +348,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       shapesToTest.forEach(shape=>{
         const bounds = this.getShapeUtil(this.getShape(shape.id)).getBounds(this.getShape(shape.id))
         
-        if(Object.keys(this.appState.sections).length){
+        if(this.appState.sections && Object.keys(this.appState.sections).length){
           if(
             bounds.minX > sectionShape.minX &&
             bounds.maxX < sectionShape.maxX &&
@@ -405,7 +419,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
    */
   protected cleanup = (state: TDSnapshot, prev: TDSnapshot): TDSnapshot => {
     const next: TDSnapshot = { ...state }
-  //  delete next.appState.sections
+      // delete next.appState.sections
     // Remove deleted shapes and bindings (in Commands, these will be set to undefined)
     if (next.document !== prev.document) {
       Object.entries(next.document.pages).forEach(([pageId, page]) => {
@@ -2361,17 +2375,26 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         throw Error(`That shape does not exist on page ${this.currentPageId}`)
       }
     })
-    let selectionIds = [...ids]
-    ids.forEach(eachid=>{
-      if(this.getShape(eachid).name === "Section"){
-        if(this.appState.sections){
-          selectionIds = [...this.appState.sections[eachid], ...ids]
-        }
-      } 
-    })
+    const selectionIds = this.childrenOfSection([...ids])
+
     this.setSelectedIds(selectionIds)
     this.addToSelectHistory(selectionIds)
     return this
+  }
+
+  childrenOfSection (ids: string[]) {
+    let selectionIds = [...ids]
+
+    ids.forEach(eachid=>{
+      if(this.getShape(eachid).name === "Section"){
+        if(this.appState.sections && this.appState.sections[eachid]){
+          selectionIds = [...this.appState.sections[eachid], ...ids]
+          selectionIds = [...new Set(selectionIds)]
+        }
+      } 
+    })
+
+    return selectionIds
   }
 
   /**
@@ -2462,31 +2485,33 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
 
   removeSectionFromState(ids:string[]) {
-    ids.forEach(id=>{
-      if(this.getShape(id).name !== "Section"){
-        Object.keys(this.appState.sections).forEach(section=>{
-          if(this.appState.sections[section].includes(id))
-            this.patchState({
-              appState: {
-                sections:{
-                  [section]: [...this.appState.sections[section].filter(id2=>id2 !== id)],
+    if(this.appState.sections){
+      ids.forEach(id=>{
+        if(this.getShape(id).name !== "Section"){
+          Object.keys(this.appState.sections).forEach(section=>{
+            if(this.appState.sections[section].includes(id))
+              this.patchState({
+                appState: {
+                  sections:{
+                    [section]: [...this.appState.sections[section].filter(id2=>id2 !== id)],
+                  }
                 }
-              }
-            })
-        })
-      }else{
-        Object.keys(this.appState.sections).forEach(section=>{
-          if(section === id){
-            delete this.appState.sections[section]
-            this.patchState({
-              appState:{
-                sections: this.appState.sections
-              } 
-            })
-          }
-        })
-      }
-    })
+              })
+          })
+        }else{
+          Object.keys(this.appState.sections).forEach(section=>{
+            if(section === id){
+              delete this.appState.sections[section]
+              this.patchState({
+                appState:{
+                  sections: this.appState.sections
+                } 
+              })
+            }
+          })
+        }
+      })
+    }
   }
   /**
    * Cancel the current session.
@@ -3224,7 +3249,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const id = Utils.uniqueId()
     if(preview.images.length===0){
       const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-      this.createLinkShapeAtPoint(id,TDShapeType.Link,[(600-xPoint),(350-yPoint)],[303,120],preview.url,preview.title,preview.description,preview.images[0])
+      this.createLinkShapeAtPoint(id,TDShapeType.Link,[(700-xPoint),(350-yPoint)],[303,120],preview.url,preview.title,preview.description,preview.images[0])
       this.setStatus(TDStatus.Idle)
       this.completeSession()
       this.selectTool('select')
@@ -3233,7 +3258,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const [width,height] = await getImageSizeFromSrc(preview.images[0])
     const newHeight = (height/(width/303))+120;
     const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-    this.createLinkShapeAtPoint(id,TDShapeType.Link,[(600-xPoint),(350-yPoint)],[303,newHeight],preview.url,preview.title,preview.description,preview.images[0])
+    this.createLinkShapeAtPoint(id,TDShapeType.Link,[(700-xPoint),(350-yPoint)],[303,newHeight],preview.url,preview.title,preview.description,preview.images[0])
     this.setStatus(TDStatus.Idle)
     this.completeSession()
     this.selectTool('select')
@@ -3247,7 +3272,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const id = Utils.uniqueId();
     const faviconSrc = videoSrc.favicons[0]
     const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-    this.createEmbedShapeAtPoint(id,TDShapeType.Embed,[(600-xPoint),(350-yPoint)],[301,201],videoSrc.url,faviconSrc)
+    this.createEmbedShapeAtPoint(id,TDShapeType.Embed,[(700-xPoint),(350-yPoint)],[301,201],videoSrc.url,faviconSrc)
     this.setStatus(TDStatus.Idle)
     this.completeSession()
     this.selectTool('select')
@@ -3994,7 +4019,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       currentStyle: defaultStyle,
       currentStickyStyle:defaultStyle,
       currentShapeStyle:defaultStyle,
-      currentDrawStyle:defaultStyle,
+      currentDrawStyle: defaultStyle,
+      currentSectionStyle: defaultSectionStyle,
       isToolLocked: false,
       isMenuOpen: false,
       isEmptyCanvas: false,

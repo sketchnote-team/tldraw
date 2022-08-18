@@ -74,6 +74,11 @@ export function styleShapes(
       app.currentTool.type == "line"
     ) {appState = {...shapeStyle}}
 
+    if(app.currentTool.type == "section") {
+      appState = {
+        currentSectionStyle: changes
+      }}
+
   return {
     id: 'style',
     before: {

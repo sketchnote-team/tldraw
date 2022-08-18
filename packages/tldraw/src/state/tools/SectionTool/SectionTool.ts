@@ -42,10 +42,10 @@ export class SectionTool extends BaseTool<Status> {
       currentPoint,
       currentGrid,
       settings: { showGrid },
-      appState: { currentPageId, currentShapeStyle },
+      appState: { currentPageId, currentSectionStyle },
     } = this.app
 
-    const childIndex = this.getNextChildIndex()
+    const childIndex = -1
 
     const id = Utils.uniqueId()
 
@@ -54,7 +54,7 @@ export class SectionTool extends BaseTool<Status> {
       parentId: currentPageId,
       childIndex,
       point: showGrid ? Vec.snap(currentPoint, currentGrid) : currentPoint,
-      style: { ...currentShapeStyle },
+      style: { ...currentSectionStyle },
     })
 
     this.shape = newShape;

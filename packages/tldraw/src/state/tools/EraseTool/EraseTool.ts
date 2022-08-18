@@ -26,8 +26,6 @@ export class EraseTool extends BaseTool {
   onPointerMove: TLPointerEventHandler = (info) => {
     switch (this.status) {
       case Status.Pointing: {
-        console.log('pointing iuf', Vec.dist(info.origin, info.point) > DEAD_ZONE);
-        
         if (Vec.dist(info.origin, info.point) > DEAD_ZONE) {
           this.app.startSession(SessionType.Erase)
           this.app.updateSession()

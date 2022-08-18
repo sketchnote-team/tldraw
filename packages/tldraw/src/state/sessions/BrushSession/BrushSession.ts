@@ -73,13 +73,16 @@ export class BrushSession extends BaseSession {
             : util.hitTestBounds(shape, brush)
         ) {
           hits.add(selectId)
+          if(shape.name==="Section"){
+            this.app.childrenOfSection([selectId]).forEach(item => selectedIds.add(item))
+          }
 
           // When brushing a shape, select its top group parent.
           if (!selectedIds.has(selectId)) {
             selectedIds.add(selectId)
           }
         } else if (selectedIds.has(selectId)) {
-          selectedIds.delete(selectId)
+          // selectedIds.delete(selectId)
         }
       }
     })

@@ -151,6 +151,29 @@ export function getStickyShapeStyle(style: ShapeStyles, isDarkMode = false) {
   }
 }
 
+export function getSectionShapeStyle(
+  style: ShapeStyles,
+  isDarkMode?: boolean
+): {
+  stroke: string
+  fill: string
+  strokeWidth: number
+} {
+  const { color, size, isFilled } = style
+
+  const strokeWidth = getStrokeWidth(size)
+
+  const theme: Theme = isDarkMode ? 'dark' : 'light'
+  
+  const adjustedColor =
+    color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Blue : color
+  return {
+    stroke: strokes[theme][adjustedColor],
+    fill: isFilled ? fills[theme][adjustedColor] : 'none',
+    strokeWidth,
+  }
+}
+
 export function getShapeStyle(
   style: ShapeStyles,
   isDarkMode?: boolean
@@ -174,6 +197,14 @@ export function getShapeStyle(
 
 export const defaultStyle: ShapeStyles = {
   color: ColorStyle.Black,
+  size: SizeStyle.Small,
+  isFilled: false,
+  dash: DashStyle.Draw,
+  scale: 1,
+}
+
+export const defaultSectionStyle: ShapeStyles = {
+  color: ColorStyle.Blue,
   size: SizeStyle.Small,
   isFilled: false,
   dash: DashStyle.Draw,

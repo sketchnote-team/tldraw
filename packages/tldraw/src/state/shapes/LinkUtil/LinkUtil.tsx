@@ -74,10 +74,10 @@ export class LinkUtil extends TDShapeUtil<T, E> {
                 {shape.title.length>=26? shape.title.slice(0,26) + '...' :shape.title }
               </StyledTitleContainer>}
              {shape.description  &&  <StyledDescription>
-                {shape.description.length>=90? shape.description.slice(0,90) + '...' :shape.description }
+                {shape.description.length>=90? shape.description.slice(0,95) + '...' :shape.description }
               </StyledDescription>}
               <StyledLink {...events} onClick={()=>window.open(shape.url,"_blank")}>
-                {shape.url}
+                {shape.url.length>=26? shape.url.slice(0,26) + '...' :shape.url }
               </StyledLink>
             </StyledLinkContent>
           </StyledLinkContainer>

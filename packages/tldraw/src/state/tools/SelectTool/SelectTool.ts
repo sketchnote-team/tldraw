@@ -358,7 +358,7 @@ export class SelectTool extends BaseTool<Status> {
       // Unless the user is holding shift or meta, clear the current selection
       if (!info.shiftKey) {
         this.app.onShapeBlur()
-
+        
         if (info.altKey && this.app.selectedIds.length > 0) {
           this.app.duplicate(this.app.selectedIds, currentPoint)
           return
@@ -423,7 +423,8 @@ export class SelectTool extends BaseTool<Status> {
       if(this.app.document.pageStates.page.selectedIds){
         const selectedShape = this.app.document.pageStates.page.selectedIds
         selectedShape.forEach(shape=>{
-          const toBeSelectedShapes = new Set([...this.app.appState.sections[shape], shape])
+        
+          const toBeSelectedShapes = this.app.appState.sections[shape]? new Set([...this.app.appState.sections[shape], shape]) : new Set([shape])
           this.app.select(...toBeSelectedShapes)
         })
       }

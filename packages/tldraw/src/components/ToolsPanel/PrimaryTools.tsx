@@ -43,8 +43,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
-  console.log(app.useStore(s=>s.appState))
-  console.log(app.useStore(s=>s.document))
+  
 
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')

@@ -99,6 +99,7 @@ export interface TDSnapshot {
     currentStickyStyle: ShapeStyles
     currentShapeStyle: ShapeStyles
     currentDrawStyle: ShapeStyles
+    currentSectionStyle: ShapeStyles
     currentPageId: string
     hoveredId?: string
     activeTool: TDToolType
