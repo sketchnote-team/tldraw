@@ -56,6 +56,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
+
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
   }, [app])
@@ -85,13 +86,12 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     
   }, [app])
 
-  const selectStickerTool = React.useCallback((svg:string) => {
-    app.selectSticker(svg)
-    app.selectTool(TDShapeType.Sticker)
+  const selectStickerTool = React.useCallback(() => {
+    app.createFile('/daa','title')
   }, [app])
 
   const selectSectionTool = React.useCallback(() => {
-    app.createFile('url','title')
+    app.selectTool(TDShapeType.Section)
   }, [app])
 
   return (

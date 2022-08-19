@@ -6,10 +6,11 @@ import { TDShapeUtil } from '../TDShapeUtil'
 import { getStickyFontStyle, getStickyShapeStyle } from '../shared/shape-styles'
 import { styled } from '~styles'
 import { Vec } from '@tldraw/vec'
-import {FileIcon} from '@radix-ui/react-icons'
+
 
 type T = FileShape
 type E = HTMLDivElement
+
 
 export class FileUtil extends TDShapeUtil<T, E> {
   type = TDShapeType.File as const
@@ -66,11 +67,11 @@ export class FileUtil extends TDShapeUtil<T, E> {
                 }}
               />
             )}
-            <div style={{display:"flex", justifyContent:"center",alignItems:'center'}}>
-                <FileIcon/>
-                <div style={{cursor:"pointer", textDecoration:"underline"}} onClick={()=>window.open(`/${shape.url}`,'_blank')} {...events} >{shape.title}</div>
-            </div>
-           
+              <div style={{display:'flex'}}>
+                <StyledHeader>
+                  {shape.title}
+                </StyledHeader>
+              </div>
           </StyledFileContainer>
         </HTMLContainer>
         
@@ -118,7 +119,6 @@ export class FileUtil extends TDShapeUtil<T, E> {
     return shape
   }
 
- 
 }
 
 /* -------------------------------------------------- */
@@ -129,11 +129,20 @@ const StyledFileContainer = styled('div', {
   pointerEvents: 'all',
   position: 'relative',
   border: '1px solid #E2E4E9',
-  borderRadius:'4px',
+  borderRadius:'6px',
   fontFamily:"Graphik Web",
   height:"100%",
   backgroundColor:'#ffffff',
   display:'flex',
   alignItems:"center",
-  justifyContent:"center"
+  justifyContent:"center",
+  padding:"12px",
+  boxShadow:" 0px 2px 4px rgba(0, 0, 0, 0.08)"
+})
+
+const StyledHeader = styled('div',{
+  fontStyle: "normal",
+  fontWeight: "600",
+  fontSize: "14px",
+  lineHeight: "21px"
 })

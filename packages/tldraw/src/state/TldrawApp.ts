@@ -3323,7 +3323,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   ){
     const id = Utils.uniqueId()
     const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[303,100], url, title)   
+    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[303,94], url, title)   
     this.setStatus(TDStatus.Idle)
     this.completeSession()
     this.selectTool('select')
