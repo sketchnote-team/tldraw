@@ -2744,6 +2744,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     size: number[],
     url: string,
     title:string,
+    files: number,
+    avatarUrl: string,
+    firstName:string,
+    time:string
 
   ):this{
     const {
@@ -2767,6 +2771,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     style: { ...currentStyle },
     url,
     title,
+    files,
+    avatarUrl,
+    firstName,
+    time
+
   })
   const bounds = Shape.getBounds(newShape as never)
   newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
@@ -3319,11 +3328,44 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
   async createFile(
     url:string,
-    title:string
+    title:string,
+    files:number,
+    avatarUrl: string,
+    name:string,
+    updatedAt:string
+
   ){
+    function timeSince(date:Date) {
+
+      const seconds = Math.floor((new Date() - date) / 1000);
+    
+      let interval = seconds / 31536000;
+    
+      if (interval > 1) {
+        return Math.floor(interval) + " y";
+      }
+      interval = seconds / 2592000;
+      if (interval > 1) {
+        return Math.floor(interval) + " mon";
+      }
+      interval = seconds / 86400;
+      if (interval > 1) {
+        return Math.floor(interval) + " d";
+      }
+      interval = seconds / 3600;
+      if (interval > 1) {
+        return Math.floor(interval) + "h";
+      }
+      interval = seconds / 60;
+      if (interval > 1) {
+        return Math.floor(interval) + "min";
+      }
+      return Math.floor(seconds) + " s";
+    }
+    const time = timeSince(new Date(updatedAt));
     const id = Utils.uniqueId()
     const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[303,94], url, title)   
+    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[303,94], url, title, files, avatarUrl, name, time)   
     this.setStatus(TDStatus.Idle)
     this.completeSession()
     this.selectTool('select')

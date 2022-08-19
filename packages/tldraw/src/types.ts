@@ -422,7 +422,12 @@ export interface FileShape extends TDBaseShape {
   type: TDShapeType.File
   size: number[]
   url: string,
-  title:string|undefined
+  title:string|undefined,
+  files: number,
+  avatarUrl: string,
+  firstName:string,
+  time:string
+
 }
 
 export interface EmbedShape extends TDBaseShape {

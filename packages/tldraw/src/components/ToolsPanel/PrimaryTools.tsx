@@ -86,10 +86,6 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     
   }, [app])
 
-  const selectStickerTool = React.useCallback(() => {
-    app.createFile('/daa','title')
-  }, [app])
-
   const selectSectionTool = React.useCallback(() => {
     app.selectTool(TDShapeType.Section)
   }, [app])
@@ -156,7 +152,6 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
       <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Sticky}
-        onClick={selectStickerTool.bind(null,svg)}
         isActive={activeTool === TDShapeType.Sticky}
         id="TD-PrimaryTools-Pencil2"
       >
