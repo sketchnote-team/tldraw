@@ -424,7 +424,7 @@ export interface FileShape extends TDBaseShape {
   url: string,
   title:string|undefined,
   files: number,
-  avatarUrl: string,
+  avatarUrl: any[],
   firstName:string,
   time:string
 

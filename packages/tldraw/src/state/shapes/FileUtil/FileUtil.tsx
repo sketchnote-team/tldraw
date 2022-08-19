@@ -40,7 +40,7 @@ export class FileUtil extends TDShapeUtil<T, E> {
         url:'',
         title:'',
         files: 0,
-        avatarUrl: '',
+        avatarUrl: [],
         firstName:'',
         time:''
       },
@@ -163,34 +163,21 @@ export class FileUtil extends TDShapeUtil<T, E> {
                 </div>
 
               <div style={{display:'flex',   flexDirection: 'column',}}>
-                <StyledHeader {...events} onClick={()=>window.open('shape.url','_blank')}>
+                <StyledHeader {...events} onClick={()=>window.open(`${shape.url}`,'_blank')}>
                   {shape.title?.length>=20?`${shape.title?.slice(0,20)}...`:shape.title}
                 </StyledHeader>
-                <div style={{display:'flex', paddingTop:"2px",}}> 
-                  <div  style={{borderRight:'1px solid #F0F1F5', paddingRight: '5px', paddingLeft: '5px'}}>
-                    {fileIcon}
-                  </div>
-                  <div  style={{borderRight:'1px solid #F0F1F5', paddingRight: '5px', paddingLeft: '5px', fontStyle: 'normal', fontWeight: 400, fontSize: '12px', lineHeight:'16px', color: '#254DDA', display: "flex", alignItems: "center" }}>
-                    {shape.files} internals files
-                  </div>
+                <div style={{display:'flex', paddingTop:"2px",}}>
                   <div style={{fontStyle: "normal", opacity: "0.6",paddingLeft: '5px', fontWeight: 400, fontSize: "12px", lineHeight: "16px", display: "flex", alignItems: "center" }}>
-                    Edited by Sarah {shape.time} ago
-
+                    Edited by {shape.firstName} {shape.time} ago
                   </div>
                 </div>
                 <div style={{display: 'flex', paddingTop:"10px"}}>
-                  <img style={{width: '24px', height: '24px', borderRadius: '50%', border:'1px solid white', marginRight:'-10px', zIndex:1}} src={shape.avatarUrl} />
+                  {shape.avatarUrl.length===0? <div style={{height:"24px", visibility:"hidden"}}></div> :
+                  shape.avatarUrl.map((item,i)=><img src={item.avatar} alt={item.member.firstname} style={{width: '24px', height: '24px', borderRadius: '50%', border:'1px solid white', marginRight:'-10px', zIndex:`${shape.avatarUrl.length+2-i}`}} />)}
                 </div>
               </div>
             </div>
           </StyledFileContainer>
-          <div style={{
-            position: "absolute",
-            right:'0',
-            top:'0',
-          }}>
-            {burgerIcon}
-          </div>
         </HTMLContainer>
         
       )

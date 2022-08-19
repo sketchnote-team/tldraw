@@ -74,7 +74,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectTextTool = React.useCallback(() => {
-    app.selectTool(TDShapeType.Text)
+    app.createFile('/','file', 0, [],'ayush', `${Date.now()}`)
   }, [app])
 
   const selectStickyTool = React.useCallback(() => {
