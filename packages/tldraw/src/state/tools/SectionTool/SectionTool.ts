@@ -45,7 +45,7 @@ export class SectionTool extends BaseTool<Status> {
       appState: { currentPageId, currentSectionStyle },
     } = this.app
 
-    const childIndex = -1
+    const childIndex = -9999;
 
     const id = Utils.uniqueId()
 
@@ -75,16 +75,21 @@ export class SectionTool extends BaseTool<Status> {
     let  { origin, point } = info
     const { currentPageId } = this.app
 
-    origin = [origin[0] - this.app.pageState.camera.point[0], origin[1] - this.app.pageState.camera.point[1] ]
-    point = [point[0] - this.app.pageState.camera.point[0], point[1] - this.app.pageState.camera.point[1] ]
- 
-    const shapesToTest = this.app.shapes
+    const zoom = this.app.pageState.camera.zoom
+
+    origin = [(origin[0]/zoom - this.app.pageState.camera.point[0]), (origin[1]/zoom - this.app.pageState.camera.point[1]) ]
+    point = [(point[0]/zoom - this.app.pageState.camera.point[0]), (point[1]/zoom - this.app.pageState.camera.point[1]) ]
+
+  
+
+    if(this.status === Status.Creating){
+      const shapesToTest = this.app.shapes
       .filter(
         (shape) =>
           !(
             shape.isLocked ||
             shape.isHidden ||
-            shape.parentId !== currentPageId 
+            shape.parentId !== currentPageId
           )
       )
       .map((shape) => ({
@@ -92,14 +97,12 @@ export class SectionTool extends BaseTool<Status> {
         bounds: this.app.getShapeUtil(shape).getBounds(shape),
         selectId: shape.id, //TLDR.getTopParentId(data, shape.id, currentPageId),
       }))
-
-
-    if(this.status === Status.Creating){
+     
       const a = shapesToTest.filter(shapes =>
-        shapes.bounds.minX > Math.min(origin[0], point[0]) &&
-        shapes.bounds.maxX < Math.max(origin[0], point[0]) &&
-        shapes.bounds.minY > Math.min(origin[1], point[1]) &&
-        shapes.bounds.maxY < Math.max(origin[1], point[1]) 
+        shapes.bounds.minX  > Math.min(origin[0], point[0]) &&
+        shapes.bounds.maxX  < Math.max(origin[0], point[0]) &&
+        shapes.bounds.minY  > Math.min(origin[1], point[1]) &&
+        shapes.bounds.maxY  < Math.max(origin[1], point[1]) 
       )
       
       this.selectedShapes = a.map(a=>a.id);

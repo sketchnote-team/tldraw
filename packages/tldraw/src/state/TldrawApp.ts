@@ -57,7 +57,7 @@ import {
 } from './data'
 import { TLDR } from './TLDR'
 import { shapeUtils } from '~state/shapes'
-import { defaultSectionStyle, defaultStyle } from '~state/shapes/shared/shape-styles'
+import { defaultHighlighterStyle, defaultSectionStyle, defaultStyle } from '~state/shapes/shared/shape-styles'
 import * as Commands from './commands'
 import { SessionArgsOfType, getSession, TldrawSession } from './sessions'
 import {
@@ -83,6 +83,7 @@ import { StateManager } from './StateManager'
 import { clearPrevSize } from './shapes/shared/getTextSize'
 import { StickerTool } from './tools/StickerTool'
 import { SectionTool } from './tools/SectionTool'
+import { HighlighterTool } from './tools/HighlighterTool'
 
 const uuid = Utils.uniqueId()
 
@@ -186,6 +187,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     [TDShapeType.Sticky]: new StickyTool(this),
     [TDShapeType.Sticker]: new StickerTool(this),
     [TDShapeType.Section]: new SectionTool(this),
+    [TDShapeType.Highlighter]: new HighlighterTool(this)
   }
 
   currentTool: BaseTool = this.tools.select
@@ -372,7 +374,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
               }
             })
           }
-            else if(this.appState.sections[id].includes(shape.id)){
+            else if(this.appState.sections[id] && this.appState.sections[id].includes(shape.id)){
               this.patchState({
                 appState: {
                   sections:{
@@ -454,7 +456,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
             let parentId: string
 
             if (!shape) {
-              parentId = prevPage?.shapes[id]?.parentId
+            parentId = prevPage?.shapes[id]?.parentId
               delete page.shapes[id]
             } else {
               parentId = shape.parentId
@@ -2546,8 +2548,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
    */
   completeSession = (): this => {
     const { session } = this
-
+  
     if (Vec.dist(this.originPoint, this.currentPoint) > 2){
+      this.pageState.selectedIds.forEach(id=>{
+        if(id){
+          this.checkIfInsideSectionandAddToState(id)
+        }
+      })
+    }else if(this.appState.activeTool!==TDShapeType.Section){
       this.pageState.selectedIds.forEach(id=>{
         if(id){
           this.checkIfInsideSectionandAddToState(id)
@@ -2744,11 +2752,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     size: number[],
     url: string,
     title:string,
-    files: number,
+    icon: string,
     avatarUrl: any[],
     firstName:string,
-    time:string
-
+    time:string,
+    fileType: string
   ):this{
     const {
       shapes,
@@ -2771,11 +2779,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     style: { ...currentStyle },
     url,
     title,
-    files,
+    icon,
     avatarUrl,
     firstName,
-    time
-
+    time,
+    fileType
   })
   const bounds = Shape.getBounds(newShape as never)
   newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
@@ -3329,11 +3337,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   async createFile(
     url:string,
     title:string,
-    files:number,
+    icon:string,
     avatarUrl: any[],
     name:string,
-    updatedAt:string
-
+    updatedAt:string,
+    fileType:string
   ){
     function timeSince(date:Date) {
 
@@ -3365,7 +3373,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const time = timeSince(new Date(updatedAt));
     const id = Utils.uniqueId()
     const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[304,94], url, title, files, avatarUrl, name, time)   
+    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[304,94], url, title, icon, avatarUrl, name, time, fileType)   
     this.setStatus(TDStatus.Idle)
     this.completeSession()
     this.selectTool('select')
@@ -4128,6 +4136,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       currentShapeStyle:defaultStyle,
       currentDrawStyle: defaultStyle,
       currentSectionStyle: defaultSectionStyle,
+      currentHighlighterStyle: defaultHighlighterStyle,
       isToolLocked: false,
       isMenuOpen: false,
       isEmptyCanvas: false,

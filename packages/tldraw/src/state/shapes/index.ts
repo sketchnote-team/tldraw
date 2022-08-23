@@ -15,6 +15,7 @@ import { LinkUtil } from './LinkUtil'
 import { EmbedUtil } from './EmbedUtil'
 import {SectionUtil} from './SectionUtil'
 import { FileUtil } from './FileUtil'
+import { HighlighterUtil } from './HighlighterUtil'
 
 export const Rectangle = new RectangleUtil()
 export const Triangle = new TriangleUtil()
@@ -31,6 +32,7 @@ export const Link = new LinkUtil();
 export const Embed = new EmbedUtil();
 export const Section = new SectionUtil();
 export const File = new FileUtil();
+export const Highlighter = new HighlighterUtil();
 
 export const shapeUtils = {
   [TDShapeType.Rectangle]: Rectangle,
@@ -47,7 +49,8 @@ export const shapeUtils = {
   [TDShapeType.Link]: Link,
   [TDShapeType.Embed]: Embed,
   [TDShapeType.Section]: Section,
-  [TDShapeType.File]: File
+  [TDShapeType.File]: File,
+  [TDShapeType.Highlighter]: Highlighter,
 }
 
 export const getShapeUtil = <T extends TDShape>(shape: T | T['type']) => {

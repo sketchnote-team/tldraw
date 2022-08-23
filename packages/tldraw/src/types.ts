@@ -98,7 +98,8 @@ export interface TDSnapshot {
     currentStyle: ShapeStyles
     currentStickyStyle: ShapeStyles
     currentShapeStyle: ShapeStyles
-    currentDrawStyle: ShapeStyles
+    currentDrawStyle: ShapeStyles,
+    currentHighlighterStyle:ShapeStyles,
     currentSectionStyle: ShapeStyles
     currentPageId: string
     hoveredId?: string
@@ -228,6 +229,7 @@ export type TDToolType =
   | TDShapeType.Sticky
   | TDShapeType.Sticker
   | TDShapeType.Section
+  | TDShapeType.Highlighter
 
 export type Easing =
   | 'linear'
@@ -301,7 +303,8 @@ export enum TDShapeType {
   Link='link',
   Embed = 'embed',
   Section= 'section',
-  File = 'file'
+  File = 'file',
+  Highlighter = 'highlighter'
 }
 
 export enum Decoration {
@@ -317,6 +320,11 @@ export interface TDBaseShape extends TLShape {
 
 export interface DrawShape extends TDBaseShape {
   type: TDShapeType.Draw
+  points: number[][]
+  isComplete: boolean
+}
+export interface HighlighterShape extends TDBaseShape {
+  type: TDShapeType.Highlighter
   points: number[][]
   isComplete: boolean
 }
@@ -422,12 +430,12 @@ export interface FileShape extends TDBaseShape {
   type: TDShapeType.File
   size: number[]
   url: string,
-  title:string|undefined,
-  files: number,
+  title: string,
+  icon: string,
   avatarUrl: any[],
   firstName:string,
-  time:string
-
+  time:string,
+  fileType: string
 }
 
 export interface EmbedShape extends TDBaseShape {
@@ -469,6 +477,7 @@ export type TDShape =
   | EmbedShape
   | SectionShape
   | FileShape
+  | HighlighterShape
 
 /* ------------------ Shape Styles ------------------ */
 

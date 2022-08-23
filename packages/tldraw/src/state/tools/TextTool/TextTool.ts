@@ -46,8 +46,12 @@ export class TextTool extends BaseTool {
   }
 
   onPointerUp: TLPointerEventHandler = () => {
-    // noop important! We don't want the inherited event
-    // from BaseUtil to run.
+  
+    if (this.status === Status.Creating) {
+      this.setStatus(Status.Idle)
+      this.app.completeSession()
+      this.app.selectTool('select')
+    }
   }
 
   onPointShape: TLPointerEventHandler = (info) => {

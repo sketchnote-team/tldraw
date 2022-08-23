@@ -65,7 +65,7 @@ export class StickerTool extends BaseTool {
     }
   }
 
-  onPointerMove: TLPointerEventHandle=()=>{
+  onPointerMove: TLPointerEventHandler =()=>{
     this.app.changeCursorStickerPosition()
   }
 }

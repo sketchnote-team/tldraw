@@ -34,7 +34,6 @@ export class BrushSession extends BaseSession {
         bounds: this.app.getShapeUtil(shape).getBounds(shape),
         selectId: shape.id, //TLDR.getTopParentId(data, shape.id, currentPageId),
       }))
-
     this.update()
   }
 
@@ -73,9 +72,12 @@ export class BrushSession extends BaseSession {
             : util.hitTestBounds(shape, brush)
         ) {
           hits.add(selectId)
-          if(shape.name==="Section"){
-            this.app.childrenOfSection([selectId]).forEach(item => selectedIds.add(item))
-          }
+          // if(shape.name==="Section"){
+          //   this.app.childrenOfSection([selectId]).forEach(item => {
+          //     selectedIds.add(item)
+          //   })
+          // }
+          console.log("hello")
 
           // When brushing a shape, select its top group parent.
           if (!selectedIds.has(selectId)) {
@@ -127,6 +129,7 @@ export class BrushSession extends BaseSession {
   }
 
   complete = (): TldrawPatch | TldrawCommand | undefined => {
+
     return {
       appState: {
         selectByContain: false,

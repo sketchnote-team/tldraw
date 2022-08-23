@@ -203,11 +203,19 @@ export const defaultStyle: ShapeStyles = {
   scale: 1,
 }
 
-export const defaultSectionStyle: ShapeStyles = {
-  color: ColorStyle.Blue,
+export const defaultHighlighterStyle: ShapeStyles = {
+  color: ColorStyle.Yellow,
   size: SizeStyle.Small,
   isFilled: false,
   dash: DashStyle.Draw,
+  scale: 1,
+}
+
+export const defaultSectionStyle: ShapeStyles = {
+  color: ColorStyle.Blue,
+  size: SizeStyle.Small,
+  isFilled: true,
+  dash: DashStyle.Solid,
   scale: 1,
 }
 

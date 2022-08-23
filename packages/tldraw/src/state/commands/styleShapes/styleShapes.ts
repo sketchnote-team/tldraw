@@ -50,34 +50,44 @@ export function styleShapes(
       }
     })
 
-    
-    const shapeStyle = {
-      currentShapeStyle: changes,
+  const shapeStyle = {
+    currentShapeStyle: changes,
+  }
+
+  let appState: any = {
+    currentStyle: changes,
+  }
+
+  if (app.currentTool.type == 'draw') {
+    appState = {
+      currentDrawStyle: changes,
     }
-
-    let appState:any = {
-      currentStyle: changes   
+  }
+  if (app.currentTool.type == 'sticky') {
+    appState = {
+      currentStickyStyle: changes,
     }
+  }
+  if (
+    app.currentTool.type == 'rectangle' ||
+    app.currentTool.type == 'triangle' ||
+    app.currentTool.type == 'ellipse' ||
+    app.currentTool.type == 'line'
+  ) {
+    appState = { ...shapeStyle }
+  }
 
-    if(app.currentTool.type == "draw") {
-      appState = {
-        currentDrawStyle: changes
-      }}
-    if(app.currentTool.type == "sticky") {
-      appState = {
-        currentStickyStyle: changes
-      }}
-    if(
-      app.currentTool.type == "rectangle" ||
-      app.currentTool.type == "triangle" ||
-      app.currentTool.type == "ellipse" ||
-      app.currentTool.type == "line"
-    ) {appState = {...shapeStyle}}
+  if (app.currentTool.type == 'section') {
+    appState = {
+      currentSectionStyle: changes,
+    }
+  }
 
-    if(app.currentTool.type == "section") {
-      appState = {
-        currentSectionStyle: changes
-      }}
+  if (app.currentTool.type == 'highlighter') {
+    appState = {
+      currentHighlighterStyle: changes,
+    }
+  }
 
   return {
     id: 'style',

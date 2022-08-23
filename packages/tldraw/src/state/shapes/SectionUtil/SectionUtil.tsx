@@ -67,34 +67,34 @@ export class SectionUtil extends TDShapeUtil<T, E> {
       },
       ref
     ) => {
-      const { id, size, style,  labelPoint = LABEL_POINT, label = 'section' } = shape
+      const { id, size, style,  labelPoint = LABEL_POINT, label = 'section'  } = shape
       const font = getFontStyle(style)
      
-      
       const styles = getSectionShapeStyle(style, meta.isDarkMode)
       const Component = style.dash === DashStyle.Draw ? DrawRectangle : DashedRectangle
       const handleLabelChange = React.useCallback(
         (label: string) => onShapeChange?.({ id, label }),
         [onShapeChange]
       )
-
       return (
         <FullWrapper ref={ref} {...events}>
-          <SectionButton  {...events} >
-            <SectionHeader
-              isEditing={isEditing}
-              onChange={handleLabelChange}
-              onBlur={onShapeBlur}
-              font={font}
-              text={label}
-              color={styles.stroke}
-              offsetX={(labelPoint[0] - 0.5) * bounds.width}
-              offsetY={(labelPoint[1] - 0.5) * bounds.height}
-            />
-          </SectionButton>
+          <div style={{position:'absolute', top: '50%', left: '28%'}} >
+              <SectionButton  {...events} style={{bottom: bounds.height/2 }} >
+                <SectionHeader
+                  isEditing={isEditing}
+                  onChange={handleLabelChange}
+                  onBlur={onShapeBlur}
+                  font={font}
+                  text={label}
+                  color={styles.stroke}
+                  offsetX={(labelPoint[0] - 0.5) * bounds.width}
+                  // offsetY={(labelPoint[1] - 0.5) * bounds.height}
+                />
+              </SectionButton>
        
-          
-          <SVGContainer id={shape.id + '_svg'} opacity={isGhost ? GHOSTED_OPACITY : 1}>
+          </div>
+        
+          <SVGContainer id={shape.id + '_svg'} opacity={0.5}>
             {isBinding && <BindingIndicator strokeWidth={styles.strokeWidth} size={size} />}
             <Component
               id={id}
@@ -149,4 +149,4 @@ export class SectionUtil extends TDShapeUtil<T, E> {
 }
 
 const FullWrapper = styled('div', { width: '100%', height: '100%', position:'relative' })
-const SectionButton = styled('div', {position:"absolute", fontFamily:"Graphik Web", top:"42px", left:"30%", zIndex:"99", pointerEvents:"all", cursor:"pointer"})
+const SectionButton = styled('div', {position:"absolute", height:"42px", left:"5%", zIndex:"99", pointerEvents:"all", cursor:"pointer"})
