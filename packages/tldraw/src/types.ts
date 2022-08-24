@@ -523,11 +523,23 @@ export enum AlignStyle {
   Justify = 'justify',
 }
 
+export enum TextWeight {
+  Normal = 'normal',
+  Bold = 'bold',
+}
+
+export enum ListType {
+  None = 'none',
+  Bullet = 'bullet',
+  Numbered = 'numbered'
+}
+
 export enum FontStyle {
   Script = 'script',
   Sans = 'sans',
   Serif = 'erif',
   Mono = 'mono',
+  Graphik = 'Graphik Web'
 }
 
 export type ShapeStyles = {
@@ -538,6 +550,19 @@ export type ShapeStyles = {
   textAlign?: AlignStyle
   isFilled?: boolean
   scale?: number
+}
+
+export type TextShapeStyles = {
+  color: ColorStyle
+  size: SizeStyle
+  dash: DashStyle
+  font?: FontStyle
+  textAlign?: AlignStyle
+  isFilled?: boolean
+  scale?: number,
+  textWeight: TextWeight,
+  listType: ListType,
+  textDecoration: string,
 }
 
 export enum TDAssetType {

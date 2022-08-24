@@ -79,11 +79,11 @@ export class HighlighterUtil extends TDShapeUtil<T, E> {
         return (
           <SVGContainer ref={ref} id={shape.id + '_svg'} {...events}>
             <circle
-              r={sw}
+              r={20}
               fill={stroke}
               stroke={stroke}
               pointerEvents="all"
-              opacity={isGhost ? GHOSTED_OPACITY : 1}
+              opacity={0.7}
             />
           </SVGContainer>
         )

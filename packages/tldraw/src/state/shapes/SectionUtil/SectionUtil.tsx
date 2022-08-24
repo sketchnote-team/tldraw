@@ -78,8 +78,8 @@ export class SectionUtil extends TDShapeUtil<T, E> {
       )
       return (
         <FullWrapper ref={ref} {...events}>
-          <div style={{position:'absolute', top: '50%', left: '28%'}} >
-              <SectionButton  {...events} style={{bottom: bounds.height/2 }} >
+          <div style={{position:'absolute', top: '50%', right: '50%'}} >
+              <SectionButton  {...events} style={{bottom: bounds.height/2, }} >
                 <SectionHeader
                   isEditing={isEditing}
                   onChange={handleLabelChange}

@@ -45,7 +45,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
-  console.log(app.useStore(s=>s.appState))
+  // console.log(app.useStore(s=>s.appState))
 
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
@@ -187,7 +187,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
       <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Sticky}
-        onClick={selectLinkTool}
+        onClick={selectStickerTool}
         isActive={activeTool === TDShapeType.Sticky}
         id="TD-PrimaryTools-Pencil2"
       >

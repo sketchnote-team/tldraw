@@ -413,13 +413,9 @@ export class SelectTool extends BaseTool<Status> {
       }
     }
 
-  
-
     // Complete the current session, if any; and reset the status
     this.app.completeSession()
     if(this.status === Status.Transforming){
-
-
       if(this.app.document.pageStates.page.selectedIds){
         const selectedShape = this.app.document.pageStates.page.selectedIds
         selectedShape.forEach(shape=>{

@@ -42,6 +42,7 @@ import {
   TDExport,
   ImageShape,
   ArrowShape,
+  TextShapeStyles,
 } from '~types'
 import {
   migrate,
@@ -57,7 +58,7 @@ import {
 } from './data'
 import { TLDR } from './TLDR'
 import { shapeUtils } from '~state/shapes'
-import { defaultHighlighterStyle, defaultSectionStyle, defaultStyle } from '~state/shapes/shared/shape-styles'
+import { defaultHighlighterStyle, defaultSectionStyle, defaultStyle, defaultTextStyle } from '~state/shapes/shared/shape-styles'
 import * as Commands from './commands'
 import { SessionArgsOfType, getSession, TldrawSession } from './sessions'
 import {
@@ -384,7 +385,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
               })
             }
         }
-        this.select(...[...this.appState.sections[id],id] )
+        const toBeSelectedIds = [...this.appState.sections[id],id, ...this.selectedIds]
+        this.select(...toBeSelectedIds )
       })
     }
   }
@@ -2865,7 +2867,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       parentId: currentPageId,
       childIndex,
       point,
-      style: { ...currentStyle },
+      style: { ...defaultTextStyle },
     })
 
     const bounds = Text.getBounds(newShape)
@@ -2979,8 +2981,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
    * @param style A style partial to apply to the shapes.
    * @param ids The ids of the shapes to change (defaults to selection).
    */
-  style = (style: Partial<ShapeStyles>, ids = this.selectedIds): this => {
-
+  style = (style: Partial<TextShapeStyles>, ids = this.selectedIds): this => {
+    if(ids.some(id=>this.getShape(id).name === 'Section' )){
+      ids = ids.filter(id=>this.getShape(id).name === 'Section' )
+      ids = [ids[ids.length-1]]
+    }
     return this.setState(Commands.styleShapes(this, ids, style))
 
   }
@@ -3373,7 +3378,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const time = timeSince(new Date(updatedAt));
     const id = Utils.uniqueId()
     const [xPoint,yPoint]= this.document.pageStates.page.camera.point
-    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[304,94], url, title, icon, avatarUrl, name, time, fileType)   
+    this.createFileShapeAtPoint(id, TDShapeType.File,[(700-xPoint),(350-yPoint)],[354,94], url, title, icon, avatarUrl, name, time, fileType)   
     this.setStatus(TDStatus.Idle)
     this.completeSession()
     this.selectTool('select')

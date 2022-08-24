@@ -1,5 +1,5 @@
 import { Utils } from '@tldraw/core'
-import { Theme, ColorStyle, DashStyle, ShapeStyles, SizeStyle, FontStyle, AlignStyle } from '~types'
+import { Theme, ColorStyle, DashStyle, ShapeStyles, SizeStyle, FontStyle, AlignStyle, TextWeight, TextShapeStyles, ListType } from '~types'
 
 const canvasLight = '#fafafa'
 
@@ -85,6 +85,7 @@ const fontSizes = {
 }
 
 const fontFaces = {
+  [FontStyle.Graphik]: '"Graphik Web"',
   [FontStyle.Script]: '"Caveat Brush"',
   [FontStyle.Sans]: '"Source Sans Pro"',
   [FontStyle.Serif]: '"Crimson Pro"',
@@ -92,10 +93,12 @@ const fontFaces = {
 }
 
 const fontSizeModifiers = {
+  [FontStyle.Graphik]: 0.8,
   [FontStyle.Script]: 1,
   [FontStyle.Sans]: 1,
   [FontStyle.Serif]: 1,
   [FontStyle.Mono]: 1,
+ 
 }
 
 const stickyFontSizes = {
@@ -109,11 +112,11 @@ export function getStrokeWidth(size: SizeStyle): number {
   return strokeWidths[size]
 }
 
-export function getFontSize(size: SizeStyle, fontStyle: FontStyle = FontStyle.Script): number {
+export function getFontSize(size: SizeStyle, fontStyle: FontStyle = FontStyle.Graphik): number {
   return fontSizes[size] * fontSizeModifiers[fontStyle]
 }
 
-export function getFontFace(font: FontStyle = FontStyle.Script): string {
+export function getFontFace(font: FontStyle = FontStyle.Graphik): string {
   return fontFaces[font]
 }
 
@@ -219,8 +222,11 @@ export const defaultSectionStyle: ShapeStyles = {
   scale: 1,
 }
 
-export const defaultTextStyle: ShapeStyles = {
+export const defaultTextStyle: TextShapeStyles = {
   ...defaultStyle,
-  font: FontStyle.Script,
-  textAlign: AlignStyle.Middle,
+  font: FontStyle.Graphik,
+  textAlign: AlignStyle.Start,
+  textWeight: TextWeight.Normal,
+  listType: ListType.None,
+  textDecoration: 'none'
 }

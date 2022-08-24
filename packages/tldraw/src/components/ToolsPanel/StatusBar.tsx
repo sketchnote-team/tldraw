@@ -12,13 +12,14 @@ export function StatusBar(): JSX.Element | null {
   const status = app.useStore(statusSelector)
   const activeTool = app.useStore(activeToolSelector)
 
-  return (
-    <StyledStatusBar bp={breakpoints} id="TD-StatusBar">
-      <StyledSection>
-        {activeTool} | {status}
-      </StyledSection>
-    </StyledStatusBar>
-  )
+  return <></>
+  // return (
+  //   <StyledStatusBar bp={breakpoints} id="TD-StatusBar">
+  //     <StyledSection>
+  //       {activeTool} | {status}
+  //     </StyledSection>
+  //   </StyledStatusBar>
+  // )
 }
 
 const StyledStatusBar = styled('div', {

@@ -53,25 +53,8 @@ export class FileUtil extends TDShapeUtil<T, E> {
       const font = getStickyFontStyle(shape.style)
 
       const { color } = getStickyShapeStyle(shape.style, meta.isDarkMode)
-      const fileIcon = (
-        <svg
-          width={10}
-          height={12}
-          viewBox="0 0 10 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M6.96086 3.02143V0.0548571L9.92743 3.02143H6.96086ZM5.44972 3.02143C5.44972 3.42221 5.60893 3.80657 5.89232 4.08997C6.17572 4.37336 6.56008 4.53257 6.96086 4.53257H9.98229V10.4889C9.98229 10.8896 9.82308 11.274 9.53969 11.5574C9.25629 11.8408 8.87193 12 8.47115 12H1.67229C1.47331 12.0001 1.27626 11.9609 1.09248 11.8846C0.908694 11.8084 0.741795 11.6965 0.601371 11.5555C0.460948 11.4145 0.349767 11.2472 0.274219 11.0631C0.198671 10.879 0.160245 10.6818 0.161148 10.4829V1.51714C0.160693 1.11567 0.319564 0.730424 0.602885 0.445978C0.886206 0.161532 1.27082 0.00113513 1.67229 0L5.44972 0V3.02143Z"
-            fill="#D5D7DD"
-          />
-        </svg>
-      )
 
       const seperator = <div style={{ borderRight: '1px solid #F0F1F5' }}></div>
-        console.log(shape.icon)
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledFileContainer>
@@ -99,7 +82,7 @@ export class FileUtil extends TDShapeUtil<T, E> {
             >
               <div
                 style={{
-                  width: '24px',
+                  width: '28px',
                   height: '28px',
                   background: '#F9FAFB',
                   border: '1px solid #F6F7F9',

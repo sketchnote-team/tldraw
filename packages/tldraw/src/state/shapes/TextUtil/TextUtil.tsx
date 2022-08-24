@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { Utils, HTMLContainer, TLBounds } from '@tldraw/core'
 import { defaultTextStyle, getShapeStyle, getFontStyle } from '../shared/shape-styles'
-import { TextShape, TDMeta, TDShapeType, TransformInfo, AlignStyle } from '~types'
+import { TextShape, TDMeta, TDShapeType, TransformInfo, AlignStyle, ListType } from '~types'
 import { BINDING_DISTANCE, GHOSTED_OPACITY, LETTER_SPACING } from '~constants'
 import { TDShapeUtil } from '../TDShapeUtil'
 import { styled } from '~styles'
@@ -12,6 +12,7 @@ import { getTextAlign } from '../shared/getTextAlign'
 import { getTextSvgElement } from '../shared/getTextSvgElement'
 import { stopPropagation } from '~components/stopPropagation'
 import { useTextKeyboardEvents } from '../shared/useTextKeyboardEvents'
+import { getTextWeight } from '../shared/getTextWeight'
 
 type T = TextShape
 type E = HTMLDivElement
@@ -53,8 +54,40 @@ export class TextUtil extends TDShapeUtil<T, E> {
       const { text, style } = shape
       const styles = getShapeStyle(style, meta.isDarkMode)
       const font = getFontStyle(shape.style)
+      const fontStyle = font.split(' ')
+      const fontSize = fontStyle[0].split('/')[0]
+      const lineHeight = 1
+      fontStyle.shift()
+      const fontFamily = fontStyle.join(' ')
+      const weight = getTextWeight(shape.style.textWeight)
       const rInput = React.useRef<HTMLTextAreaElement>(null)
       const rIsMounted = React.useRef(false)
+      const isTextEmpty = text == '' || text == ' '
+      const str = text
+      let textArr = text.split('')
+      
+      if (style.listType === ListType.Numbered) {
+        textArr = textArr[0]!=="1." ? ['1.', ' ', ...textArr] : [...textArr] 
+        let count = 3
+        let number =2 
+        for (let i = 0; i < str.length; i++) {
+          if ((str[i] === '\n' || str[i] === '\r') && str[i + 1] !== `${number}` && str[i] != `${number}`) {
+            textArr.splice(i + count, 0, `${number}.`, ' ')
+            count+=2
+            number+=1
+          }
+        } 
+      }else if (style.listType === ListType.Bullet) {
+        textArr = textArr[0]!=="\u2022" ? ['\u2022', ' ', ...textArr] : [...textArr] 
+        let count = 3
+        for (let i = 0; i < str.length; i++) {
+          if ((str[i] === '\n' || str[i] === '\r') && str[i + 1] !== '\u2022' && str[i] != '\u2022') {
+            textArr.splice(i + count, 0, `\u2022`, ' ')
+            count+=2
+          }
+        } 
+      }
+      const newText = textArr.join('')
 
       const handleChange = React.useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -145,9 +178,13 @@ export class TextUtil extends TDShapeUtil<T, E> {
           <Wrapper isGhost={isGhost} isEditing={isEditing} onPointerDown={handlePointerDown}>
             <InnerWrapper
               style={{
-                font,
+                fontSize,
+                fontFamily,
+                fontWeight: weight,
+                lineHeight,
                 color: styles.stroke,
                 textAlign: getTextAlign(style.textAlign),
+                textDecoration: style.textDecoration
               }}
             >
               {isBinding && (
@@ -167,7 +204,10 @@ export class TextUtil extends TDShapeUtil<T, E> {
                 <TextArea
                   ref={rInput}
                   style={{
-                    font,
+                    fontSize,
+                    fontFamily,
+                    fontWeight: weight,
+                    lineHeight,
                     color: styles.stroke,
                   }}
                   name="text"
@@ -177,12 +217,11 @@ export class TextUtil extends TDShapeUtil<T, E> {
                   autoCorrect="false"
                   autoSave="false"
                   autoFocus
-                  placeholder=""
                   spellCheck="true"
                   wrap="off"
                   dir="auto"
                   datatype="wysiwyg"
-                  defaultValue={text}
+                  defaultValue={isTextEmpty ? '' : text}
                   color={styles.stroke}
                   onFocus={handleFocus}
                   onChange={handleChange}
@@ -190,9 +229,10 @@ export class TextUtil extends TDShapeUtil<T, E> {
                   onBlur={handleBlur}
                   onPointerDown={handlePointerDown}
                   onContextMenu={stopPropagation}
+                  placeholder="Add text"
                 />
               ) : (
-                text
+                style.listType!==ListType.None? newText: text
               )}
               &#8203;
             </InnerWrapper>
@@ -220,8 +260,16 @@ export class TextUtil extends TDShapeUtil<T, E> {
       melm.textContent = this.texts.get(shape.id) ?? shape.text
 
       // In tests, offsetWidth and offsetHeight will be 0
-      const width = melm.offsetWidth || 1
-      const height = melm.offsetHeight || 1
+      let width = melm.offsetWidth || 1
+      let height = melm.offsetHeight || 1
+
+      if (shape.style.textWeight === 'bold') {
+        width = width + 0.1 * width
+        height = height + 0.04 * height
+      }
+      if (shape.style.listType !== ListType.None ) {
+        width = width + 15 + (0.4 * width);
+      }
 
       return {
         minX: 0,
@@ -388,6 +436,7 @@ const InnerWrapper = styled('div', {
   minHeight: 1,
   minWidth: 1,
   lineHeight: 1,
+  textAlign: 'inherit',
   letterSpacing: LETTER_SPACING,
   outline: 0,
   fontWeight: '500',
@@ -418,9 +467,8 @@ const TextArea = styled('textarea', {
   border: 'none',
   padding: '4px',
   resize: 'none',
-  textAlign: 'inherit',
+  textAlign: 'left',
   minHeight: 'inherit',
-  minWidth: 'inherit',
   lineHeight: 'inherit',
   letterSpacing: 'inherit',
   outline: 0,
@@ -433,4 +481,5 @@ const TextArea = styled('textarea', {
   userSelect: 'text',
   WebkitUserSelect: 'text',
   ...commonTextWrapping,
+  minWidth: '140px',
 })

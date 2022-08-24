@@ -77,7 +77,7 @@ export class BrushSession extends BaseSession {
           //     selectedIds.add(item)
           //   })
           // }
-          console.log("hello")
+
 
           // When brushing a shape, select its top group parent.
           if (!selectedIds.has(selectId)) {
