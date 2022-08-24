@@ -184,7 +184,8 @@ export class TextUtil extends TDShapeUtil<T, E> {
                 lineHeight,
                 color: styles.stroke,
                 textAlign: getTextAlign(style.textAlign),
-                textDecoration: style.textDecoration
+                textDecoration: style.textDecoration,
+                fontStyle: style.fontStyle
               }}
             >
               {isBinding && (
@@ -263,7 +264,7 @@ export class TextUtil extends TDShapeUtil<T, E> {
       let width = melm.offsetWidth || 1
       let height = melm.offsetHeight || 1
 
-      if (shape.style.textWeight === 'bold') {
+      if (shape.style.textWeight === 'bold' || shape.style.fontStyle === 'italic') {
         width = width + 0.1 * width
         height = height + 0.04 * height
       }

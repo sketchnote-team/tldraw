@@ -76,40 +76,46 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectStickerTool = React.useCallback(() => {
-    app.createFile(
-      '/sda',
-      'MY INSANE FILE LOL LHHAHA',
-      svg,
-      [
-        {
-          avatar:
-            'https://bestprofilepictures.com/wp-content/uploads/2021/04/Profile-Pic-For-Girl.jpg',
-          member: {
-            firstname: 'nepal1',
-            memberId:"1"
-          },
-        },
-        {
-          avatar:
-            'https://bestprofilepictures.com/wp-content/uploads/2021/04/Profile-Pic-For-Girl.jpg',
-          member: {
-            firstname: 'nepal2',
-            memberId:"2"
-          },
-        },
-        {
-          avatar:
-            'https://bestprofilepictures.com/wp-content/uploads/2021/04/Profile-Pic-For-Girl.jpg',
-          member: {
-            firstname: 'nepal3',
-            memberId:"3"
-          },
-        },
-      ],
-      'aayush',
-      '1994-11-05T13:15:30Z',
-      'whiteboard'
-    )
+    // app.createFile(
+    //   '/sda',
+    //   'MY INSANE FILE LOL LHHAHA',
+    //   svg,
+    //   [
+    //     {
+    //       avatar:
+    //         'https://bestprofilepictures.com/wp-content/uploads/2021/04/Profile-Pic-For-Girl.jpg',
+    //       member: {
+    //         firstname: 'nepal1',
+    //         memberId:"1"
+    //       },
+    //     },
+    //     {
+    //       avatar:
+    //         'https://bestprofilepictures.com/wp-content/uploads/2021/04/Profile-Pic-For-Girl.jpg',
+    //       member: {
+    //         firstname: 'nepal2',
+    //         memberId:"2"
+    //       },
+    //     },
+    //     {
+    //       avatar:
+    //         'https://bestprofilepictures.com/wp-content/uploads/2021/04/Profile-Pic-For-Girl.jpg',
+    //       member: {
+    //         firstname: 'nepal3',
+    //         memberId:"3"
+    //       },
+    //     },
+    //   ],
+    //   'aayush',
+    //   '1994-11-05T13:15:30Z',
+    //   'whiteboard'
+    // )
+    app.createLesson({
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
+      title: 'Branding Lesson',
+      description: 'Keep records of the financial accounts of the business. Keep records of the financial accounts of the business.',
+      url:'/www.sfafa.sagas'
+    })
   }, [app])
 
   const selectSectionTool = React.useCallback(() => {

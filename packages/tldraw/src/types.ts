@@ -304,7 +304,8 @@ export enum TDShapeType {
   Embed = 'embed',
   Section= 'section',
   File = 'file',
-  Highlighter = 'highlighter'
+  Highlighter = 'highlighter',
+  Lesson = 'lesson'
 }
 
 export enum Decoration {
@@ -438,6 +439,15 @@ export interface FileShape extends TDBaseShape {
   fileType: string
 }
 
+export interface LessonShape extends TDBaseShape {
+  type: TDShapeType.Lesson
+  size: number[]
+  title: string,
+  imageUrl: string,
+  description: string,
+  url: string
+}
+
 export interface EmbedShape extends TDBaseShape {
   type: TDShapeType.Embed
   size: number[]
@@ -478,6 +488,7 @@ export type TDShape =
   | SectionShape
   | FileShape
   | HighlighterShape
+  | LessonShape
 
 /* ------------------ Shape Styles ------------------ */
 
@@ -563,6 +574,7 @@ export type TextShapeStyles = {
   textWeight: TextWeight,
   listType: ListType,
   textDecoration: string,
+  fontStyle:string
 }
 
 export enum TDAssetType {

@@ -93,7 +93,7 @@ const fontFaces = {
 }
 
 const fontSizeModifiers = {
-  [FontStyle.Graphik]: 0.8,
+  [FontStyle.Graphik]: 0.68,
   [FontStyle.Script]: 1,
   [FontStyle.Sans]: 1,
   [FontStyle.Serif]: 1,
@@ -228,5 +228,6 @@ export const defaultTextStyle: TextShapeStyles = {
   textAlign: AlignStyle.Start,
   textWeight: TextWeight.Normal,
   listType: ListType.None,
-  textDecoration: 'none'
+  textDecoration: 'none',
+  fontStyle: 'normal'
 }

@@ -40,6 +40,15 @@ export const SelectionTools = React.memo(function SelectionTools(): JSX.Element 
       <button onClick={()=>{
         app.style({textDecoration:'none'})
       }}>NS</button> 
+       <button onClick={()=>{
+        app.style({textDecoration:'underline'})
+      }}>U</button> 
+      <button onClick={()=>{
+        app.style({fontStyle:'italic'})
+      }}>I</button> 
+      <button onClick={()=>{
+        app.style({fontStyle:'normal'})
+      }}>N</button> 
     </StyledToolBarContainer>
   )
 })
