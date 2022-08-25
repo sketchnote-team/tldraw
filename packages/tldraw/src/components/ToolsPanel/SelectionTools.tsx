@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import { useTldrawApp } from '~hooks'
-import { saveFileHandle } from '~state/data';
 import {styled} from '~styles';
 import { AlignStyle, ListType, TextWeight } from '~types';
 

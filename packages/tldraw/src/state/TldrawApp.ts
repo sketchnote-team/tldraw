@@ -2755,7 +2755,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     avatarUrl: any[],
     firstName: string,
     time: string,
-    fileType: string
+    fileType: string,
+    fileIcon: string,
   ): this {
     const {
       shapes,
@@ -2783,6 +2784,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       firstName,
       time,
       fileType,
+      fileIcon
     })
     const bounds = Shape.getBounds(newShape as never)
     newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
@@ -3419,7 +3421,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     avatarUrl: any[],
     name: string,
     updatedAt: string,
-    fileType: string
+    fileType: string,
+    fileIcon: string
   ) {
     function timeSince(date: Date) {
       const seconds = Math.floor((new Date() - date) / 1000)
@@ -3461,7 +3464,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       avatarUrl,
       name,
       time,
-      fileType
+      fileType,
+      fileIcon
     )
     this.setStatus(TDStatus.Idle)
     this.completeSession()

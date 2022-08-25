@@ -313,7 +313,7 @@ export enum Decoration {
 }
 
 export interface TDBaseShape extends TLShape {
-  style: ShapeStyles
+  style: TextShapeStyles
   type: TDShapeType
   label?: string
   handles?: Record<string, TDHandle>
@@ -436,7 +436,8 @@ export interface FileShape extends TDBaseShape {
   avatarUrl: any[],
   firstName:string,
   time:string,
-  fileType: string
+  fileType: string,
+  fileIcon: string
 }
 
 export interface LessonShape extends TDBaseShape {

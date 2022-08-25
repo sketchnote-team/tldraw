@@ -42,7 +42,8 @@ export class FileUtil extends TDShapeUtil<T, E> {
         avatarUrl: [],
         firstName: '',
         time: '',
-        fileType:''
+        fileType:'',
+        fileIcon:''
       },
       props
     )
@@ -93,8 +94,8 @@ export class FileUtil extends TDShapeUtil<T, E> {
                   justifyContent: 'center',
                   marginTop: '10px',
                 }}
-              >
-                <FileSvg />
+                dangerouslySetInnerHTML={{__html:shape.fileIcon}}
+              >  
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column' }}>

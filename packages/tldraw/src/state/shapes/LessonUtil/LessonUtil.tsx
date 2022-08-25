@@ -61,7 +61,7 @@ export class LessonUtil extends TDShapeUtil<T, E> {
         <HTMLContainer ref={ref} {...events}>
           <StyledFileContainer>
             <StyledImage src={shape.imageUrl} alt={shape.title} />
-            <StyledHeader>{shape.title.length>30?shape.title.slice(0,30)+'...':shape.title}</StyledHeader>
+            <StyledHeader>{shape.title.length>31?shape.title.slice(0,27)+'...':shape.title}</StyledHeader>
             <StyledParagraph>{shape.description.length>80?shape.description.slice(0,80)+'...':shape.description}</StyledParagraph>
             <StyledButton onClick={()=>{window.open(shape.url,'_blank')} } {...events}>Open
                 <div style={{position:"absolute", top:"12px", right:"14px"}}>{arrow}</div>
