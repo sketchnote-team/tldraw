@@ -2829,6 +2829,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       title,
       description,
       imageUrl,
+      url
     })
 
     const bounds = Shape.getBounds(newShape as never)
@@ -4222,7 +4223,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       activeTool: 'select',
       hoveredId: undefined,
       currentPageId: 'page',
-      currentStyle: defaultStyle,
+      currentStyle: defaultTextStyle,
       currentStickyStyle: defaultStyle,
       currentShapeStyle: defaultStyle,
       currentDrawStyle: defaultStyle,

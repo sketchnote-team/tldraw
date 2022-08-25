@@ -115,14 +115,16 @@ export const SectionHeader = React.memo(function TextLabel({
   }, [text, font, offsetY, offsetX, scale])
 
   return (
-    <TextWrapper>
+    <TextWrapper >
       <InnerWrapper
         ref={rInnerWrapper}
         hasText={!!text}
         isEditing={isEditing}
         style={{
           font,
-          color,
+          color:"#fff",
+          border:"none",
+          background: color
         }}
       >
         {isEditing ? (
@@ -130,7 +132,7 @@ export const SectionHeader = React.memo(function TextLabel({
             ref={rInput}
             style={{
               font,
-              color,
+              color:"#fff",
             }}
             name="text"
             tabIndex={-1}
@@ -145,7 +147,7 @@ export const SectionHeader = React.memo(function TextLabel({
             dir="auto"
             datatype="wysiwyg"
             defaultValue={rTextContent.current}
-            color={color}
+            color="#fff"
             onFocus={handleFocus}
             onChange={handleChange}
             onKeyDown={handleKeyDown}

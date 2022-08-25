@@ -1,15 +1,26 @@
 import * as React from 'react'
 
 import { useTldrawApp } from '~hooks'
+import { saveFileHandle } from '~state/data';
 import {styled} from '~styles';
 import { AlignStyle, ListType, TextWeight } from '~types';
 
 
 export const SelectionTools = React.memo(function SelectionTools(): JSX.Element {
   const app = useTldrawApp()
-
+  app.useStore(s=>s.appState.currentStyle)
+  const selectedId = app.useStore(s=>s.document.pageStates.page.selectedIds)
+  const scale = app.getShape(selectedId[0]).style.scale || 1
   return ( 
     <StyledToolBarContainer>
+      <button onClick={()=>{
+        console.log(scale)
+        app.style({scale: (scale + 0.1 * scale)})
+      }}>A+</button>
+      <button onClick={()=>{
+        console.log(scale)
+        app.style({scale: (scale - 0.1 * scale)})
+      }}>A-</button>
       <button onClick={()=>{
         app.style({textAlign:AlignStyle.Start})
       }}>L</button>

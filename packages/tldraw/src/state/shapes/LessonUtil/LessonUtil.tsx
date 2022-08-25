@@ -56,13 +56,14 @@ export class LessonUtil extends TDShapeUtil<T, E> {
       const { color } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
       const seperator = <div style={{ borderRight: '1px solid #F0F1F5' }}></div>
+
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledFileContainer>
             <StyledImage src={shape.imageUrl} alt={shape.title} />
-            <StyledHeader><span>{shape.title}</span></StyledHeader>
+            <StyledHeader>{shape.title.length>30?shape.title.slice(0,30)+'...':shape.title}</StyledHeader>
             <StyledParagraph>{shape.description.length>80?shape.description.slice(0,80)+'...':shape.description}</StyledParagraph>
-            <StyledButton onClick={()=>{window.open(`${shape.url}`,'_blank')} } {...events}>Open
+            <StyledButton onClick={()=>{window.open(shape.url,'_blank')} } {...events}>Open
                 <div style={{position:"absolute", top:"12px", right:"14px"}}>{arrow}</div>
             </StyledButton>
           </StyledFileContainer>

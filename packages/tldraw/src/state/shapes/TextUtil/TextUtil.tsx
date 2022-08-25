@@ -65,6 +65,7 @@ export class TextUtil extends TDShapeUtil<T, E> {
       const isTextEmpty = text == '' || text == ' '
       const str = text
       let textArr = text.split('')
+
       
       if (style.listType === ListType.Numbered) {
         textArr = textArr[0]!=="1." ? ['1.', ' ', ...textArr] : [...textArr] 

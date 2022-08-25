@@ -11,9 +11,13 @@ interface SelectedPanelProps {
 export function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
   const app = useTldrawApp()
   const zoom = app.useStore(s=>s.document.pageStates.page.camera.zoom)
+  const getShapePoints = (currentId:string) => app.getShapeUtil(app.getShape(currentId).type).getBounds(app.getShape(currentId))
 
   const selectedShapes = selectedIds.map((id) => app.getShape(id).name)
-  const xPoints = selectedIds.map(id=>app.getShape(id).point[0])
+  // console.log(app.getShapeUtil(app.getShape(selectedIds[0]).type).getBounds(app.getShape(selectedIds[0])))
+  console.log()
+
+  const xPoints = selectedIds.map(id=>(getShapePoints(id).maxX + getShapePoints(id).minX)/2)
   const yPoints = selectedIds.map(id=>app.getShape(id).point[1])
   const xPoint = xPoints.reduce((a, b) => a + b, 0)/xPoints.length
   const yPoint = Math.min(...yPoints)
@@ -28,9 +32,13 @@ export function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
     if (firstShape && (status!==TDStatus.Translating  && status!==TDStatus.Creating))
     content =  
       <StyledToolsPanelContainer style={{ 
-        transform: `translate(${pointX}px, ${pointY}px)`
+        transform: `translate(${pointX }px, ${pointY}px)`
       }}>
-        <SelectionTools />
+        <div style={{ 
+          transform: `translate(-50%, 0)`
+        }}>
+          <SelectionTools />
+        </div>
       </StyledToolsPanelContainer>
   }
   return content 

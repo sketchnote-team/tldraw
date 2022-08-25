@@ -112,9 +112,9 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     // )
     app.createLesson({
       imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
-      title: 'Branding Lesson',
+      title: 'Branding Lesson Branding Lesson Branding Lesson Branding Lesson',
       description: 'Keep records of the financial accounts of the business. Keep records of the financial accounts of the business.',
-      url:'/www.sfafa.sagas'
+      url:'/ws'
     })
   }, [app])
 

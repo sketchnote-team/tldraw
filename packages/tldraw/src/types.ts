@@ -95,7 +95,7 @@ export interface TDSnapshot {
     showGrid: boolean
   }
   appState: {
-    currentStyle: ShapeStyles
+    currentStyle: TextShapeStyles
     currentStickyStyle: ShapeStyles
     currentShapeStyle: ShapeStyles
     currentDrawStyle: ShapeStyles,
