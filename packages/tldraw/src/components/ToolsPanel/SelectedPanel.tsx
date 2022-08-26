@@ -14,9 +14,6 @@ export function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
   const getShapePoints = (currentId:string) => app.getShapeUtil(app.getShape(currentId).type).getBounds(app.getShape(currentId))
 
   const selectedShapes = selectedIds.map((id) => app.getShape(id).name)
-  // console.log(app.getShapeUtil(app.getShape(selectedIds[0]).type).getBounds(app.getShape(selectedIds[0])))
-  console.log()
-
   const xPoints = selectedIds.map(id=>(getShapePoints(id).maxX + getShapePoints(id).minX)/2)
   const yPoints = selectedIds.map(id=>app.getShape(id).point[1])
   const xPoint = xPoints.reduce((a, b) => a + b, 0)/xPoints.length

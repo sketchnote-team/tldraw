@@ -90,6 +90,7 @@ import { clearPrevSize } from './shapes/shared/getTextSize'
 import { StickerTool } from './tools/StickerTool'
 import { SectionTool } from './tools/SectionTool'
 import { HighlighterTool } from './tools/HighlighterTool'
+import { ConnectorTool } from './tools/ConnectorTool'
 
 const uuid = Utils.uniqueId()
 
@@ -194,6 +195,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     [TDShapeType.Sticker]: new StickerTool(this),
     [TDShapeType.Section]: new SectionTool(this),
     [TDShapeType.Highlighter]: new HighlighterTool(this),
+    [TDShapeType.Connector]: new ConnectorTool(this),
   }
 
   currentTool: BaseTool = this.tools.select

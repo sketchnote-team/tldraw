@@ -8,6 +8,7 @@ import {
   SunIcon,
   Link1Icon,
   SectionIcon,
+  ArrowRightIcon,
 } from '@radix-ui/react-icons'
 import { TDSnapshot, TDShapeType, ColorStyle } from '~types'
 import { useTldrawApp } from '~hooks'
@@ -110,12 +111,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     //   '1994-11-05T13:15:30Z',
     //   'whiteboard'
     // )
-    app.createLesson({
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png',
-      title: 'Branding Lesson Branding Lesson Branding Lesson Branding Lesson',
-      description: 'Keep records of the financial accounts of the business. Keep records of the financial accounts of the business.',
-      url:'/ws'
-    })
+    app.selectTool(TDShapeType.Connector)
   }, [app])
 
   const selectSectionTool = React.useCallback(() => {
@@ -181,7 +177,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
       >
         <Pencil2Icon />
       </ToolButtonWithTooltip>
-      <ToolButtonWithTooltip
+      {/* <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Sticky}
         isActive={activeTool === TDShapeType.Sticky}
@@ -189,7 +185,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
         id="TD-PrimaryTools-Pencil2"
       >
         <Link1Icon />
-      </ToolButtonWithTooltip>
+      </ToolButtonWithTooltip> */}
       <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Sticky}
@@ -197,7 +193,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
         isActive={activeTool === TDShapeType.Sticky}
         id="TD-PrimaryTools-Pencil2"
       >
-        <SectionIcon></SectionIcon>
+        <ArrowRightIcon></ArrowRightIcon>
       </ToolButtonWithTooltip>
     </Panel>
   )
