@@ -196,6 +196,17 @@ export class StickyUtil extends TDShapeUtil<T, E> {
             isGhost={isGhost}
             style={{ backgroundColor: fill, ...style }}
           >
+            <div style={{
+              position:"absolute",
+              bottom: "-28px",
+              left:"5%",
+              width:"90%",
+              height:"20px",
+              background: "rgba(0,0,0,0.3)",
+              borderRadius:"50%",
+              zIndex:"-1",
+              filter: "blur(10px)"
+            }}></div>
             {isBinding && (
               <div
                 className="tl-binding-indicator"
@@ -318,22 +329,7 @@ const StyledStickyContainer = styled('div', {
   padding: PADDING + 'px',
   borderRadius: '3px',
   perspective: '800px',
-  variants: {
-    isGhost: {
-      false: { opacity: 1 },
-      true: { transition: 'opacity .2s', opacity: GHOSTED_OPACITY },
-    },
-    isDarkMode: {
-      true: {
-        boxShadow:
-          '2px 3px 12px -2px rgba(0,0,0,.3), 1px 1px 4px rgba(0,0,0,.3), 1px 1px 2px rgba(0,0,0,.3)',
-      },
-      false: {
-        boxShadow:
-          '2px 3px 12px -2px rgba(0,0,0,.2), 1px 1px 4px rgba(0,0,0,.16),  1px 1px 2px rgba(0,0,0,.16)',
-      },
-    },
-  },
+
 })
 
 const commonTextWrapping = {
