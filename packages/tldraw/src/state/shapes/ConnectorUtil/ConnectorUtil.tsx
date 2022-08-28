@@ -11,7 +11,7 @@ import {
 } from '@tldraw/intersect'
 import { GHOSTED_OPACITY } from '~constants'
 import {
-  getArrowPath,
+  getConnectorPath2,
 } from './connectorHelpers'
 import { styled } from '~styles'
 import { TextLabel, getFontStyle, getShapeStyle } from '../shared'
@@ -96,8 +96,7 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
       const offset = React.useMemo(() => {
         const bounds = this.getBounds(shape)
         const offset = 
-        [bounds.width / 2, bounds.height / 2]
-        console.log(offset)
+        [bounds.width / 2, bounds.height / 2] 
         return offset
       }, [shape, scale])
       const handleLabelChange = React.useCallback(
@@ -195,10 +194,10 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
           labelSize={labelSize}
         />
         <path
-          d={getArrowPath(
+          d={getConnectorPath2(
+            shape.id,
             style,
             start.point,
-            
             end.point,
             decorations?.start,
             decorations?.end

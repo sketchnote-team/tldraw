@@ -28,9 +28,9 @@ export class StickerUtil extends TDShapeUtil<T, E> {
   getShape = (props: Partial<T>): T => {
     return Utils.deepMerge<T>(
       {
-        id: 'image',
+        id: 'sticker',
         type: TDShapeType.Sticker,
-        name: 'Image',
+        name: 'sticker',
         parentId: 'page',
         childIndex: 1,
         point: [0, 0],
@@ -64,19 +64,6 @@ export class StickerUtil extends TDShapeUtil<T, E> {
 
       return (
         <HTMLContainer ref={ref} {...events}>
-          {isBinding && (
-            <div
-              className="tl-binding-indicator"
-              style={{
-                position: 'absolute',
-                top: `calc(${-this.bindingDistance}px * var(--tl-zoom))`,
-                left: `calc(${-this.bindingDistance}px * var(--tl-zoom))`,
-                width: `calc(100% + ${this.bindingDistance * 2}px * var(--tl-zoom))`,
-                height: `calc(100% + ${this.bindingDistance * 2}px * var(--tl-zoom))`,
-                backgroundColor: 'var(--tl-selectFill)',
-              }}
-            />
-          )}
 
           <Wrapper
             ref={rWrapper}
@@ -121,17 +108,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
 }
 
 const Wrapper = styled('div', {
-  pointerEvents: 'all',
-  position: 'relative',
-  fontFamily: 'sans-serif',
   width:'45px',
   height:'45px',
-  background: '#FFFFFF',
-  border: '1px solid #E2E4E9',
-  boxShadow: '0px 2px 4px rgba(19, 23, 32, 0.06)',
-  display:'flex',
-  justifyContent:'center',
-  alignItems:'center',
-  borderRadius:'999px'
 })
 

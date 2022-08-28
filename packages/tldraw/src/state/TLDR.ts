@@ -11,6 +11,7 @@ import {
   TDShapeType,
   ArrowShape,
   TDHandle,
+  ConnectorShape,
 } from '~types'
 import { Vec } from '@tldraw/vec'
 import type { TDShapeUtil } from './shapes/TDShapeUtil'
@@ -588,6 +589,23 @@ export class TLDR {
     if (!delta) return shape
 
     return { ...shape, ...delta }
+  }
+
+  static connectConnectorToShape(page: TDPage, connectorShape: ConnectorShape) {
+    const result = {
+      start: deepCopy(connectorShape.handles.start),
+      end: deepCopy(connectorShape.handles.end),
+    }
+    if (result.end.bindingId) {
+      const binding = page.bindings[result.end.bindingId]
+      const target = page.shapes[binding.toId]
+      console.log(target)
+    }
+    if (result.start.bindingId) {
+      const binding = page.bindings[result.start.bindingId]
+      const target = page.shapes[binding.toId]
+      console.log(target)
+    }
   }
 
   static updateArrowBindings(page: TDPage, arrowShape: ArrowShape) {

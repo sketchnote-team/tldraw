@@ -198,6 +198,7 @@ export enum SessionType {
   Rotate = 'rotate',
   Handle = 'handle',
   Grid = 'grid',
+  Connector = 'connector'
 }
 
 export enum TDStatus {

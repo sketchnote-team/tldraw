@@ -192,8 +192,6 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         <HTMLContainer ref={ref} {...events}>
           <StyledStickyContainer
             ref={rContainer}
-            isDarkMode={meta.isDarkMode}
-            isGhost={isGhost}
             style={{ backgroundColor: fill, ...style }}
           >
             <div style={{
@@ -201,10 +199,9 @@ export class StickyUtil extends TDShapeUtil<T, E> {
               bottom: "-28px",
               left:"5%",
               width:"90%",
-              height:"20px",
+              height:"10px",
               background: "rgba(0,0,0,0.3)",
               borderRadius:"50%",
-              zIndex:"-1",
               filter: "blur(10px)"
             }}></div>
             {isBinding && (

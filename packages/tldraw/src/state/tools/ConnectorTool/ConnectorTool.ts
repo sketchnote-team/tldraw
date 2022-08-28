@@ -33,7 +33,7 @@ export class ConnectorTool extends BaseTool {
 
     this.app.patchCreate([newShape])
 
-    this.app.startSession(SessionType.Arrow, newShape.id, 'end', true)
+    this.app.startSession(SessionType.Connector, newShape.id, 'end', true)
 
     this.setStatus(Status.Creating)
   }

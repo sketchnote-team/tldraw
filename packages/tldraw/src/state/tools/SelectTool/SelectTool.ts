@@ -241,7 +241,6 @@ export class SelectTool extends BaseTool<Status> {
 
   onPointerMove: TLPointerEventHandler = (info, e) => {
     const { originPoint, currentPoint } = this.app
-
     switch (this.status) {
       case Status.PointingBoundsHandle: {
         if (!this.pointedBoundsHandle) throw Error('No pointed bounds handle')
@@ -263,10 +262,12 @@ export class SelectTool extends BaseTool<Status> {
             let idsToTransform = this.app.selectedIds.flatMap((id) =>
               TLDR.getDocumentBranch(this.app.state, id, this.app.currentPageId)
             )
-            if(idsToTransform.some(id=>this.app.getShape(id).name === 'Section' )){
-              idsToTransform = idsToTransform.filter(id=>this.app.getShape(id).name === 'Section' )
+            if (idsToTransform.some((id) => this.app.getShape(id).name === 'Section')) {
+              idsToTransform = idsToTransform.filter(
+                (id) => this.app.getShape(id).name === 'Section'
+              )
             }
-            
+
             if (idsToTransform.length === 1) {
               // if only one shape is selected, transform single
               this.app.startSession(
@@ -318,12 +319,21 @@ export class SelectTool extends BaseTool<Status> {
               this.app.startSession(SessionType.Handle, selectedShape.id, this.pointedHandleId)
               this.app.updateSession()
             } else {
-              this.app.startSession(
-                SessionType.Arrow,
-                selectedShape.id,
-                this.pointedHandleId,
-                false
-              )
+              if (selectedShape.type == TDShapeType.Connector)
+                this.app.startSession(
+                  SessionType.Connector,
+                  selectedShape.id,
+                  this.pointedHandleId,
+                  false
+                )
+              else {
+                this.app.startSession(
+                  SessionType.Arrow,
+                  selectedShape.id,
+                  this.pointedHandleId,
+                  false
+                )
+              }
               this.app.updateSession()
             }
           }
@@ -358,7 +368,7 @@ export class SelectTool extends BaseTool<Status> {
       // Unless the user is holding shift or meta, clear the current selection
       if (!info.shiftKey) {
         this.app.onShapeBlur()
-        
+
         if (info.altKey && this.app.selectedIds.length > 0) {
           this.app.duplicate(this.app.selectedIds, currentPoint)
           return
@@ -415,12 +425,13 @@ export class SelectTool extends BaseTool<Status> {
 
     // Complete the current session, if any; and reset the status
     this.app.completeSession()
-    if(this.status === Status.Transforming){
-      if(this.app.document.pageStates.page.selectedIds){
+    if (this.status === Status.Transforming) {
+      if (this.app.document.pageStates.page.selectedIds) {
         const selectedShape = this.app.document.pageStates.page.selectedIds
-        selectedShape.forEach(shape=>{
-        
-          const toBeSelectedShapes = this.app.appState.sections[shape]? new Set([...this.app.appState.sections[shape], shape]) : new Set([shape])
+        selectedShape.forEach((shape) => {
+          const toBeSelectedShapes = this.app.appState.sections[shape]
+            ? new Set([...this.app.appState.sections[shape], shape])
+            : new Set([shape])
           this.app.select(...toBeSelectedShapes)
         })
       }

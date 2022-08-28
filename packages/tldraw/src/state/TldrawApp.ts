@@ -43,6 +43,7 @@ import {
   ImageShape,
   ArrowShape,
   TextShapeStyles,
+  ConnectorShape,
 } from '~types'
 import {
   migrate,
@@ -504,6 +505,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
             const toShape = page.shapes[binding.toId]
             const fromShape = page.shapes[binding.fromId] as ArrowShape
+           
+            const fromShapeConnector = page.shapes[binding.fromId] as ConnectorShape
 
             if (!(toShape && fromShape)) {
               delete next.document.pages[pageId].bindings[binding.id]
@@ -515,7 +518,9 @@ export class TldrawApp extends StateManager<TDSnapshot> {
             }
 
             // We only need to update the binding's "from" shape (an arrow)
+            
             const fromDelta = TLDR.updateArrowBindings(page, fromShape)
+            TLDR.connectConnectorToShape(page,fromShapeConnector)
             visitedShapes.add(fromShape)
 
             if (fromDelta) {
@@ -941,7 +946,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         }
 
         const fromShape = page.shapes[binding.fromId] as ArrowShape
-
         if (visitedShapes.has(fromShape)) {
           return
         }
