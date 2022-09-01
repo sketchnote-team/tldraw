@@ -5,7 +5,7 @@ import { SessionType, TDShapeType } from '~types'
 import { BaseTool, Status } from '../BaseTool'
 
 export class ConnectorTool extends BaseTool {
-  type = TDShapeType.Arrow as const
+  type = TDShapeType.Connector as const
 
   /* ----------------- Event Handlers ----------------- */
 

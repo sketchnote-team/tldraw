@@ -62,6 +62,7 @@ import { shapeUtils } from '~state/shapes'
 import {
   defaultHighlighterStyle,
   defaultSectionStyle,
+  defaultStickyStyle,
   defaultStyle,
   defaultTextStyle,
 } from '~state/shapes/shared/shape-styles'
@@ -4234,7 +4235,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       hoveredId: undefined,
       currentPageId: 'page',
       currentStyle: defaultTextStyle,
-      currentStickyStyle: defaultStyle,
+      currentStickyStyle: defaultStickyStyle,
       currentShapeStyle: defaultStyle,
       currentDrawStyle: defaultStyle,
       currentSectionStyle: defaultSectionStyle,

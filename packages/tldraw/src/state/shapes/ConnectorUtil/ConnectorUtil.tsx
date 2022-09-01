@@ -55,7 +55,7 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
           point: [1, 1],
           canBind: true,
           ...props.handles?.end,
-        },
+        }
 
       },
       decorations: props.decorations ?? {
@@ -77,10 +77,13 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
       const {
         id,
         label = '',
+        // handles: { start, end, startConnector, endConnector },
         handles: { start, end },
+
         decorations = {},
         style,
       } = shape
+
       const font = getFontStyle(style)
       const styles = getShapeStyle(style, meta.isDarkMode)
       const labelSize = label || isEditing ? getTextLabelSize(label, font) : [0, 0]
@@ -96,7 +99,7 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
       const offset = React.useMemo(() => {
         const bounds = this.getBounds(shape)
         const offset = 
-        [bounds.width / 2, bounds.height / 2] 
+        [bounds.width / 2, bounds.height / 2]
         return offset
       }, [shape, scale])
       const handleLabelChange = React.useCallback(
@@ -360,10 +363,15 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
       end: {
         point: Vec.toFixed(nextHandles.end.point),
       },
+      // endConnector: {
+      //   point: [0,0],
+      // },
+      // startConnector: {
+      //   point: [0,0],
+      // },
     })
     // This will produce NaN values
     if (Vec.isEqual(nextHandles.start.point, nextHandles.end.point)) return
-    // If the user is moving the bend handle, we want to move the bend point
    
     const nextShape = {
       point: shape.point,
@@ -375,6 +383,7 @@ export class ConnectorUtil extends TDShapeUtil<T, E> {
     // Zero out the handles to prevent handles with negative points. If a handle's x or y
     // is below zero, we need to move the shape left or up to make it zero.
     const topLeft = shape.point
+    
     const nextBounds = this.getBounds({ ...nextShape } as ConnectorShape)
     const offset = Vec.sub([nextBounds.minX, nextBounds.minY], topLeft)
     if (!Vec.isEqual(offset, [0, 0])) {

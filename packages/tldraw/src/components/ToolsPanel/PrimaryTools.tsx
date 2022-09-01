@@ -41,7 +41,9 @@ const video = {
 }
 
 
-const svg =  <svg width="100%" height="100%" id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 439.48 442.3">
+const svg =  <svg 
+  style={{boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.08)'}}
+width="100%" height="100%" id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 439.48 442.3">
 <defs>
   <style
     dangerouslySetInnerHTML={{
@@ -205,7 +207,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
   // console.log(app.useStore(s=>s.document.pages.page.bindings))
-  console.log(app.useStore(s=>s.appState.selectedSticker))
+  // console.log('asdfasdf')
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
   }, [app])
@@ -235,9 +237,9 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectStickerTool = React.useCallback(() => {
-    app.selectSticker(ReactDOM.renderToString(svg))
-    app.selectTool(TDShapeType.Sticker)
-    // app.selectTool(TDShapeType.Connector)
+    // app.selectSticker(ReactDOM.renderToString(svg))
+    // app.selectTool(TDShapeType.Sticker)
+    app.selectTool(TDShapeType.Connector)
   }, [app])
 
   const selectSectionTool = React.useCallback(() => {
@@ -303,7 +305,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
       >
         <Pencil2Icon />
       </ToolButtonWithTooltip>
-      {/* <ToolButtonWithTooltip
+      <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Sticky}
         isActive={activeTool === TDShapeType.Sticky}
@@ -311,7 +313,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
         id="TD-PrimaryTools-Pencil2"
       >
         <Link1Icon />
-      </ToolButtonWithTooltip> */}
+      </ToolButtonWithTooltip>
       <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Sticky}

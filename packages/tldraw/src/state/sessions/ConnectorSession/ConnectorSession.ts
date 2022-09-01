@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  ArrowBinding,
   ConnectorShape,
   TDShape,
   TDBinding,
@@ -9,6 +8,7 @@ import {
   TDShapeType,
   TldrawPatch,
   TldrawCommand,
+  ConnectorBinding,
 } from '~types'
 import { Vec } from '@tldraw/vec'
 import { TLDR } from '~state/TLDR'
@@ -86,6 +86,7 @@ export class ConnectorSession extends BaseSession {
 
   update = (): TldrawPatch | undefined => {
     const { initialShape } = this
+    
     const {
       currentPoint,
       shiftKey,
@@ -97,7 +98,8 @@ export class ConnectorSession extends BaseSession {
     const shape = this.app.getShape<ConnectorShape>(initialShape.id)
     if (shape.isLocked) return
     const handles = shape.handles
-    const handleId = this.handleId as keyof typeof handles
+
+    const handleId = this.handleId 
     // If the handle can bind, then we need to search bindable shapes for
     // a binding.
     if (!handles[handleId].canBind) return
@@ -127,11 +129,13 @@ export class ConnectorSession extends BaseSession {
     // before. If it does change, we'll redefine this later on. And if we've
     // made it this far, the shape should be a new object reference that
     // incorporates the changes we've made due to the handle movement.
-    const next: { shape: ConnectorShape; bindings: Record<string, TDBinding | undefined> } = {
+    const next: { shape: ConnectorShape; bindings: Record<string, ConnectorBinding | undefined> } = {
       shape: Utils.deepMerge(shape, handleChange),
       bindings: {},
     }
-    let draggedBinding: ArrowBinding | undefined
+
+    
+    let draggedBinding: ConnectorBinding | undefined
     const draggingHandle = next.shape.handles[this.handleId]
     const oppositeHandle = next.shape.handles[this.handleId === 'start' ? 'end' : 'start']
 
@@ -139,7 +143,7 @@ export class ConnectorSession extends BaseSession {
     // If we have a start binding shape id, the recompute the binding
     // point based on the current end handle position
     if (this.startBindingShapeId) {
-      let nextStartBinding: ArrowBinding | undefined
+      let nextStartBinding: ConnectorBinding | undefined
       const startTarget = this.app.page.shapes[this.startBindingShapeId]
       const startTargetUtils = TLDR.getShapeUtil(startTarget)
       const center = startTargetUtils.getCenter(startTarget)
@@ -156,7 +160,8 @@ export class ConnectorSession extends BaseSession {
         !metaKey &&
         !startTargetUtils.hitTestPoint(startTarget, Vec.add(next.shape.point, endHandle.point))
       ) {
-        nextStartBinding = this.findBindingPoint(
+        // nextStartBinding = this.findBindingPoint(
+        nextStartBinding = this.findConnectorBindingPoint(
           shape,
           startTarget,
           'start',
@@ -176,6 +181,9 @@ export class ConnectorSession extends BaseSession {
             start: {
               bindingId: nextStartBinding.id,
             },
+            // startConnector: {
+            //   point: [startHandle.point[0], startHandle.point[1]]
+            // }
           },
         })
       } else if (!nextStartBinding && hasStartBinding) {
@@ -187,18 +195,21 @@ export class ConnectorSession extends BaseSession {
             start: {
               bindingId: undefined,
             },
+            // startConnector: {
+            //   point: [0, 0]
+            // }
           },
         })
       }
     }
 
     // DRAGGED POINT BINDING
+    const startPoint = Vec.add(next.shape.point!, next.shape.handles!.start.point!)
+    const endPoint = Vec.add(next.shape.point!, next.shape.handles!.end.point!)
     if (!metaKey) {
       const rayOrigin = Vec.add(oppositeHandle.point, next.shape.point)
       const rayPoint = Vec.add(draggingHandle.point, next.shape.point)
       const rayDirection = Vec.uni(Vec.sub(rayPoint, rayOrigin))
-      const startPoint = Vec.add(next.shape.point!, next.shape.handles!.start.point!)
-      const endPoint = Vec.add(next.shape.point!, next.shape.handles!.end.point!)
       const targets = this.bindableShapeIds
         .map((id) => this.app.page.shapes[id])
         .sort((a, b) => b.childIndex - a.childIndex)
@@ -207,7 +218,8 @@ export class ConnectorSession extends BaseSession {
           return ![startPoint, endPoint].every((point) => utils.hitTestPoint(shape, point))
         })
       for (const target of targets) {
-        draggedBinding = this.findBindingPoint(
+        // draggedBinding = this.findBindingPoint(
+        draggedBinding = this.findConnectorBindingPoint(
           shape,
           target,
           this.handleId,
@@ -221,6 +233,8 @@ export class ConnectorSession extends BaseSession {
       }
     }
     if (draggedBinding) {
+    
+      // const nextPoint = [next.shape.point[0], next.shape.point[1]+ 50]
       // Create the dragged point binding
       this.didBind = true
       next.bindings[this.draggedBindingId] = draggedBinding
@@ -229,6 +243,9 @@ export class ConnectorSession extends BaseSession {
           [this.handleId]: {
             bindingId: this.draggedBindingId,
           },
+          // [this.handleId + 'Connector']: {
+          //   point: [endPoint[0], endPoint[1]+30]
+          // }
         },
       })
     } else {
@@ -242,11 +259,14 @@ export class ConnectorSession extends BaseSession {
             [this.handleId]: {
               bindingId: undefined,
             },
+            // [this.handleId + 'Connector']: {
+            //   point: [0, 0]
+            // }
           },
         })
       }
     }
-
+    
     const change = TLDR.getShapeUtil<ConnectorShape>(next.shape).onHandleChange?.(
       next.shape,
       next.shape.handles
@@ -412,6 +432,41 @@ export class ConnectorSession extends BaseSession {
       handleId: handleId,
       point: Vec.toFixed(bindingPoint.point),
       distance: bindingPoint.distance,
+    }
+  }
+
+  private findConnectorBindingPoint = (
+    shape: ConnectorShape,
+    target: TDShape,
+    handleId: 'start' | 'end',
+    bindingId: string,
+    point: number[],
+    origin: number[],
+    direction: number[],
+    bindAnywhere: boolean
+  ) => {
+    const util = TLDR.getShapeUtil<TDShape>(target.type)
+
+    const connectorPoint = util.getConnectorBindingPoint(
+      target,
+      shape,
+      point, // fix dead center bug
+      origin,
+      direction,
+      bindAnywhere
+    )
+
+    // Not all shapes will produce a binding point
+    if (!connectorPoint) return
+
+    return {
+      id: bindingId,
+      type: 'connector',
+      fromId: shape.id,
+      toId: target.id,  
+      handleId: handleId,
+      point: Vec.toFixed(connectorPoint.point),
+      distance: connectorPoint.distance,
     }
   }
 }

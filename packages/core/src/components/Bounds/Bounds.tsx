@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { TLBoundsEdge, TLBoundsCorner, TLBounds } from '~types'
-import { CenterHandle } from './CenterHandle'
-import { RotateHandle } from './RotateHandle'
-import { CornerHandle } from './CornerHandle'
-import { LinkHandle } from './LinkHandle'
-import { EdgeHandle } from './EdgeHandle'
-import { CloneButtons } from './CloneButtons'
 import { Container } from '~components/Container'
 import { SVGContainer } from '~components/SVGContainer'
-import { observer } from 'mobx-react-lite'
+import { TLBounds, TLBoundsCorner, TLBoundsEdge } from '~types'
+import { CenterHandle } from './CenterHandle'
+import { CloneButtons } from './CloneButtons'
+import { CornerHandle } from './CornerHandle'
+import { EdgeHandle } from './EdgeHandle'
+import { LinkHandle } from './LinkHandle'
+import { RotateHandle } from './RotateHandle'
 
 interface BoundsProps {
   zoom: number
@@ -22,7 +21,7 @@ interface BoundsProps {
   hideBindingHandles: boolean
   hideResizeHandles: boolean
   viewportWidth: number
-  children?: React.ReactNode
+  children?: React.ReactElement
 }
 
 export const Bounds = observer<BoundsProps>(function Bounds({
@@ -36,7 +35,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
   hideResizeHandles,
   hideRotateHandle,
   hideBindingHandles,
-}: BoundsProps): JSX.Element {
+}: BoundsProps) {
   // Touch target size
   const targetSize = (viewportWidth < 768 ? 16 : 8) / zoom
   // Handle size
@@ -58,7 +57,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
     <Container bounds={bounds} rotation={rotation}>
       <SVGContainer>
         <CenterHandle bounds={bounds} isLocked={isLocked} isHidden={isHidden} />
-        {showResizeHandles && (
+        {showResizeHandles ? (
           <>
             <EdgeHandle
               targetSize={targetSize}
@@ -117,7 +116,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
               corner={TLBoundsCorner.BottomLeft}
             />
           </>
-        )}
+        ) : null}
         {showRotateHandle && (
           <RotateHandle
             targetSize={targetSize}
@@ -126,7 +125,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
             isHidden={!showEdgeHandles}
           />
         )}
-        {showCloneHandles && <CloneButtons bounds={bounds} targetSize={targetSize} size={size} />}
+        <CloneButtons bounds={bounds} targetSize={targetSize} size={size} />
         {!hideBindingHandles && (
           <LinkHandle
             targetSize={targetSize}

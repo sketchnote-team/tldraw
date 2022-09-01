@@ -384,6 +384,8 @@ export interface ConnectorShape extends TDBaseShape {
   handles: {
     start: TDHandle
     end: TDHandle
+    // startConnector: TDHandle
+    // endConnector: TDHandle 
   }
   decorations?: {
     start?: Decoration
@@ -396,6 +398,12 @@ export interface ConnectorShape extends TDBaseShape {
 
 export interface ArrowBinding extends TLBinding {
   handleId: keyof ArrowShape['handles']
+  distance: number
+  point: number[]
+}
+
+export interface ConnectorBinding extends TLBinding {
+  handleId: keyof ConnectorShape['handles']
   distance: number
   point: number[]
 }

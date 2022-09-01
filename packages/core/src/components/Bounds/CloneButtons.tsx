@@ -12,13 +12,13 @@ export function CloneButtons({ targetSize, size, bounds }: CloneButtonsProps) {
   return (
     <>
       <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="top" />
-      <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="right" />
+      <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="right" /> 
       <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="bottom" />
       <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="left" />
-      <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="topLeft" />
+      {/* <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="topLeft" />
       <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="topRight" />
       <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="bottomLeft" />
-      <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="bottomRight" />
+      <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="bottomRight" /> */}
     </>
   )
 }

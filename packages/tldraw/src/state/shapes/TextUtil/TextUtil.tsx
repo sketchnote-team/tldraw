@@ -65,28 +65,34 @@ export class TextUtil extends TDShapeUtil<T, E> {
       const isTextEmpty = text == '' || text == ' '
       const str = text
       let textArr = text.split('')
-
-      
       if (style.listType === ListType.Numbered) {
-        textArr = textArr[0]!=="1." ? ['1.', ' ', ...textArr] : [...textArr] 
+        textArr = textArr[0] !== '1.' ? ['1.', ' ', ...textArr] : [...textArr]
         let count = 3
-        let number =2 
+        let number = 2
         for (let i = 0; i < str.length; i++) {
-          if ((str[i] === '\n' || str[i] === '\r') && str[i + 1] !== `${number}` && str[i] != `${number}`) {
+          if (
+            (str[i] === '\n' || str[i] === '\r') &&
+            str[i + 1] !== `${number}` &&
+            str[i] != `${number}`
+          ) {
             textArr.splice(i + count, 0, `${number}.`, ' ')
-            count+=2
-            number+=1
+            count += 2
+            number += 1
           }
-        } 
-      }else if (style.listType === ListType.Bullet) {
-        textArr = textArr[0]!=="\u2022" ? ['\u2022', ' ', ...textArr] : [...textArr] 
+        }
+      } else if (style.listType === ListType.Bullet) {
+        textArr = textArr[0] !== '\u2022' ? ['\u2022', ' ', ...textArr] : [...textArr]
         let count = 3
         for (let i = 0; i < str.length; i++) {
-          if ((str[i] === '\n' || str[i] === '\r') && str[i + 1] !== '\u2022' && str[i] != '\u2022') {
+          if (
+            (str[i] === '\n' || str[i] === '\r') &&
+            str[i + 1] !== '\u2022' &&
+            str[i] != '\u2022'
+          ) {
             textArr.splice(i + count, 0, `\u2022`, ' ')
-            count+=2
+            count += 2
           }
-        } 
+        }
       }
       const newText = textArr.join('')
 
@@ -186,7 +192,7 @@ export class TextUtil extends TDShapeUtil<T, E> {
                 color: styles.stroke,
                 textAlign: getTextAlign(style.textAlign),
                 textDecoration: style.textDecoration,
-                fontStyle: style.fontStyle
+                fontStyle: style.fontStyle,
               }}
             >
               {isBinding && (
@@ -233,8 +239,10 @@ export class TextUtil extends TDShapeUtil<T, E> {
                   onContextMenu={stopPropagation}
                   placeholder="Add text"
                 />
+              ) : style.listType !== ListType.None ? (
+                newText
               ) : (
-                style.listType!==ListType.None? newText: text
+                text
               )}
               &#8203;
             </InnerWrapper>
@@ -267,12 +275,19 @@ export class TextUtil extends TDShapeUtil<T, E> {
 
       if (shape.style.textWeight === 'bold' || shape.style.fontStyle === 'italic') {
         width = width + 0.1 * width
-        height = height + 0.04 * height
       }
-      if (shape.style.listType !== ListType.None ) {
-        width = width + 15 + (0.4 * width);
+      if (shape.style.listType !== ListType.None) {
+        width = width + 15 + 0.4 * width
       }
-
+    //   if (width > 500) {       
+    //     const heightIcrementor = Math.floor(width / 500) + 0.6
+    //     height = heightIcrementor * 29
+    // }
+    if(melm.textContent.length>69){
+      const heightIncrementor = Math.floor(melm.textContent.length/69)-1
+      height = height + heightIncrementor * height
+    }
+      width = width>500?500:width
       return {
         minX: 0,
         maxX: width,
@@ -282,7 +297,6 @@ export class TextUtil extends TDShapeUtil<T, E> {
         height,
       }
     })
-
     return Utils.translateBounds(bounds, shape.point)
   }
 

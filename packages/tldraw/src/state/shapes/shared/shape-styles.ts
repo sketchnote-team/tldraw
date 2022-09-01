@@ -206,6 +206,14 @@ export const defaultStyle: ShapeStyles = {
   scale: 1,
 }
 
+export const defaultStickyStyle: ShapeStyles = {
+  color: ColorStyle.Black,
+  size: SizeStyle.Large,
+  isFilled: false,
+  dash: DashStyle.Draw,
+  scale: 1,
+}
+
 export const defaultHighlighterStyle: ShapeStyles = {
   color: ColorStyle.Yellow,
   size: SizeStyle.Small,

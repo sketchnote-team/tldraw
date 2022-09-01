@@ -599,12 +599,12 @@ export class TLDR {
     if (result.end.bindingId) {
       const binding = page.bindings[result.end.bindingId]
       const target = page.shapes[binding.toId]
-      console.log(target)
+      // console.log(target)
     }
     if (result.start.bindingId) {
       const binding = page.bindings[result.start.bindingId]
       const target = page.shapes[binding.toId]
-      console.log(target)
+      // console.log(target)
     }
   }
 

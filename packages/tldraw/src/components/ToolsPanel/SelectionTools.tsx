@@ -11,7 +11,6 @@ export const SelectionTools = React.memo(function SelectionTools(): JSX.Element 
   const selectedId = app.useStore(s=>s.document.pageStates.page.selectedIds)
   const scale = app.getShape(selectedId[0]).style.scale || 1
   return ( 
-    <></>
     // <StyledToolBarContainer>
     //   <button onClick={()=>{
     //     console.log(scale)
@@ -61,6 +60,7 @@ export const SelectionTools = React.memo(function SelectionTools(): JSX.Element 
     //     app.style({fontStyle:'normal'})
     //   }}>N</button> 
     // </StyledToolBarContainer>
+    <></>
   )
 })
 

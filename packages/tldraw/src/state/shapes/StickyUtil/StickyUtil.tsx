@@ -49,7 +49,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
     ({ shape, meta, events, isGhost, isBinding, isEditing, onShapeBlur, onShapeChange }, ref) => {
-      const font = getStickyFontStyle(shape.style)
+      let font = getStickyFontStyle(shape.style)
 
       const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
@@ -61,19 +61,42 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
       const rTextContent = React.useRef(shape.text)
 
+      const currentScale = React.useRef(shape.style.scale)
+
       const rIsMounted = React.useRef(false)
 
       const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
         e.stopPropagation()
       }, [])
-
       const handleTextChange = React.useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
           rTextContent.current = TLDR.normalizeText(e.currentTarget.value)
+
+          // if(rTextArea.current && this.checkOverflow(rTextArea.current) && currentScale.current ){
+
+          //   currentScale.current *= .9
+          // }
+          if (!rTextContent.current) {
+            onShapeChange?.({
+              id: shape.id,
+              type: shape.type,
+              text: rTextContent.current,
+              style: {
+                ...shape.style,
+                scale: 1,
+              },
+            })
+            return
+          }
+
           onShapeChange?.({
             id: shape.id,
             type: shape.type,
             text: rTextContent.current,
+            // style: {
+            //   ...shape.style,
+            //   scale: currentScale.current
+            // }
           })
         },
         [onShapeChange]
@@ -138,7 +161,6 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         },
         [isEditing]
       )
-
       // Focus when editing changes to true
       React.useEffect(() => {
         if (isEditing) {
@@ -154,25 +176,24 @@ export class StickyUtil extends TDShapeUtil<T, E> {
       React.useEffect(() => {
         const text = rText.current!
 
-        const { size } = shape
+        const { size, style } = shape
+        const scale = style.scale || 1
         const { offsetHeight: currTextHeight } = text
         const minTextHeight = MIN_CONTAINER_HEIGHT - PADDING * 2
         const prevTextHeight = size[1] - PADDING * 2
-
         // Same size? We can quit here
         if (currTextHeight === prevTextHeight) return
 
         if (currTextHeight > minTextHeight) {
           // Snap the size to the text content if the text only when the
           // text is larger than the minimum text height.
-          onShapeChange?.({ id: shape.id, size: [size[0], currTextHeight + PADDING * 2] })
-          return
-        }
-
-        if (currTextHeight < minTextHeight && size[1] > MIN_CONTAINER_HEIGHT) {
-          // If we're smaller than the minimum height and the container
-          // is too tall, snap it down to the minimum container height
-          onShapeChange?.({ id: shape.id, size: [size[0], MIN_CONTAINER_HEIGHT] })
+          onShapeChange?.({
+            id: shape.id,
+            style: {
+              ...shape.style,
+              scale: scale - 0.03,
+            },
+          })
           return
         }
 
@@ -190,20 +211,19 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
       return (
         <HTMLContainer ref={ref} {...events}>
-          <StyledStickyContainer
-            ref={rContainer}
-            style={{ backgroundColor: fill, ...style }}
-          >
-            <div style={{
-              position:"absolute",
-              bottom: "-28px",
-              left:"5%",
-              width:"90%",
-              height:"10px",
-              background: "rgba(0,0,0,0.3)",
-              borderRadius:"50%",
-              filter: "blur(10px)"
-            }}></div>
+          <StyledStickyContainer ref={rContainer} style={{ backgroundColor: fill, ...style }}>
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '-28px',
+                left: '5%',
+                width: '90%',
+                height: '10px',
+                background: 'rgba(0,0,0,0.3)',
+                borderRadius: '50%',
+                filter: 'blur(10px)',
+              }}
+            ></div>
             {isBinding && (
               <div
                 className="tl-binding-indicator"
@@ -213,7 +233,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
                   left: -this.bindingDistance,
                   width: `calc(100% + ${this.bindingDistance * 2}px)`,
                   height: `calc(100% + ${this.bindingDistance * 2}px)`,
-                  backgroundColor: 'var(--tl-selectFill)',
+                  backgroundColor: 'let(--tl-selectFill)',
                 }}
               />
             )}
@@ -222,6 +242,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
             </StyledText>
             {isEditing && (
               <StyledTextArea
+                style={{ lineHeight: '1' }}
                 ref={rTextArea}
                 onPointerDown={handlePointerDown}
                 value={isEditing ? rTextContent.current : shape.text}
@@ -326,7 +347,6 @@ const StyledStickyContainer = styled('div', {
   padding: PADDING + 'px',
   borderRadius: '3px',
   perspective: '800px',
-
 })
 
 const commonTextWrapping = {
@@ -343,7 +363,7 @@ const StyledText = styled('div', {
   font: 'inherit',
   pointerEvents: 'none',
   userSelect: 'none',
-  variants: {
+  letiants: {
     isEditing: {
       true: {
         opacity: 1,
@@ -385,7 +405,7 @@ const StyledTextArea = styled('textarea', {
   resize: 'none',
   caretColor: 'black',
   ...commonTextWrapping,
-  variants: {
+  letiants: {
     alignment: {
       [AlignStyle.Start]: {
         textAlign: 'left',

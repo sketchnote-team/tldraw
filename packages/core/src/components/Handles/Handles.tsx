@@ -31,7 +31,7 @@ export const Handles = observer(function Handles({
   }, [] as TLHandle[])
 
   if (handlesToShow.length === 1) return null
-
+  
   return (
     <>
       {handlesToShow.map((handle) => (

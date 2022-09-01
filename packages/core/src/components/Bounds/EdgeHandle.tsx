@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useBoundsHandleEvents } from '~hooks'
-import { TLBoundsEdge, TLBounds } from '~types'
+import { TLBounds, TLBoundsEdge } from '~types'
 
 const edgeClassnames = {
   [TLBoundsEdge.Top]: 'tl-cursor-ns',
@@ -23,7 +23,7 @@ export const EdgeHandle = observer<EdgeHandleProps>(function EdgeHandle({
   isHidden,
   bounds,
   edge,
-}: EdgeHandleProps): JSX.Element {
+}: EdgeHandleProps) {
   const events = useBoundsHandleEvents(edge)
 
   const isHorizontal = edge === TLBoundsEdge.Top || edge === TLBoundsEdge.Bottom

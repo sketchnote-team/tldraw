@@ -71,7 +71,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
             <div style={{
               display:"flex",
               justifyContent:"center",
-              alignItems:"center"
+              alignItems:"center",
             }} dangerouslySetInnerHTML={{__html: shape.svg}}
             
             />
