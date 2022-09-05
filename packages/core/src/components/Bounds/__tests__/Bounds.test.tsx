@@ -45,7 +45,7 @@ describe('bounds', () => {
     expect(screen.getAllByLabelText('corner handle').length).toBe(4)
     expect(screen.getByLabelText('rotate handle transparent')).toBeDefined()
     expect(screen.getByLabelText('rotate handle')).toBeDefined()
-    expect(screen.getAllByLabelText('clone button').length).toBe(8)
+    expect(screen.getAllByLabelText('clone button').length).toBe(4)
     expect(screen.getByLabelText('link handle')).toBeDefined()
     expect(screen.getByLabelText('link rotate handle')).toBeDefined()
   })

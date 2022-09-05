@@ -28,6 +28,7 @@ export const CloneButton = observer<CloneButtonProps>(function CloneButton({
   size,
 }: CloneButtonProps) {
   const s = targetSize * 2
+  const h = targetSize / 2
   const x = {
     left: -s,
     topLeft: -s,
@@ -35,12 +36,12 @@ export const CloneButton = observer<CloneButtonProps>(function CloneButton({
     right: bounds.width,
     topRight: bounds.width,
     bottomRight: bounds.width,
-    top: bounds.width / 2 - s,
-    bottom: bounds.width / 2,
+    top: bounds.width / 2 - s -h/2,
+    bottom: bounds.width / 2 + h,
   }[side]
 
   const y = {
-    left: bounds.height / 2 ,
+    left: bounds.height / 2 + h,
     right: bounds.height / 2 - s,
     top: -s * 2,
     topLeft: -s,
@@ -62,7 +63,7 @@ export const CloneButton = observer<CloneButtonProps>(function CloneButton({
   )
 
   return (
-    <g onMouseOver={()=>{console.log('to do shape')}} className="tl-clone-target" transform={`translate(${x}, ${y})`} aria-label="clone button" >
+    <g  className="tl-clone-target" transform={`translate(${x}, ${y})`} aria-label="clone button" >
       <rect className="tl-transparent" width={targetSize * 2} height={targetSize * 2} />
       <g
         className="tl-clone-button-target"
@@ -72,6 +73,7 @@ export const CloneButton = observer<CloneButtonProps>(function CloneButton({
         <circle className="tl-transparent " r={targetSize} />
         <path
           className="tl-clone-button"
+          style={{transform:`scale(1.3)`}}
           d={`M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z`}
           strokeLinejoin="round"
         />

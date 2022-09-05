@@ -483,6 +483,7 @@ const InnerTldraw = React.memo(function InnerTldraw({
           onKeyUp={app.onKeyUp}
           onDragOver={app.onDragOver}
           onDrop={app.onDrop}
+          activeUsers={[]}
         />
       </ContextMenu>
       {showUI && (

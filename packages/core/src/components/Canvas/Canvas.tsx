@@ -31,6 +31,7 @@ import { SnapLines } from '~components/SnapLines/SnapLines'
 import { Grid } from '~components/Grid'
 import { Overlay } from '~components/Overlay'
 
+
 interface CanvasProps<T extends TLShape, M extends Record<string, unknown>> {
   page: TLPage<T, TLBinding>
   pageState: TLPageState
@@ -53,6 +54,7 @@ interface CanvasProps<T extends TLShape, M extends Record<string, unknown>> {
   meta?: M
   id?: string
   onBoundsChange: (bounds: TLBounds) => void
+  activeUsers: any[]
 }
 
 export const Canvas = observer(function _Canvas<
@@ -80,6 +82,7 @@ export const Canvas = observer(function _Canvas<
   hideRotateHandle,
   hideGrid,
   onBoundsChange,
+  activeUsers
 }: CanvasProps<T, M>): JSX.Element {
   const rCanvas = React.useRef<HTMLDivElement>(null)
   const rContainer = React.useRef<HTMLDivElement>(null)
@@ -120,7 +123,9 @@ export const Canvas = observer(function _Canvas<
             hideResizeHandles={hideResizeHandles}
             hideRotateHandle={hideRotateHandle}
             meta={meta}
+            activeUsers={activeUsers}
           />
+          
           {users && userId && (
             <UsersIndicators userId={userId} users={users} page={page} meta={meta} />
           )}
@@ -129,6 +134,7 @@ export const Canvas = observer(function _Canvas<
           )}
           {users && <Users userId={userId} users={users} />}
         </div>
+           
         <Overlay camera={pageState.camera}>
           {snapLines && <SnapLines snapLines={snapLines} />}
         </Overlay>

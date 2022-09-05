@@ -22,6 +22,7 @@ interface PageProps<T extends TLShape, M extends Record<string, unknown>> {
   hideRotateHandle: boolean
   hideResizeHandles: boolean
   meta?: M
+  activeUsers: any[]
 }
 
 /**
@@ -39,6 +40,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
   hideRotateHandle,
   hideResizeHandles,
   meta,
+  activeUsers
 }: PageProps<T, M>): JSX.Element {
   const { bounds: rendererBounds, shapeUtils } = useTLContext()
 
@@ -111,6 +113,15 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
         />
       )}
       {!hideHandles && shapeWithHandles && <Handles shape={shapeWithHandles} zoom={zoom} />}
+      {activeUsers.map((user) => {
+        return (
+          <div key={user.name} style={{
+            transform: `translateX(${user.point[0]}px) translateY(${user.point[1]}px) scale(${1/zoom})`
+          }}>
+            {user.name}
+          </div>
+        )
+      })}
     </>
   )
 })

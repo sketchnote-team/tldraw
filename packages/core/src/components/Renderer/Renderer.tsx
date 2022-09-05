@@ -117,6 +117,7 @@ export interface RendererProps<T extends TLShape, M = any> extends Partial<TLCal
    * (optional) A callback that is fired when the editor's client bounding box changes.
    */
   onBoundsChange?: (bounds: TLBounds) => void
+  activeUsers: any[]
 }
 
 /**
@@ -144,6 +145,7 @@ export const Renderer = observer(function _Renderer<
   grid,
   containerRef,
   performanceMode,
+  activeUsers,
   hideHandles = false,
   hideIndicators = false,
   hideCloneHandles = false,
@@ -212,6 +214,7 @@ export const Renderer = observer(function _Renderer<
         onBoundsChange={onBoundsChange}
         performanceMode={performanceMode}
         meta={meta}
+        activeUsers={activeUsers}
       />
     </TLContext.Provider>
   )

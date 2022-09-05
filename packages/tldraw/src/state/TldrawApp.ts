@@ -3732,6 +3732,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
   onPointerMove: TLPointerEventHandler = (info, e) => {
     this.previousPoint = this.currentPoint
+
     this.updateInputs(info, e)
     if (this.isForcePanning && this.isPointing) {
       this.onPan?.({ ...info, delta: Vec.neg(info.delta) }, e as unknown as WheelEvent)
