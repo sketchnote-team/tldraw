@@ -28,7 +28,7 @@ describe('CloneButton', () => {
 
     const cloneBtn = screen.getByLabelText('clone button')
 
-    expect(cloneBtn).toHaveAttribute('transform', 'translate(10, -80)')
+    expect(cloneBtn).toHaveAttribute('transform', 'translate(5, -80)')
 
     // transparent rect
     const rect = cloneBtn.querySelector('rect')

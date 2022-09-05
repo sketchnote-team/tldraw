@@ -9,6 +9,7 @@ import { Handles } from '~components/Handles'
 import { ShapeNode } from '~components/Shape'
 import { ShapeIndicator } from '~components/ShapeIndicator'
 import type { TLShapeUtil } from '~TLShapeUtil'
+import { WhiteboardUser } from '~components/WhiteboardUser'
 
 interface PageProps<T extends TLShape, M extends Record<string, unknown>> {
   page: TLPage<T, TLBinding>
@@ -40,7 +41,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
   hideRotateHandle,
   hideResizeHandles,
   meta,
-  activeUsers
+  activeUsers,
 }: PageProps<T, M>): JSX.Element {
   const { bounds: rendererBounds, shapeUtils } = useTLContext()
 
@@ -113,15 +114,9 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
         />
       )}
       {!hideHandles && shapeWithHandles && <Handles shape={shapeWithHandles} zoom={zoom} />}
-      {activeUsers.map((user) => {
-        return (
-          <div key={user.name} style={{
-            transform: `translateX(${user.point[0]}px) translateY(${user.point[1]}px) scale(${1/zoom})`
-          }}>
-            {user.name}
-          </div>
-        )
-      })}
+      {activeUsers && activeUsers.map((user) => (
+        <WhiteboardUser key={user.id} user={user} zoom={zoom}/>
+      ))}
     </>
   )
 })
