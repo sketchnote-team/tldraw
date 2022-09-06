@@ -93,6 +93,7 @@ import { StickerTool } from './tools/StickerTool'
 import { SectionTool } from './tools/SectionTool'
 import { HighlighterTool } from './tools/HighlighterTool'
 import { ConnectorTool } from './tools/ConnectorTool'
+import { CommentTool } from './tools/CommentTool'
 
 const uuid = Utils.uniqueId()
 
@@ -198,6 +199,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     [TDShapeType.Section]: new SectionTool(this),
     [TDShapeType.Highlighter]: new HighlighterTool(this),
     [TDShapeType.Connector]: new ConnectorTool(this),
+    [TDShapeType.Comment]: new CommentTool(this)
   }
 
   currentTool: BaseTool = this.tools.select

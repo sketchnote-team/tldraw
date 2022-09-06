@@ -13,6 +13,7 @@ import { StickerTool } from './StickerTool'
 import { SectionTool } from './SectionTool'
 import { HighlighterTool } from './HighlighterTool'
 import { ConnectorTool } from './ConnectorTool'
+import { CommentTool } from './CommentTool'
 
 export interface ToolsMap {
   select: typeof SelectTool
@@ -29,6 +30,7 @@ export interface ToolsMap {
   [TDShapeType.Section]: typeof SectionTool
   [TDShapeType.Highlighter]: typeof HighlighterTool
   [TDShapeType.Connector]: typeof ConnectorTool
+  [TDShapeType.Comment]: typeof CommentTool
 }
 
 export type ToolOfType<K extends TDToolType> = ToolsMap[K]
@@ -49,5 +51,6 @@ export const tools: { [K in TDToolType]: ToolsMap[K] } = {
   [TDShapeType.Sticker]: StickerTool,
   [TDShapeType.Section]: SectionTool,
   [TDShapeType.Highlighter]: HighlighterTool,
-  [TDShapeType.Connector]: ConnectorTool
+  [TDShapeType.Connector]: ConnectorTool,
+  [TDShapeType.Comment]: CommentTool
 }

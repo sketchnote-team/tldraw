@@ -18,6 +18,7 @@ import { FileUtil } from './FileUtil'
 import { HighlighterUtil } from './HighlighterUtil'
 import { LessonUtil } from './LessonUtil'
 import { ConnectorUtil } from './ConnectorUtil'
+import { CommentUtil } from './CommentUtil'
 
 export const Rectangle = new RectangleUtil()
 export const Triangle = new TriangleUtil()
@@ -37,6 +38,7 @@ export const File = new FileUtil();
 export const Highlighter = new HighlighterUtil();
 export const Lesson = new LessonUtil();
 export const Connector = new ConnectorUtil();
+export const Comment = new CommentUtil();
 
 export const shapeUtils = {
   [TDShapeType.Rectangle]: Rectangle,
@@ -57,6 +59,7 @@ export const shapeUtils = {
   [TDShapeType.Highlighter]: Highlighter,
   [TDShapeType.Lesson]: Lesson,
   [TDShapeType.Connector]: Connector,
+  [TDShapeType.Comment]: Comment,
 }
 
 export const getShapeUtil = <T extends TDShape>(shape: T | T['type']) => {

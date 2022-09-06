@@ -232,6 +232,7 @@ export type TDToolType =
   | TDShapeType.Section
   | TDShapeType.Highlighter
   | TDShapeType.Connector
+  | TDShapeType.Comment
 
 export type Easing =
   | 'linear'
@@ -308,7 +309,8 @@ export enum TDShapeType {
   File = 'file',
   Highlighter = 'highlighter',
   Lesson = 'lesson',
-  Connector = 'connector'
+  Connector = 'connector',
+  Comment = 'comment'
 }
 
 export enum Decoration {
@@ -445,6 +447,13 @@ export interface StickyShape extends TDBaseShape {
   text: string
 }
 
+export interface CommentShape extends TDBaseShape {
+  type: TDShapeType.Sticky
+  size: number[]
+  user: any
+  comment: any
+}
+
 export interface LinkShape extends TDBaseShape {
   type: TDShapeType.Link
   size: number[]
@@ -518,6 +527,7 @@ export type TDShape =
   | HighlighterShape
   | LessonShape
   | ConnectorShape
+  | CommentShape
 
 /* ------------------ Shape Styles ------------------ */
 
