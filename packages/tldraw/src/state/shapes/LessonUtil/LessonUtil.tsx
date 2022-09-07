@@ -134,7 +134,7 @@ const StyledFileContainer = styled('div', {
   gap:"8px"
 })
 
-const StyledHeader = styled('div', {
+export const StyledHeader = styled('div', {
   display:'flex',
   alignItems:"start",
   fontStyle: 'normal',
@@ -154,7 +154,7 @@ const StyledImage = styled('img', {
     pointerEvents:"none"
   })
 
-const StyledParagraph = styled('p',{
+export const StyledParagraph = styled('p',{
     height:"40px",
     fontStyle: 'normal',
     fontWeight: '400',
@@ -165,7 +165,7 @@ const StyledParagraph = styled('p',{
     margin:'0px'
 })
 
-const StyledButton = styled('div',{
+export const StyledButton = styled('div',{
     height:"40px",
     fontStyle: 'normal',
     fontWeight: '400',

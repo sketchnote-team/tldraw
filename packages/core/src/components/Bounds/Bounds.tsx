@@ -125,7 +125,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
             isHidden={!showEdgeHandles}
           />
         )}
-        <CloneButtons bounds={bounds} targetSize={targetSize} size={size} />
+        {showCloneHandles && <CloneButtons bounds={bounds} targetSize={targetSize} size={size} />}
         {!hideBindingHandles && (
           <LinkHandle
             targetSize={targetSize}

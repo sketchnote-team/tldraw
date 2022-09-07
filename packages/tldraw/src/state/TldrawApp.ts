@@ -2932,6 +2932,37 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     return this
   }
 
+  createCommentShapeAtPoint(point: number[], id?: string): this {
+    const {
+      shapes,
+      appState: { currentPageId, currentStyle },
+    } = this
+
+    const childIndex =
+      shapes.length === 0
+        ? 1
+        : shapes
+            .filter((shape) => shape.parentId === currentPageId)
+            .sort((a, b) => b.childIndex - a.childIndex)[0].childIndex + 1
+
+    const Text = shapeUtils[TDShapeType.Comment]
+
+    const newShape = Text.create({
+      id: id || Utils.uniqueId(),
+      parentId: currentPageId,
+      childIndex,
+      point,
+      style: { ...defaultTextStyle },
+    })
+
+    const bounds = Text.getBounds(newShape)
+    newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
+    this.createShapes(newShape)
+    // this.setEditingId(newShape.id)
+
+    return this
+  }
+
   createImageOrVideoShapeAtPoint(
     id: string,
     type: TDShapeType.Image | TDShapeType.Video,

@@ -59,6 +59,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
   let _hideIndicators = hideIndicators
   let _hideCloneHandles = true
   let _isEditing = false
+  let _hideBounds = false
 
   // Does the selected shape have handles?
   let shapeWithHandles: TLShape | undefined = undefined
@@ -69,15 +70,16 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
     _isEditing = editingId === shape.id
     if (_isEditing) _hideIndicators = true
     const utils = shapeUtils[shape.type] as TLShapeUtil<any, any>
-    _hideCloneHandles = hideCloneHandles || !utils.showCloneHandles
+    _hideCloneHandles = !utils.showCloneHandles
     if (shape.handles !== undefined && !_isEditing) {
       shapeWithHandles = shape
     }
+    if(shape.type==="comment") _hideBounds = true
   }
 
   return (
     <>
-      {bounds && <BoundsBg bounds={bounds} rotation={rotation} isHidden={hideBounds} />}
+      {!_hideBounds && bounds && <BoundsBg bounds={bounds} rotation={rotation} isHidden={hideBounds} />}
       {shapeTree.map((node) => (
         <ShapeNode key={node.shape.id} utils={shapeUtils} {...node} />
       ))}
@@ -99,7 +101,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
           isHovered
         />
       )}
-      {bounds && (
+      {!_hideBounds && bounds && (
         <Bounds
           zoom={zoom}
           bounds={bounds}

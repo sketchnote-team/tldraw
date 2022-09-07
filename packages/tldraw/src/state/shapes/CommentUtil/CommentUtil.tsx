@@ -1,23 +1,28 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from 'react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Utils, HTMLContainer, TLBounds } from '@tldraw/core'
 import { defaultTextStyle } from '../shared/shape-styles'
+import { StyledHeader, StyledParagraph, StyledButton } from '../LessonUtil'
 import { AlignStyle, CommentShape, TDMeta, TDShapeType, TransformInfo } from '~types'
 import { getBoundsRectangle, TextAreaUtils } from '../shared'
 import { TDShapeUtil } from '../TDShapeUtil'
-import { getStickyFontStyle, getStickyShapeStyle } from '../shared/shape-styles'
+import { getStickyShapeStyle } from '../shared/shape-styles'
 import { styled } from '~styles'
 import { Vec } from '@tldraw/vec'
 import { GHOSTED_OPACITY } from '~constants'
 import { TLDR } from '~state/TLDR'
 import { getTextSvgElement } from '../shared/getTextSvgElement'
 import { stopPropagation } from '~components/stopPropagation'
+import { useTldrawApp } from '~hooks'
+import { Tooltip } from '~components'
+import { Comment } from './components/comment'
 
 type T = CommentShape
 type E = HTMLDivElement
 
 export class CommentUtil extends TDShapeUtil<T, E> {
-  type = TDShapeType.Sticky as const
+  type = TDShapeType.Comment as const
 
   canBind = true
 
@@ -33,14 +38,14 @@ export class CommentUtil extends TDShapeUtil<T, E> {
     return Utils.deepMerge<T>(
       {
         id: 'id',
-        type: TDShapeType.Sticky,
-        name: 'Sticky',
+        type: TDShapeType.Comment,
+        name: 'Comment',
         parentId: 'page',
         childIndex: 1,
         point: [0, 0],
-        size: [100, 100],
-        user:'',
-        comment:'',
+        size: [32, 32],
+        user: '',
+        comment: '',
         rotation: 0,
         style: defaultTextStyle,
       },
@@ -50,41 +55,110 @@ export class CommentUtil extends TDShapeUtil<T, E> {
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
     ({ shape, meta, events, isGhost, isBinding, isEditing, onShapeBlur, onShapeChange }, ref) => {
-
       const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
       const rContainer = React.useRef<HTMLDivElement>(null)
 
+      const style = {
+        transform: '',
+      }
+
+      const shapeStyle = {
+        borderRadius: '50%',
+        border: 'none',
+      }
+
+      const app = useTldrawApp()
+      const pageState = app.document.pageStates.page
+
+      if (shape.id == pageState.hoveredId && pageState.selectedIds[0] !== shape.id) {
+        style['transform'] = 'scale(1.2)'
+      }
+
+      if (shape.id === pageState.selectedIds[0]) {
+        shapeStyle['border'] = '1px solid #254DDA'
+      }
+
+      const user = {
+        id: 2189163346,
+        point: [0, 0],
+        color: '#aa030e',
+        user: {
+          name: 'Aayush Lama',
+          avatar:
+            'https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c',
+        },
+      }
+
+      const deleteComment = () => app.delete()
 
       return (
         <HTMLContainer ref={ref} {...events}>
-          <StyledStickyContainer ref={rContainer} style={{ backgroundColor: fill, ...style }}>
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '-28px',
-                left: '5%',
-                width: '90%',
-                height: '10px',
-                background: 'rgba(0,0,0,0.3)',
-                borderRadius: '50%',
-                filter: 'blur(10px)',
-              }}
-            ></div>
-            {isBinding && (
-              <div
-                className="tl-binding-indicator"
-                style={{
-                  position: 'absolute',
-                  top: -this.bindingDistance,
-                  left: -this.bindingDistance,
-                  width: `calc(100% + ${this.bindingDistance * 2}px)`,
-                  height: `calc(100% + ${this.bindingDistance * 2}px)`,
-                  backgroundColor: 'let(--tl-selectFill)',
-                }}
-              />
-            )}
-          </StyledStickyContainer>
+          <StyledCommentContainer ref={rContainer} style={{ ...shapeStyle }}>
+            <DropdownMenu.Root dir="ltr">
+              <DropdownMenu.Trigger asChild>
+                <StyledAvatar style={{ backgroundImage: `url(${user.user.avatar})`, ...style }} />
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content
+                side="right"
+                sideOffset={20}
+                style={{ fontFamily: 'Graphik Web' }}
+              >
+                <StyledCommentWrapper>
+                  <StyledCommentBox>
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '8px',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <StyledHeader
+                        style={{
+                          fontWeight: '500',
+                          fontSize: '16px',
+                          lineHeight: '20px',
+                          height: '20px',
+                          color: 'black',
+                        }}
+                      >
+                        Add a Comment
+                      </StyledHeader>
+                      {/* <Tooltip side="left" label="Mark as resolved"> */}
+                      <div
+                        {...events}
+                        onClick={deleteComment}
+                        style={{
+                          background: '#F6F7F9',
+                          border: '2px solid #D5D7DD',
+                          borderRadius: '4px',
+                          height: '20px',
+                          width: '20px',
+                          cursor: 'pointer',
+                        }}
+                      ></div>
+                    </div>
+                    <Comment
+                      userName={user.user.name}
+                      time="10/03/2020"
+                      avatar={user.user.avatar}
+                      message={
+                        'Be crystal clear in explaining your pitch deck and finish it under 20 minutes. Ideally, book the meeting'
+                      }
+                    />
+                    <StyledCommentInputWrapper>
+                      <StyledAvatar
+                        style={{ backgroundImage: `url(${user.user.avatar})` }}
+                      ></StyledAvatar>
+                      <input type="text"></input>
+                      <button style={{}}>Send</button>
+                    </StyledCommentInputWrapper>
+                  </StyledCommentBox>
+                </StyledCommentWrapper>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+            {/* <InitialComment >Some Comment Here</InitialComment> */}
+          </StyledCommentContainer>
         </HTMLContainer>
       )
     }
@@ -95,9 +169,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       size: [width, height],
     } = shape
 
-    return (
-      <rect x={0} y={0} rx={3} ry={3} width={Math.max(1, width)} height={Math.max(1, height)} />
-    )
+    return <></>
   })
 
   getBounds = (shape: T) => {
@@ -108,24 +180,6 @@ export class CommentUtil extends TDShapeUtil<T, E> {
     return next.size !== prev.size || next.style !== prev.style || next.text !== prev.text
   }
 
-  transform = (
-    shape: T,
-    bounds: TLBounds,
-    { scaleX, scaleY, transformOrigin }: TransformInfo<T>
-  ): Partial<T> => {
-    const point = Vec.toFixed([
-      bounds.minX +
-        (bounds.width - shape.size[0]) * (scaleX < 0 ? 1 - transformOrigin[0] : transformOrigin[0]),
-      bounds.minY +
-        (bounds.height - shape.size[1]) *
-          (scaleY < 0 ? 1 - transformOrigin[1] : transformOrigin[1]),
-    ])
-
-    return {
-      point,
-    }
-  }
-
   transformSingle = (shape: T): Partial<T> => {
     return shape
   }
@@ -133,7 +187,6 @@ export class CommentUtil extends TDShapeUtil<T, E> {
   getSvgElement = (shape: T): SVGElement | void => {
     const bounds = this.getBounds(shape)
 
-  
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     rect.setAttribute('width', bounds.width + '')
@@ -154,14 +207,54 @@ export class CommentUtil extends TDShapeUtil<T, E> {
 const PADDING = 16
 const MIN_CONTAINER_HEIGHT = 200
 
-const StyledStickyContainer = styled('div', {
+const StyledCommentContainer = styled('div', {
   pointerEvents: 'all',
-  position: 'relative',
-  backgroundColor: 'rgba(255, 220, 100)',
-  fontFamily: 'sans-serif',
   height: '100%',
   width: '100%',
-  padding: PADDING + 'px',
-  borderRadius: '3px',
+  position: 'relative',
+  display: 'flex',
+  fontFamily: 'Graphik Web',
+  justifyContent: 'center',
+  alignItems: 'center',
   perspective: '800px',
+})
+
+export const StyledAvatar = styled('div', {
+  height: '24px',
+  width: '24px',
+  borderRadius: '9999px',
+  backgroundSize: 'cover',
+})
+
+const StyledCommentWrapper = styled('div', {
+  display: 'flex',
+  gap: '3px',
+  flexDirection: 'column',
+})
+
+const StyledCommentBox = styled('div', {
+  width: '344px',
+  padding: '15px',
+  borderRadius: '8px',
+  boxShadow: '0px 2px 12px rgba(19, 23, 32, 0.08)',
+  background: 'white',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+})
+
+const InitialComment = styled('div', {
+  width: '324px',
+  height: '100%',
+  position: 'absolute',
+  top: '0',
+  left: '0',
+  zIndex: '99999px',
+})
+
+const StyledCommentInputWrapper = styled('div', {
+  display: 'flex',
+  marginTop: '16px',
+  gap: '12px',
+  alignItems: 'center',
 })

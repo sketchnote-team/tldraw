@@ -9,17 +9,21 @@ export class CommentTool extends BaseTool {
   type = TDShapeType.Comment as const
 
   shapeId?: string
+  
+  stopEditingShape = () => {
+    this.setStatus(Status.Idle)
+
+    if (!this.app.appState.isToolLocked) {
+      this.app.selectTool('select')
+    }
+  }
 
   /* ----------------- Event Handlers ----------------- */
 
+
   onPointerDown: TLPointerEventHandler = () => {
     if (this.status === Status.Creating) {
-      this.setStatus(Status.Idle)
-
-      if (!this.app.appState.isToolLocked) {
-        this.app.selectTool('select')
-      }
-
+      this.stopEditingShape()
       return
     }
 
@@ -28,32 +32,11 @@ export class CommentTool extends BaseTool {
         currentPoint,
         currentGrid,
         settings: { showGrid },
-        appState: { currentPageId, currentStickyStyle },
       } = this.app
 
-      const childIndex = this.getNextChildIndex()
-
-      const id = Utils.uniqueId()
-
-      this.shapeId = id
-
-      const newShape = Comment.create({
-        id,
-        parentId: currentPageId,
-        childIndex,
-        point: showGrid ? Vec.snap(currentPoint, currentGrid) : currentPoint,
-        style: { ...currentStickyStyle },
-      })
-
-      const bounds = Comment.getBounds(newShape)
-
-      newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
-
-      this.app.createShapes(newShape)
-
-      this.app.startSession(SessionType.Translate)
-
+      this.app.createCommentShapeAtPoint(showGrid ? Vec.snap(currentPoint, currentGrid) : currentPoint)
       this.setStatus(Status.Creating)
+      return
     }
   }
 

@@ -448,7 +448,7 @@ export interface StickyShape extends TDBaseShape {
 }
 
 export interface CommentShape extends TDBaseShape {
-  type: TDShapeType.Sticky
+  type: TDShapeType.Comment
   size: number[]
   user: any
   comment: any
