@@ -1,5 +1,16 @@
 import { Utils } from '@tldraw/core'
-import { Theme, ColorStyle, DashStyle, ShapeStyles, SizeStyle, FontStyle, AlignStyle, TextWeight, TextShapeStyles, ListType } from '~types'
+import {
+  Theme,
+  ColorStyle,
+  DashStyle,
+  ShapeStyles,
+  SizeStyle,
+  FontStyle,
+  AlignStyle,
+  TextWeight,
+  TextShapeStyles,
+  ListType,
+} from '~types'
 
 const canvasLight = '#fafafa'
 
@@ -44,7 +55,7 @@ export const strokes: Record<Theme, Record<ColorStyle, string>> = {
   light: {
     ...colors,
     [ColorStyle.White]: '#1d1d1d',
-    [ColorStyle.Black]: '#3d3d3d'
+    [ColorStyle.Black]: '#3d3d3d',
   },
   dark: {
     ...(Object.fromEntries(
@@ -98,7 +109,6 @@ const fontSizeModifiers = {
   [FontStyle.Sans]: 1,
   [FontStyle.Serif]: 1,
   [FontStyle.Mono]: 1,
- 
 }
 
 const stickyFontSizes = {
@@ -146,7 +156,7 @@ export function getStickyShapeStyle(style: ShapeStyles, isDarkMode = false) {
   const theme: Theme = isDarkMode ? 'dark' : 'light'
   const adjustedColor =
     color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Violet : color
-  
+
   return {
     fill: strokes[theme][adjustedColor],
     stroke: strokes[theme][adjustedColor],
@@ -167,7 +177,7 @@ export function getSectionShapeStyle(
   const strokeWidth = getStrokeWidth(size)
 
   const theme: Theme = isDarkMode ? 'dark' : 'light'
-  
+
   const adjustedColor =
     color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Blue : color
   return {
@@ -237,5 +247,16 @@ export const defaultTextStyle: TextShapeStyles = {
   textWeight: TextWeight.Normal,
   listType: ListType.None,
   textDecoration: 'none',
-  fontStyle: 'normal'
+  fontStyle: 'normal',
+}
+
+export const defaultUser = {
+  id: 2189163346,
+  point: [0, 0],
+  color: '#aa030e',
+  user: {
+    name: 'Anonymous',
+    avatar:
+      'https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c',
+  },
 }

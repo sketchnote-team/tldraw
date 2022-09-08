@@ -65,6 +65,7 @@ import {
   defaultStickyStyle,
   defaultStyle,
   defaultTextStyle,
+  defaultUser
 } from '~state/shapes/shared/shape-styles'
 import * as Commands from './commands'
 import { SessionArgsOfType, getSession, TldrawSession } from './sessions'
@@ -295,6 +296,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     this.patchState({
       appState: {
         currentStickerPoint: this.currentPoint,
+      },
+    })
+  }
+
+  initializeUser = (user:any) => {
+    this.patchState({
+      appState: {
+        user
       },
     })
   }
@@ -4283,6 +4292,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       selectedSticker: '',
       sections: {},
       currentStickerPoint: [0, 0],
+      user: defaultUser
     },
     document: TldrawApp.defaultDocument,
   }

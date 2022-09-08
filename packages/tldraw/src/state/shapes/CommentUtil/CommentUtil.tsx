@@ -45,9 +45,10 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         point: [0, 0],
         size: [32, 32],
         user: '',
-        comment: '',
+        comments: [],
         rotation: 0,
         style: defaultTextStyle,
+        currentComment: '',
       },
       props
     )
@@ -58,6 +59,8 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
       const rContainer = React.useRef<HTMLDivElement>(null)
+
+      const rComment = React.useRef<HTMLDivElement>(null)
 
       const style = {
         transform: '',
@@ -70,6 +73,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
 
       const app = useTldrawApp()
       const pageState = app.document.pageStates.page
+      const user = app.appState.user
 
       if (shape.id == pageState.hoveredId && pageState.selectedIds[0] !== shape.id) {
         style['transform'] = 'scale(1.2)'
@@ -79,31 +83,68 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         shapeStyle['border'] = '1px solid #254DDA'
       }
 
-      const user = {
-        id: 2189163346,
-        point: [0, 0],
-        color: '#aa030e',
-        user: {
-          name: 'Aayush Lama',
-          avatar:
-            'https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c',
-        },
+      const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        onShapeChange?.({
+          ...shape,
+          currentComment: TLDR.normalizeText(e.currentTarget.value),
+        })
       }
 
-      const deleteComment = () => app.delete()
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter') addComment()
+      }
+
+      const addComment = () => {
+        const newComments = [
+          ...shape.comments,
+          {
+            userName: user.user.name,
+            time: getTodayDate(),
+            avatar: user.user.avatar,
+            message: shape.currentComment,
+          },
+        ]
+        onShapeChange?.({
+          ...shape,
+          comments: newComments,
+          currentComment: '',
+        })
+      }
+
+      const deleteComment = () => app.delete([shape.id])
+
+      const getTodayDate = () => {
+        const today = new Date()
+        const yyyy = today.getFullYear()
+        let mm = today.getMonth() + 1 // Months start at 0!
+        let dd = today.getDate()
+
+        if (dd < 10) dd = '0' + dd
+        if (mm < 10) mm = '0' + mm
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy
+
+        return formattedToday
+      }
+
+      const openChangeHandle = () => {
+        if (!shape.comments.length && shape.currentComment == '') deleteComment()
+      }
+      React.useEffect(() => {
+        rComment.current?.scroll({
+          top: rComment.current.scrollHeight,
+          behavior: 'smooth',
+        })
+      }, [shape])
 
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledCommentContainer ref={rContainer} style={{ ...shapeStyle }}>
-            <DropdownMenu.Root dir="ltr">
+            <DropdownMenu.Root dir="ltr" defaultOpen onOpenChange={openChangeHandle}>
               <DropdownMenu.Trigger asChild>
                 <StyledAvatar style={{ backgroundImage: `url(${user.user.avatar})`, ...style }} />
               </DropdownMenu.Trigger>
-              <DropdownMenu.Content
-                side="right"
-                sideOffset={20}
-                style={{ fontFamily: 'Graphik Web' }}
-              >
+              <DropdownMenu.Content side="right" sideOffset={20}>
                 <StyledCommentWrapper>
                   <StyledCommentBox>
                     <div
@@ -138,20 +179,76 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                         }}
                       ></div>
                     </div>
-                    <Comment
-                      userName={user.user.name}
-                      time="10/03/2020"
-                      avatar={user.user.avatar}
-                      message={
-                        'Be crystal clear in explaining your pitch deck and finish it under 20 minutes. Ideally, book the meeting'
-                      }
-                    />
+                    <div
+                      ref={rComment}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '16px',
+                        maxHeight: '400px',
+                        overflow: 'auto',
+                      }}
+                    >
+                      {shape.comments.map((comment, i) => (
+                        <Comment
+                          userName={comment.userName}
+                          time={comment.time}
+                          avatar={comment.avatar}
+                          message={comment.message}
+                          key={Utils.uniqueId()}
+                          style={
+                            i !== shape.comments.length - 1
+                              ? { borderBottom: '1px solid #E2E4E9', paddingBottom: '16px' }
+                              : null
+                          }
+                        />
+                      ))}
+                    </div>
                     <StyledCommentInputWrapper>
                       <StyledAvatar
                         style={{ backgroundImage: `url(${user.user.avatar})` }}
                       ></StyledAvatar>
-                      <input type="text"></input>
-                      <button style={{}}>Send</button>
+                      <input
+                        placeholder="Add a Comment..."
+                        style={{
+                          marginLeft: '2px',
+                          outline: 'none',
+                          border: 'none',
+                          flex: 'auto',
+                        }}
+                        type="text"
+                        onChange={handleTextChange}
+                        value={shape.currentComment}
+                        onKeyDown={handleKeyDown}
+                      ></input>
+                      <button
+                        style={{
+                          padding: '6px 16px',
+                          height: '32px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          background: 'transparent ',
+                          border: '1px solid #254DDA',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                        }}
+                        {...events}
+                        onClick={addComment}
+                      >
+                        <StyledHeader
+                          style={{
+                            fontWeight: '500',
+                            fontSize: '14px',
+                            lineHeight: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#254DDA',
+                          }}
+                        >
+                          Send
+                        </StyledHeader>
+                      </button>
                     </StyledCommentInputWrapper>
                   </StyledCommentBox>
                 </StyledCommentWrapper>
@@ -230,6 +327,7 @@ const StyledCommentWrapper = styled('div', {
   display: 'flex',
   gap: '3px',
   flexDirection: 'column',
+  fontFamily: 'Graphik Web',
 })
 
 const StyledCommentBox = styled('div', {
@@ -257,4 +355,5 @@ const StyledCommentInputWrapper = styled('div', {
   marginTop: '16px',
   gap: '12px',
   alignItems: 'center',
+  // justifyContent:"space-between"
 })

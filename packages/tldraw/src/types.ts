@@ -117,6 +117,7 @@ export interface TDSnapshot {
       [key: string]: string[]
     },
     currentStickerPoint: number[]
+    user: any
   }
   document: TDDocument
   room?: {
@@ -451,7 +452,8 @@ export interface CommentShape extends TDBaseShape {
   type: TDShapeType.Comment
   size: number[]
   user: any
-  comment: any
+  comments: any[]
+  currentComment: string
 }
 
 export interface LinkShape extends TDBaseShape {
