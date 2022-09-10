@@ -98,8 +98,8 @@ export interface TDSnapshot {
     currentStyle: TextShapeStyles
     currentStickyStyle: ShapeStyles
     currentShapeStyle: ShapeStyles
-    currentDrawStyle: ShapeStyles,
-    currentHighlighterStyle:ShapeStyles,
+    currentDrawStyle: ShapeStyles
+    currentHighlighterStyle: ShapeStyles
     currentSectionStyle: ShapeStyles
     currentPageId: string
     hoveredId?: string
@@ -111,11 +111,11 @@ export interface TDSnapshot {
     snapLines: TLSnapLine[]
     isLoading: boolean
     disableAssets: boolean
-    selectByContain?: boolean,
-    selectedSticker: string,
+    selectByContain?: boolean
+    selectedSticker: string
     sections: {
       [key: string]: string[]
-    },
+    }
     currentStickerPoint: number[]
     user: any
   }
@@ -199,7 +199,7 @@ export enum SessionType {
   Rotate = 'rotate',
   Handle = 'handle',
   Grid = 'grid',
-  Connector = 'connector'
+  Connector = 'connector',
 }
 
 export enum TDStatus {
@@ -304,14 +304,14 @@ export enum TDShapeType {
   Image = 'image',
   Video = 'video',
   Sticker = 'sticker',
-  Link='link',
+  Link = 'link',
   Embed = 'embed',
-  Section= 'section',
+  Section = 'section',
   File = 'file',
   Highlighter = 'highlighter',
   Lesson = 'lesson',
   Connector = 'connector',
-  Comment = 'comment'
+  Comment = 'comment',
 }
 
 export enum Decoration {
@@ -381,14 +381,13 @@ export interface ArrowShape extends TDBaseShape {
   labelPoint?: number[]
 }
 
-
 export interface ConnectorShape extends TDBaseShape {
   type: TDShapeType.Connector
   handles: {
     start: TDHandle
     end: TDHandle
     // startConnector: TDHandle
-    // endConnector: TDHandle 
+    // endConnector: TDHandle
   }
   decorations?: {
     start?: Decoration
@@ -423,9 +422,8 @@ export interface StickerShape extends TDBaseShape {
   type: TDShapeType.Sticker
   size: number[]
   assetId: string
-  svg:string
+  svg: string
 }
-
 
 export interface VideoShape extends TDBaseShape {
   type: TDShapeType.Video
@@ -447,50 +445,49 @@ export interface StickyShape extends TDBaseShape {
   size: number[]
   text: string
 }
-
 export interface CommentShape extends TDBaseShape {
   type: TDShapeType.Comment
   size: number[]
   user: any
   comments: any[]
   currentComment: string
+  isOpen: boolean
 }
-
 export interface LinkShape extends TDBaseShape {
   type: TDShapeType.Link
   size: number[]
-  url: string,
-  title:string|undefined,
-  imageUrl: string|undefined,
-  description:string|undefined
+  url: string
+  title: string | undefined
+  imageUrl: string | undefined
+  description: string | undefined
 }
 
 export interface FileShape extends TDBaseShape {
   type: TDShapeType.File
   size: number[]
-  url: string,
-  title: string,
-  icon: string,
-  avatarUrl: any[],
-  firstName:string,
-  time:string,
-  fileType: string,
+  url: string
+  title: string
+  icon: string
+  avatarUrl: any[]
+  firstName: string
+  time: string
+  fileType: string
   fileIcon: string
 }
 
 export interface LessonShape extends TDBaseShape {
   type: TDShapeType.Lesson
   size: number[]
-  title: string,
-  imageUrl: string,
-  description: string,
+  title: string
+  imageUrl: string
+  description: string
   url: string
 }
 
 export interface EmbedShape extends TDBaseShape {
   type: TDShapeType.Embed
   size: number[]
-  src: string,
+  src: string
   faviconSrc: string
 }
 
@@ -583,7 +580,7 @@ export enum TextWeight {
 export enum ListType {
   None = 'none',
   Bullet = 'bullet',
-  Numbered = 'numbered'
+  Numbered = 'numbered',
 }
 
 export enum FontStyle {
@@ -591,7 +588,7 @@ export enum FontStyle {
   Sans = 'sans',
   Serif = 'erif',
   Mono = 'mono',
-  Graphik = 'Graphik Web'
+  Graphik = 'Graphik Web',
 }
 
 export type ShapeStyles = {
@@ -611,11 +608,11 @@ export type TextShapeStyles = {
   font?: FontStyle
   textAlign?: AlignStyle
   isFilled?: boolean
-  scale?: number,
-  textWeight: TextWeight,
-  listType: ListType,
-  textDecoration: string,
-  fontStyle:string
+  scale?: number
+  textWeight: TextWeight
+  listType: ListType
+  textDecoration: string
+  fontStyle: string
 }
 
 export enum TDAssetType {

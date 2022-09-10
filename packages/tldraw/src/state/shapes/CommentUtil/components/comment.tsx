@@ -2,6 +2,7 @@ import * as React from 'react'
 import { styled } from '~styles'
 import { StyledHeader, StyledParagraph } from '~state/shapes/LessonUtil'
 import { StyledAvatar } from '../CommentUtil'
+import { useTldrawApp } from '~hooks'
 
 export interface CommentProps {
   userName: string
@@ -9,6 +10,8 @@ export interface CommentProps {
   message: string
   time: string
   style: any
+  deleteCommentbyId:any
+  onPointerDown:any
 }
 
 export const Comment = React.memo(function Comment({
@@ -17,7 +20,11 @@ export const Comment = React.memo(function Comment({
   message,
   time,
   style,
+  deleteCommentbyId,
+  onPointerDown
 }: CommentProps) {
+  const app = useTldrawApp()
+  const user = app.useStore(s=>s.appState.user)
   return (
     <StyledCommentWrapper style={{ ...style }}>
       <div
@@ -36,9 +43,11 @@ export const Comment = React.memo(function Comment({
               lineHeight: '20px',
               height: '20px',
               color: 'black',
+              position:"relative"
             }}
           >
             {userName}
+            {user.user.avatar===avatar && <div style={{color:'#F4381F', position:'absolute',right:"0", top:'10px', cursor:'pointer' }} onPointerDown={deleteCommentbyId}>Delete</div>}
           </StyledHeader>
           <div
             style={{

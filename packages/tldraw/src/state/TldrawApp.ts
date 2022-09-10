@@ -65,7 +65,7 @@ import {
   defaultStickyStyle,
   defaultStyle,
   defaultTextStyle,
-  defaultUser
+  defaultUser,
 } from '~state/shapes/shared/shape-styles'
 import * as Commands from './commands'
 import { SessionArgsOfType, getSession, TldrawSession } from './sessions'
@@ -200,7 +200,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     [TDShapeType.Section]: new SectionTool(this),
     [TDShapeType.Highlighter]: new HighlighterTool(this),
     [TDShapeType.Connector]: new ConnectorTool(this),
-    [TDShapeType.Comment]: new CommentTool(this)
+    [TDShapeType.Comment]: new CommentTool(this),
   }
 
   currentTool: BaseTool = this.tools.select
@@ -300,10 +300,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
-  initializeUser = (user:any) => {
+  initializeUser = (user: any) => {
     this.patchState({
       appState: {
-        user
+        user,
       },
     })
   }
@@ -517,7 +517,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
             const toShape = page.shapes[binding.toId]
             const fromShape = page.shapes[binding.fromId] as ArrowShape
-           
+
             const fromShapeConnector = page.shapes[binding.fromId] as ConnectorShape
 
             if (!(toShape && fromShape)) {
@@ -530,9 +530,9 @@ export class TldrawApp extends StateManager<TDSnapshot> {
             }
 
             // We only need to update the binding's "from" shape (an arrow)
-            
+
             const fromDelta = TLDR.updateArrowBindings(page, fromShape)
-            TLDR.connectConnectorToShape(page,fromShapeConnector)
+            TLDR.connectConnectorToShape(page, fromShapeConnector)
             visitedShapes.add(fromShape)
 
             if (fromDelta) {
@@ -2774,7 +2774,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     firstName: string,
     time: string,
     fileType: string,
-    fileIcon: string,
+    fileIcon: string
   ): this {
     const {
       shapes,
@@ -2802,7 +2802,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       firstName,
       time,
       fileType,
-      fileIcon
+      fileIcon,
     })
     const bounds = Shape.getBounds(newShape as never)
     newShape.point = Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2])
@@ -2836,7 +2836,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         : shapes
             .filter((shape) => shape.parentId === currentPageId)
             .sort((a, b) => b.childIndex - a.childIndex)[0].childIndex + 1
-    
+
     const Shape = shapeUtils[type]
 
     const newShape = Shape.create({
@@ -2849,7 +2849,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       title,
       description,
       imageUrl,
-      url
+      url,
     })
 
     const bounds = Shape.getBounds(newShape as never)
@@ -2961,6 +2961,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       parentId: currentPageId,
       childIndex,
       point,
+      user: this.appState.user,
       style: { ...defaultTextStyle },
     })
 
@@ -3444,7 +3445,12 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     return
   }
 
-  async createLesson(lesson: { imageUrl: string; title: string; description: string, url:string }) {
+  async createLesson(lesson: {
+    imageUrl: string
+    title: string
+    description: string
+    url: string
+  }) {
     const id = Utils.uniqueId()
     const [xPoint, yPoint] = this.document.pageStates.page.camera.point
     this.createLessonShapeAtPoint(
@@ -4068,6 +4074,15 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     }
   }
 
+  openCommentDropDown = (id: string) => {
+    this.updateShapes({
+      id: id,
+      isOpen: true,
+    })
+
+    return this
+  }
+
   onError = () => {
     // TODO
   }
@@ -4292,7 +4307,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       selectedSticker: '',
       sections: {},
       currentStickerPoint: [0, 0],
-      user: defaultUser
+      user: defaultUser,
     },
     document: TldrawApp.defaultDocument,
   }

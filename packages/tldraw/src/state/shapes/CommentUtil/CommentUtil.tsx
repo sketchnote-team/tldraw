@@ -44,11 +44,12 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         childIndex: 1,
         point: [0, 0],
         size: [32, 32],
-        user: '',
+        user: {},
         comments: [],
         rotation: 0,
         style: defaultTextStyle,
         currentComment: '',
+        isOpen: true,
       },
       props
     )
@@ -56,8 +57,6 @@ export class CommentUtil extends TDShapeUtil<T, E> {
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
     ({ shape, meta, events, isGhost, isBinding, isEditing, onShapeBlur, onShapeChange }, ref) => {
-      const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
-
       const rContainer = React.useRef<HTMLDivElement>(null)
 
       const rComment = React.useRef<HTMLDivElement>(null)
@@ -98,6 +97,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         const newComments = [
           ...shape.comments,
           {
+            id: Utils.uniqueId(),
             userName: user.user.name,
             time: getTodayDate(),
             avatar: user.user.avatar,
@@ -112,6 +112,15 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       }
 
       const deleteComment = () => app.delete([shape.id])
+      const deleteCommentbyId = (id:string) => {
+        const newComments = shape.comments.filter(comment=>comment.id!==id)
+     
+        onShapeChange?.({
+          ...shape,
+          comments: newComments,
+        })
+      }
+
 
       const getTodayDate = () => {
         const today = new Date()
@@ -127,9 +136,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         return formattedToday
       }
 
-      const openChangeHandle = () => {
-        if (!shape.comments.length && shape.currentComment == '') deleteComment()
-      }
+    
       React.useEffect(() => {
         rComment.current?.scroll({
           top: rComment.current.scrollHeight,
@@ -140,11 +147,33 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledCommentContainer ref={rContainer} style={{ ...shapeStyle }}>
-            <DropdownMenu.Root dir="ltr" defaultOpen onOpenChange={openChangeHandle}>
+            <DropdownMenu.Root
+              modal={false}
+              dir="ltr"
+              open={shape.isOpen}
+              defaultOpen={!shape.comments.length && shape.currentComment == ''}
+            >
               <DropdownMenu.Trigger asChild>
-                <StyledAvatar style={{ backgroundImage: `url(${user.user.avatar})`, ...style }} />
+                <StyledAvatar
+                  {...events}
+                  onPointerDown={(e) => {
+                    onShapeChange?.({ ...shape, isOpen: !shape.isOpen })
+                  }}
+                  onDrag={(e)=>[
+                    onShapeChange?.({ ...shape, isOpen: false })
+                  ]}
+
+                  style={{ backgroundImage: `url(${shape.user.user.avatar})`, ...style }}
+                />
               </DropdownMenu.Trigger>
-              <DropdownMenu.Content side="right" sideOffset={20}>
+              <DropdownMenu.Content
+                onPointerDownOutside={() => {
+                  if (!shape.comments.length && shape.currentComment == '') deleteComment()
+                  onShapeChange?.({ ...shape, isOpen: false })
+                }}
+                side="right"
+                sideOffset={20}
+              >
                 <StyledCommentWrapper>
                   <StyledCommentBox>
                     <div
@@ -191,11 +220,13 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                     >
                       {shape.comments.map((comment, i) => (
                         <Comment
+                          onPointerDown = {events.onPointerDown}
                           userName={comment.userName}
                           time={comment.time}
                           avatar={comment.avatar}
                           message={comment.message}
-                          key={Utils.uniqueId()}
+                          key={comment.id}
+                          deleteCommentbyId={()=>deleteCommentbyId(comment.id)}
                           style={
                             i !== shape.comments.length - 1
                               ? { borderBottom: '1px solid #E2E4E9', paddingBottom: '16px' }
@@ -274,7 +305,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
   }
 
   shouldRender = (prev: T, next: T) => {
-    return next.size !== prev.size || next.style !== prev.style || next.text !== prev.text
+    return next.size !== prev.size || next.style !== prev.style || next.isOpen !== prev.isOpen 
   }
 
   transformSingle = (shape: T): Partial<T> => {

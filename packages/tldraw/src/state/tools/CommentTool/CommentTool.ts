@@ -30,11 +30,9 @@ export class CommentTool extends BaseTool {
     if (this.status === Status.Idle) {
       const {
         currentPoint,
-        currentGrid,
-        settings: { showGrid },
       } = this.app
 
-      this.app.createCommentShapeAtPoint(showGrid ? Vec.snap(currentPoint, currentGrid) : currentPoint)
+      this.app.createCommentShapeAtPoint(currentPoint)
       this.setStatus(Status.Creating)
       return
     }

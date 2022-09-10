@@ -17,6 +17,7 @@ import { ToolButtonWithTooltip } from '~components/Primitives/ToolButton'
 import { Panel } from '~components/Primitives/Panel'
 import { ShapesMenu } from './ShapesMenu'
 import { EraserIcon } from '~components/Primitives/icons'
+import Vec from '@tldraw/vec'
 
 const activeToolSelector = (s: TDSnapshot) => s.appState.activeTool
 const toolLockedSelector = (s: TDSnapshot) => s.appState.isToolLocked
@@ -40,14 +41,11 @@ const video = {
   ],
 }
 
-
-
 export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
-  // console.log(app.useStore(s=>s.appState.status))
-  // console.log('asdfasdf')
+
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
   }, [app])
@@ -82,9 +80,22 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     app.selectTool(TDShapeType.Comment)
   }, [app])
 
-  const selectSectionTool = React.useCallback(() => {
-    app.selectTool(TDShapeType.Section)
-  }, [app])
+  const selectSectionTool = () => {
+    // const commentIds = Object.keys(shapes).filter((shape) => shapes[shape].type === 'comment')
+
+    // const comments = commentIds.map((id) => shapes[id])
+
+    // const commonBounds = comments[0].point
+    // app.openCommentDropDown(comments[0].id)
+    // const { width, height } = app.rendererBounds
+
+    
+    // app.setCamera(
+    //   Vec.toFixed(Vec.add(Vec.sub([0, 0], commonBounds), [width / 2, height / 2])),
+    //   1,
+    //   `zoomed_to_content`
+    // )
+  }
 
   return (
     <Panel side="center" id="TD-PrimaryTools">
@@ -166,5 +177,3 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     </Panel>
   )
 })
-
-
