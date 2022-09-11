@@ -118,6 +118,10 @@ export interface TDSnapshot {
     }
     currentStickerPoint: number[]
     user: any
+    isOpen: {
+      [key:string]: boolean
+    },
+    defaultOpen: boolean
   }
   document: TDDocument
   room?: {

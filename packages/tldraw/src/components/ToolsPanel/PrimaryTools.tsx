@@ -45,6 +45,8 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
+  // const openComments = app.useStore(s=>s.appState.isOpen)
+  // const shapes = app.useStore(s=>s.document.pages.page.shapes)
 
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
@@ -78,6 +80,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     // app.selectSticker(ReactDOM.renderToString(svg))
     // app.selectTool(TDShapeType.Sticker)
     app.selectTool(TDShapeType.Comment)
+    app.setDefaultOpen(true)
   }, [app])
 
   const selectSectionTool = () => {
@@ -86,7 +89,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     // const comments = commentIds.map((id) => shapes[id])
 
     // const commonBounds = comments[0].point
-    // app.openCommentDropDown(comments[0].id)
+    // app.setDropDown(comments[0].id, true)
     // const { width, height } = app.rendererBounds
 
     

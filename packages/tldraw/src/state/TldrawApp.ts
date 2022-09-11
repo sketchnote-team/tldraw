@@ -308,6 +308,24 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+  setDropDown = (id: string, status = !this.appState.isOpen[id]) => {
+    this.patchState({
+      appState: {
+        isOpen: {
+          [id]: status
+        }
+      }
+    })
+  }
+
+  setDefaultOpen= (status: boolean) => {
+    this.patchState({
+      appState:{
+        defaultOpen: status
+      }
+    })
+  }
+
   removeEditing = () => {
     this.patchState(
       {
@@ -2541,6 +2559,22 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       })
     }
   }
+
+  removeCommentStatusfromState(ids: string[]) {
+    if (this.appState.isOpen){
+      ids.forEach(id=>{
+        if (this.getShape(id).name === 'Comment') {
+          delete this.appState.isOpen[id]
+          this.patchState({
+            appState: {
+              isOpen:  this.appState.isOpen
+            }
+          })
+        }
+      })
+    } 
+  }
+  /**
   /**
    * Cancel the current session.
    * @param args The arguments of the current session's cancel method.
@@ -3041,6 +3075,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const drawCommand = Commands.deleteShapes(this, ids)
 
     this.removeSectionFromState(ids)
+    this.removeCommentStatusfromState(ids)
 
     if (
       this.callbacks.onAssetDelete &&
@@ -4308,6 +4343,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       sections: {},
       currentStickerPoint: [0, 0],
       user: defaultUser,
+      isOpen: {},
+      defaultOpen: false
     },
     document: TldrawApp.defaultDocument,
   }
