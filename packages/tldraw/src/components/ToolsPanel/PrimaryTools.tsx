@@ -18,6 +18,7 @@ import { Panel } from '~components/Primitives/Panel'
 import { ShapesMenu } from './ShapesMenu'
 import { EraserIcon } from '~components/Primitives/icons'
 import Vec from '@tldraw/vec'
+import { template1 } from '~templates'
 
 const activeToolSelector = (s: TDSnapshot) => s.appState.activeTool
 const toolLockedSelector = (s: TDSnapshot) => s.appState.isToolLocked
@@ -79,8 +80,10 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const selectStickerTool = React.useCallback(() => {
     // app.selectSticker(ReactDOM.renderToString(svg))
     // app.selectTool(TDShapeType.Sticker)
-    app.selectTool(TDShapeType.Comment)
-    app.setDefaultOpen(true)
+    // app.selectTool(TDShapeType.Comment)
+    // app.setDefaultOpen(true)
+    app.createTemplateAtPoint(template1)
+    
   }, [app])
 
   const selectSectionTool = () => {
@@ -90,7 +93,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
 
     // const commonBounds = comments[0].point
     // app.setDropDown(comments[0].id, true)
-    // const { width, height } = app.rendererBounds
+    
 
     
     // app.setCamera(

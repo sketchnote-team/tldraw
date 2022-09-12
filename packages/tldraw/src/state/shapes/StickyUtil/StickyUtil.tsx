@@ -12,6 +12,7 @@ import { GHOSTED_OPACITY } from '~constants'
 import { TLDR } from '~state/TLDR'
 import { getTextSvgElement } from '../shared/getTextSvgElement'
 import { stopPropagation } from '~components/stopPropagation'
+import { useTldrawApp } from '~hooks'
 
 type T = StickyShape
 type E = HTMLDivElement
@@ -51,7 +52,8 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
     ({ shape, meta, events, isGhost, isBinding, isEditing, onShapeBlur, onShapeChange }, ref) => {
-      let font = getStickyFontStyle(shape.style)
+      const app = useTldrawApp()
+      const font = getStickyFontStyle(shape.style)
 
       const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
@@ -66,6 +68,33 @@ export class StickyUtil extends TDShapeUtil<T, E> {
       const currentScale = React.useRef(shape.style.scale)
 
       const rIsMounted = React.useRef(false)
+      
+      const selectedStickyText = app.useStore(s=>s.appState.selectedStickyText)
+
+
+      function getSelectedText() {
+        let text = "";
+        if (typeof window.getSelection != "undefined") {
+            text = window.getSelection().toString();
+        } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+            text = document.selection.createRange().text;
+        }
+        return text;
+    }
+
+      function doSomethingWithSelectedText() {
+        const  selectedText = getSelectedText();
+        app.setSelectedText(selectedText)
+        
+    }
+
+      const handlePointerUp = React.useCallback(() => {
+        doSomethingWithSelectedText()
+      }, [])
+      const handleKeyUp = React.useCallback(() => {
+
+        doSomethingWithSelectedText()
+      }, [])
 
       const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
         e.stopPropagation()
@@ -214,6 +243,12 @@ export class StickyUtil extends TDShapeUtil<T, E> {
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledStickyContainer ref={rContainer} style={{ backgroundColor: fill, ...style }}>
+            {selectedStickyText !== '' && <div style={{
+              position:"absolute",
+              top:'-50px',
+              right:'60%',
+              zIndex:90
+            }}><button>blue</button></div>}
             <div
               style={{
                 position: 'absolute',
@@ -247,6 +282,9 @@ export class StickyUtil extends TDShapeUtil<T, E> {
                 style={{ lineHeight: '1' }}
                 ref={rTextArea}
                 onPointerDown={handlePointerDown}
+                onPointerUp={handlePointerUp}
+                onKeyUp={handleKeyUp}
+
                 value={isEditing ? rTextContent.current : shape.text}
                 onChange={handleTextChange}
                 onKeyDown={handleKeyDown}
@@ -263,6 +301,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
                 onContextMenu={stopPropagation}
               />
             )}
+   
           </StyledStickyContainer>
         </HTMLContainer>
       )

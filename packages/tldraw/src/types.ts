@@ -121,7 +121,9 @@ export interface TDSnapshot {
     isOpen: {
       [key:string]: boolean
     },
-    defaultOpen: boolean
+    defaultOpen: boolean,
+    isTemplateLibrary: boolean,
+    selectedStickyText: string
   }
   document: TDDocument
   room?: {
