@@ -11,56 +11,57 @@ export const SelectionTools = React.memo(function SelectionTools(): JSX.Element 
   const selectedId = app.useStore(s=>s.document.pageStates.page.selectedIds)
   const scale = app.getShape(selectedId[0]).style.scale || 1
   return ( 
-    // <StyledToolBarContainer>
-    //   <button onClick={()=>{
-    //     console.log(scale)
-    //     app.style({scale: (scale + 0.1 * scale)})
-    //   }}>A+</button>
-    //   <button onClick={()=>{
-    //     console.log(scale)
-    //     app.style({scale: (scale - 0.1 * scale)})
-    //   }}>A-</button>
-    //   <button onClick={()=>{
-    //     app.style({textAlign:AlignStyle.Start})
-    //   }}>L</button>
-    //   <button onClick={()=>{
-    //     app.style({textAlign:AlignStyle.Middle})
-    //   }}>M</button>
-    //   <button onClick={()=>{
-    //     app.style({textAlign:AlignStyle.End})
-    //   }}>R</button>
-    //   <button onClick={()=>{
-    //     app.style({textWeight:TextWeight.Bold})
-    //   }}>B</button>
-    //   <button onClick={()=>{
-    //     app.style({textWeight:TextWeight.Normal})
-    //   }}>N</button>
-    //   <button onClick={()=>{
-    //     app.style({listType: ListType.Bullet})
-    //   }}>BLi</button>
-    //    <button onClick={()=>{
-    //     app.style({listType: ListType.Numbered})
-    //   }}>Li</button>
-    //     <button onClick={()=>{
-    //     app.style({listType: ListType.None})
-    //   }}>NLi</button>
-    //    <button onClick={()=>{
-    //     app.style({textDecoration:'line-through'})
-    //   }}>Strike</button> 
-    //   <button onClick={()=>{
-    //     app.style({textDecoration:'none'})
-    //   }}>NS</button> 
-    //    <button onClick={()=>{
-    //     app.style({textDecoration:'underline'})
-    //   }}>U</button> 
-    //   <button onClick={()=>{
-    //     app.style({fontStyle:'italic'})
-    //   }}>I</button> 
-    //   <button onClick={()=>{
-    //     app.style({fontStyle:'normal'})
-    //   }}>N</button> 
-    // </StyledToolBarContainer>
-    <></>
+    <StyledToolBarContainer>
+      <button onClick={()=>{
+        console.log(scale)
+        app.style({scale: (scale + 0.1 * scale)})
+      }}>A+</button>
+      <button onClick={()=>{
+        console.log(scale)
+        app.style({scale: (scale - 0.1 * scale)})
+      }}>A-</button>
+      <button onClick={()=>{
+        app.style({textAlign:AlignStyle.Start})
+      }}>L</button>
+      <button onClick={()=>{
+        app.style({textAlign:AlignStyle.Middle})
+      }}>M</button>
+      <button onClick={()=>{
+        app.style({textAlign:AlignStyle.End})
+      }}>R</button>
+      <button onClick={()=>{
+        app.style({textWeight:TextWeight.Bold})
+      }}>B</button>
+      <button onClick={()=>{
+        app.style({textWeight:TextWeight.Normal})
+      }}>N</button>
+      <button onClick={()=>{
+        app.style({listType: ListType.Bullet})
+      }}>BLi</button>
+       <button onClick={()=>{
+        app.style({listType: ListType.Numbered})
+      }}>Li</button>
+        <button onClick={()=>{
+        app.style({listType: ListType.None})
+      }}>NLi</button>
+       <button onClick={()=>{
+        app.style({textDecoration:'line-through'})
+      }}>Strike</button> 
+      <button onClick={()=>{
+        app.style({textDecoration:'none'})
+      }}>NS</button> 
+       <button onClick={()=>{
+        app.style({textDecoration:'underline'})
+      }}>U</button> 
+      <button onClick={()=>{
+        app.style({fontStyle:'italic'})
+      }}>I</button> 
+      <button onClick={()=>{
+        app.style({fontStyle:'normal'})
+      }}>N</button> 
+      
+
+    </StyledToolBarContainer>
   )
 })
 

@@ -13,6 +13,8 @@ import { TLDR } from '~state/TLDR'
 import { getTextSvgElement } from '../shared/getTextSvgElement'
 import { stopPropagation } from '~components/stopPropagation'
 import { useTldrawApp } from '~hooks'
+import ContentEditable from 'react-contenteditable'
+import sanitizeHtml from 'sanitize-html'
 
 type T = StickyShape
 type E = HTMLDivElement
@@ -68,45 +70,45 @@ export class StickyUtil extends TDShapeUtil<T, E> {
       const currentScale = React.useRef(shape.style.scale)
 
       const rIsMounted = React.useRef(false)
-      
-      const selectedStickyText = app.useStore(s=>s.appState.selectedStickyText)
 
 
       function getSelectedText() {
-        let text = "";
-        if (typeof window.getSelection != "undefined") {
-            text = window.getSelection().toString();
-        } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-            text = document.selection.createRange().text;
+        let text = ''
+        if (typeof window.getSelection != 'undefined') {
+          text = window.getSelection().toString()
+        } else if (typeof document.selection != 'undefined' && document.selection.type == 'Text') {
+          text = document.selection.createRange().text
         }
-        return text;
-    }
+        return text
+      }
 
       function doSomethingWithSelectedText() {
-        const  selectedText = getSelectedText();
+        const selectedText = getSelectedText()
         app.setSelectedText(selectedText)
-        
-    }
+      }
 
-      const handlePointerUp = React.useCallback(() => {
-        doSomethingWithSelectedText()
-      }, [])
       const handleKeyUp = React.useCallback(() => {
-
         doSomethingWithSelectedText()
       }, [])
+
+      const sanitizeConf = {
+        allowedTags: ['b', 'i', 'em', 'strong'],
+      }
 
       const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
         e.stopPropagation()
       }, [])
+
+      const sanitize = () => {
+        onShapeChange?.({
+          id: shape.id,
+          text: sanitizeHtml(rTextContent.current, sanitizeConf),
+        })
+      }
+
       const handleTextChange = React.useCallback(
-        (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-          rTextContent.current = TLDR.normalizeText(e.currentTarget.value)
-
-          // if(rTextArea.current && this.checkOverflow(rTextArea.current) && currentScale.current ){
-
-          //   currentScale.current *= .9
-          // }
+        e => {
+          rTextContent.current = e.target.value
           if (!rTextContent.current) {
             onShapeChange?.({
               id: shape.id,
@@ -124,10 +126,6 @@ export class StickyUtil extends TDShapeUtil<T, E> {
             id: shape.id,
             type: shape.type,
             text: rTextContent.current,
-            // style: {
-            //   ...shape.style,
-            //   scale: currentScale.current
-            // }
           })
         },
         [onShapeChange]
@@ -179,27 +177,11 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         [shape, onShapeChange]
       )
 
-      const handleBlur = React.useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
-        e.currentTarget.setSelectionRange(0, 0)
-        onShapeBlur?.()
-      }, [])
-
-      const handleFocus = React.useCallback(
-        (e: React.FocusEvent<HTMLTextAreaElement>) => {
-          if (!isEditing) return
-          if (!rIsMounted.current) return
-          e.currentTarget.select()
-        },
-        [isEditing]
-      )
       // Focus when editing changes to true
       React.useEffect(() => {
         if (isEditing) {
           rTextContent.current = shape.text
           rIsMounted.current = true
-          const elm = rTextArea.current!
-          elm.focus()
-          elm.select()
         }
       }, [isEditing])
 
@@ -209,7 +191,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
         const { size, style } = shape
         const scale = style.scale || 1
-        const { offsetHeight: currTextHeight } = text
+        const { offsetHeight: currTextHeight, offsetWidth: currentWidth } = text
         const minTextHeight = MIN_CONTAINER_HEIGHT - PADDING * 2
         const prevTextHeight = size[1] - PADDING * 2
         // Same size? We can quit here
@@ -243,12 +225,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledStickyContainer ref={rContainer} style={{ backgroundColor: fill, ...style }}>
-            {selectedStickyText !== '' && <div style={{
-              position:"absolute",
-              top:'-50px',
-              right:'60%',
-              zIndex:90
-            }}><button>blue</button></div>}
+           
             <div
               style={{
                 position: 'absolute',
@@ -274,34 +251,39 @@ export class StickyUtil extends TDShapeUtil<T, E> {
                 }}
               />
             )}
-            <StyledText ref={rText} isEditing={isEditing} alignment={shape.style.textAlign}>
-              {isEditing ? rTextContent.current : shape.text}&#8203;
-            </StyledText>
-            {isEditing && (
-              <StyledTextArea
-                style={{ lineHeight: '1' }}
-                ref={rTextArea}
-                onPointerDown={handlePointerDown}
-                onPointerUp={handlePointerUp}
-                onKeyUp={handleKeyUp}
 
-                value={isEditing ? rTextContent.current : shape.text}
-                onChange={handleTextChange}
-                onKeyDown={handleKeyDown}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                tabIndex={-1}
-                autoComplete="false"
-                autoCapitalize="false"
-                autoCorrect="false"
-                autoSave="false"
-                autoFocus
-                spellCheck={true}
-                alignment={shape.style.textAlign}
-                onContextMenu={stopPropagation}
-              />
-            )}
-   
+            <ContentEditable
+              innerRef={rText}
+              tagName="pre"
+              onKeyUp={handleKeyUp}
+              html={rTextContent.current}
+              style={{
+                ...shape.style,
+                outline: '0px solid transparent',
+                margin: 0,
+                padding: 0,
+                whiteSpace: 'pre-line',
+                overflow: 'hidden',
+              }}
+              onChange={handleTextChange}
+              onBlur={sanitize}
+              spellCheck={true}
+              {...events}
+              // onPointerDown={handlePointerDown}
+            />
+
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '8px',
+                left: '5%',
+                fontWeight: '400',
+                fontSize: '12px',
+                lineHeight: '10px',
+                color: '#878A92',
+                pointerEvents:'none'
+              }}
+            >{app.appState.user.user.name}</div>
           </StyledStickyContainer>
         </HTMLContainer>
       )
@@ -378,11 +360,13 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 const PADDING = 16
 const MIN_CONTAINER_HEIGHT = 200
 
+
+
 const StyledStickyContainer = styled('div', {
   pointerEvents: 'all',
   position: 'relative',
   backgroundColor: 'rgba(255, 220, 100)',
-  fontFamily: 'sans-serif',
+  fontFamily: 'Graphik Web',
   height: '100%',
   width: '100%',
   padding: PADDING + 'px',
@@ -395,71 +379,11 @@ const commonTextWrapping = {
   overflowWrap: 'break-word',
 }
 
-const StyledText = styled('div', {
-  position: 'absolute',
-  top: PADDING,
-  left: PADDING,
-  width: `calc(100% - ${PADDING * 2}px)`,
-  height: 'fit-content',
-  font: 'inherit',
-  pointerEvents: 'none',
-  userSelect: 'none',
-  letiants: {
-    isEditing: {
-      true: {
-        opacity: 1,
-      },
-      false: {
-        opacity: 1,
-      },
-    },
-    alignment: {
-      [AlignStyle.Start]: {
-        textAlign: 'left',
-      },
-      [AlignStyle.Middle]: {
-        textAlign: 'center',
-      },
-      [AlignStyle.End]: {
-        textAlign: 'right',
-      },
-      [AlignStyle.Justify]: {
-        textAlign: 'justify',
-      },
-    },
-  },
-  ...commonTextWrapping,
-})
-
-const StyledTextArea = styled('textarea', {
-  width: '100%',
-  height: '100%',
-  border: 'none',
-  overflow: 'hidden',
-  background: 'none',
-  outline: 'none',
-  textAlign: 'left',
-  font: 'inherit',
-  padding: 0,
-  color: 'transparent',
-  verticalAlign: 'top',
-  resize: 'none',
-  caretColor: 'black',
-  ...commonTextWrapping,
-  letiants: {
-    alignment: {
-      [AlignStyle.Start]: {
-        textAlign: 'left',
-      },
-      [AlignStyle.Middle]: {
-        textAlign: 'center',
-      },
-      [AlignStyle.End]: {
-        textAlign: 'right',
-      },
-      [AlignStyle.Justify]: {
-        textAlign: 'justify',
-      },
-    },
-  },
-})
+// stikcer pointer selection
+// stroke on shapes selection
+// bring to front and back
+// section top on left
+// cursor icon change
+// share link on public should not be visible
+// alignment of icon with search
+// icons on file shape

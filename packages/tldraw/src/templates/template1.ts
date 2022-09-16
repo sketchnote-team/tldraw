@@ -374,3 +374,4 @@ export const template1 = {
   assets: [],
   zoom: 0.75,
 }
+

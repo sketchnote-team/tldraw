@@ -69,9 +69,11 @@ export class SectionUtil extends TDShapeUtil<T, E> {
     ) => {
       const { id, size, style,  labelPoint = LABEL_POINT, label = 'section'  } = shape
       const font = getFontStyle(style)
+      console.log(size,style);
+      
      
       const styles = getSectionShapeStyle(style, meta.isDarkMode)
-      const Component = style.dash === DashStyle.Draw ? DrawRectangle : DashedRectangle
+      const Component = DashedRectangle
       const handleLabelChange = React.useCallback(
         (label: string) => onShapeChange?.({ id, label }),
         [onShapeChange]

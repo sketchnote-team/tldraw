@@ -318,11 +318,19 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
-  setSelectedText = (text: string)=>{
+  setTemplateLibrary = (status: boolean) => {
     this.patchState({
-      appState:{
-        selectedStickyText: text
-      }
+      appState: {
+        isTemplateLibrary: status,
+      },
+    })
+  }
+
+  setSelectedText = (text: string) => {
+    this.patchState({
+      appState: {
+        selectedStickyText: text,
+      },
     })
   }
 
@@ -2018,8 +2026,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       return
     }
 
-    
-
     navigator.clipboard
       .readText()
       .then((result) => {
@@ -2029,7 +2035,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
           bindings: TDBinding[]
           assets: TDAsset[]
         } = JSON.parse(result)
-        debugger
         if (data.type === 'tldr/clipboard') {
           pasteInCurrentPage(data.shapes, data.bindings, data.assets)
         } else {
@@ -3018,83 +3023,129 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     return this
   }
 
-  createTemplateAtPoint(templateObject:any){
-    const {
-      shapes,
-      assets,
-      bindings
-    } = templateObject
+  createTemplateCopy = (ids = this.selectedIds): this => {
+    const copyingShapeIds = ids.flatMap((id) =>
+      TLDR.getDocumentBranch(this.state, id, this.currentPageId)
+    )
+    const copyingShapes = copyingShapeIds.map((id) =>
+      Utils.deepClone(this.getShape(id, this.currentPageId))
+    )
+    if (copyingShapes.length === 0) return this
+    const copyingBindings: TDBinding[] = Object.values(this.page.bindings).filter(
+      (binding) =>
+        copyingShapeIds.includes(binding.fromId) && copyingShapeIds.includes(binding.toId)
+    )
+    const copyingAssets = copyingShapes
+      .map((shape) => {
+        if (!shape.assetId) return
+
+        return this.document.assets[shape.assetId]
+      })
+      .filter(Boolean) as TDAsset[]
+
+    try {
+      const text = JSON.stringify({
+        type: 'tldr/clipboard',
+        shapes: copyingShapes,
+        bindings: copyingBindings,
+        assets: copyingAssets,
+      })
+
+      this.patchState({
+        appState: {
+          currentTemplate: text,
+        },
+      })
+
+      // navigator.clipboard.writeText(text).then(
+      //   () => {
+      //     // success
+      //   },
+      //   () => {
+      //     // failure
+      //   }
+      // )
+    } catch (e) {
+      // Browser does not support copying to clipboard
+    }
+    this.pasteInfo.offset = [0, 0]
+    this.pasteInfo.center = [0, 0]
+    return this
+  }
+
+  createTemplateAtPoint(templateObject: any) {
+    const { shapes, assets, bindings } = templateObject
     const idsMap: Record<string, string> = {}
-      const newAssets = assets.filter((asset) => this.document.assets[asset.id] === undefined)
-      if (newAssets.length) {
-        this.patchState({
-          document: {
-            assets: Object.fromEntries(newAssets.map((asset) => [asset.id, asset])),
-          },
-        })
-      }
-      shapes.forEach((shape) => (idsMap[shape.id] = Utils.uniqueId()))
-      bindings.forEach((binding) => (idsMap[binding.id] = Utils.uniqueId()))
-      let startIndex = TLDR.getTopChildIndex(this.state, this.currentPageId)
-      const shapesToPaste = shapes
-        .sort((a, b) => a.childIndex - b.childIndex)
-        .map((shape) => {
-          const parentShapeId = idsMap[shape.parentId]
-          const copy = {
-            ...shape,
-            id: idsMap[shape.id],
-            parentId: parentShapeId || this.currentPageId,
-          }
-          if (shape.children) {
-            copy.children = shape.children.map((id) => idsMap[id])
-          }
-          if (!parentShapeId) {
-            copy.childIndex = startIndex
-            startIndex++
-          }
-          if (copy.handles) {
-            Object.values(copy.handles).forEach((handle) => {
-              if (handle.bindingId) {
-                handle.bindingId = idsMap[handle.bindingId]
-              }
-            })
-          }
-          return copy
-        })
-      const bindingsToPaste = bindings.map((binding) => ({
-        ...binding,
-        id: idsMap[binding.id],
-        toId: idsMap[binding.toId],
-        fromId: idsMap[binding.fromId],
-      }))
-      const commonBounds = Utils.getCommonBounds(shapesToPaste.map(TLDR.getBounds))
-      let center = Vec.toFixed(this.getPagePoint(this.centerPoint))
-      if (
-        Vec.dist(center, this.pasteInfo.center) < 2 ||
-        Vec.dist(center, Vec.toFixed(Utils.getBoundsCenter(commonBounds))) < 2
-      ) {
-        center = Vec.add(center, this.pasteInfo.offset)
-        this.pasteInfo.offset = Vec.add(this.pasteInfo.offset, [GRID_SIZE, GRID_SIZE])
-      } else {
-        this.pasteInfo.center = center
-        this.pasteInfo.offset = [0, 0]
-      }
-      const centeredBounds = Utils.centerBounds(commonBounds, center)
-      const delta = Vec.sub(
-        Utils.getBoundsCenter(centeredBounds),
-        Utils.getBoundsCenter(commonBounds)
-      )
-      this.zoomTo(templateObject.zoom)
-      this.create(
-        shapesToPaste.map((shape) =>
-          TLDR.getShapeUtil(shape.type).create({
-            ...shape,
-            point: Vec.toFixed(Vec.add(shape.point, delta)),
-            parentId: shape.parentId || this.currentPageId,
+    const newAssets = assets.filter((asset) => this.document.assets[asset.id] === undefined)
+    if (newAssets.length) {
+      this.patchState({
+        document: {
+          assets: Object.fromEntries(newAssets.map((asset) => [asset.id, asset])),
+        },
+      })
+    }
+    shapes.forEach((shape) => (idsMap[shape.id] = Utils.uniqueId()))
+    bindings.forEach((binding) => (idsMap[binding.id] = Utils.uniqueId()))
+    let startIndex = TLDR.getTopChildIndex(this.state, this.currentPageId)
+    const shapesToPaste = shapes
+      .sort((a, b) => a.childIndex - b.childIndex)
+      .map((shape) => {
+        const parentShapeId = idsMap[shape.parentId]
+        const copy = {
+          ...shape,
+          id: idsMap[shape.id],
+          parentId: parentShapeId || this.currentPageId,
+        }
+        if (shape.children) {
+          copy.children = shape.children.map((id) => idsMap[id])
+        }
+        if (!parentShapeId) {
+          copy.childIndex = startIndex
+          startIndex++
+        }
+        if (copy.handles) {
+          Object.values(copy.handles).forEach((handle) => {
+            if (handle.bindingId) {
+              handle.bindingId = idsMap[handle.bindingId]
+            }
           })
-        ),
-        bindingsToPaste
-      )
+        }
+        return copy
+      })
+    const bindingsToPaste = bindings.map((binding) => ({
+      ...binding,
+      id: idsMap[binding.id],
+      toId: idsMap[binding.toId],
+      fromId: idsMap[binding.fromId],
+    }))
+    const commonBounds = Utils.getCommonBounds(shapesToPaste.map(TLDR.getBounds))
+    let center = Vec.toFixed(this.getPagePoint(this.centerPoint))
+    if (
+      Vec.dist(center, this.pasteInfo.center) < 2 ||
+      Vec.dist(center, Vec.toFixed(Utils.getBoundsCenter(commonBounds))) < 2
+    ) {
+      center = Vec.add(center, this.pasteInfo.offset)
+      this.pasteInfo.offset = Vec.add(this.pasteInfo.offset, [GRID_SIZE, GRID_SIZE])
+    } else {
+      this.pasteInfo.center = center
+      this.pasteInfo.offset = [0, 0]
+    }
+    const centeredBounds = Utils.centerBounds(commonBounds, center)
+    const delta = Vec.sub(
+      Utils.getBoundsCenter(centeredBounds),
+      Utils.getBoundsCenter(commonBounds)
+    )
+    this.zoomTo(templateObject.zoom)
+    this.create(
+      shapesToPaste.map((shape) =>
+        TLDR.getShapeUtil(shape.type).create({
+          ...shape,
+          point: Vec.toFixed(Vec.add(shape.point, delta)),
+          parentId: shape.parentId || this.currentPageId,
+        })
+      ),
+      bindingsToPaste
+    )
   }
 
   createImageOrVideoShapeAtPoint(
@@ -3940,6 +3991,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   }
 
   onPointerUp: TLPointerEventHandler = (info, e) => {
+    let text = "";
+    if (typeof window.getSelection != "undefined") {
+        text = window.getSelection().toString();
+    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+        text = document.selection.createRange().text;
+    }
+    console.log(text)
+    this.setSelectedText(text)
     this.isPointing = false
     if (!this.shiftKey) this.isForcePanning = false
     this.updateInputs(info, e)
@@ -4436,7 +4495,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       isOpen: {},
       defaultOpen: false,
       isTemplateLibrary: false,
-      selectedStickyText: ''
+      selectedStickyText: '',
+      currentTemplate: '',
     },
     document: TldrawApp.defaultDocument,
   }

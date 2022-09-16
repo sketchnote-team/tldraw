@@ -66,7 +66,7 @@ export const DashedRectangle = React.memo(function DashedRectangle({
       {style.isFilled && (
         <rect x={sw / 2} y={sw / 2} width={w} height={h} fill={fill} pointerEvents="none" />
       )}
-      <g pointerEvents="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round">
+      <g pointerEvents="none" stroke={stroke} strokeWidth={2} strokeLinecap="round">
         {paths}
       </g>
     </>

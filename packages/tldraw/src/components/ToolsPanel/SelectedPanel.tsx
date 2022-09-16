@@ -24,22 +24,65 @@ export function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
   const pointX = (app.useStore(s=>s.document.pageStates.page.camera.point[0])+(xPoint)) * zoom
   const pointY = (app.useStore(s=>s.document.pageStates.page.camera.point[1])+(yPoint)) * zoom - 40
   const status = (app.useStore(s=>s.appState.status))
+  const selectedStickyText = app.useStore(s => s.appState.selectedStickyText)
 
   if(selectedShapes.every( v => v === selectedShapes[0] )){
     if (firstShape && (status!==TDStatus.Translating  && status!==TDStatus.Creating))
     content =  
-      <StyledToolsPanelContainer style={{ 
-        transform: `translate(${pointX }px, ${pointY}px)`
-      }}>
-        <div style={{ 
-          transform: `translate(-50%, 0)`
-        }}>
+      
           <SelectionTools />
-        </div>
-      </StyledToolsPanelContainer>
+       
   }
-  return content 
+  console.log(selectedStickyText);
+  
+  if(selectedStickyText !== '' &&  firstShape.name==='Sticky') 
+    content = (
+     
+      <div
+        style={{
+          position: 'absolute',
+          top: '-50px',
+          right: '60%',
+          zIndex: 90,
+        }}
+      >
+        <EditButton cmd="strikethrough" />
+        <EditButton cmd="underline" />
+        <EditButton cmd="bold" />
+        <EditButton cmd="italic" />
+        <EditButton cmd="foreColor" name="blue" arg="rgb(0,0,255)"/>
+        <EditButton cmd="foreColor" name="red" arg="rgb(255,0,0)"/>
+        <EditButton cmd="foreColor" name="yellow" arg="rgb(255,255,0)"/>
+
+
+
+      </div>
+    
+    )
+  return  <StyledToolsPanelContainer style={{ 
+    transform: `translate(${pointX }px, ${pointY}px)`
+  }}>
+    <div style={{ 
+      transform: `translate(-50%, 0)`
+    }}>{content}   </div>
+      </StyledToolsPanelContainer>
 }
+
+function EditButton(props) {
+  return (
+    <button
+      key={props.cmd}
+      onMouseDown={evt => {
+        evt.preventDefault() // Avoids loosing focus from the editable area
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand(props.cmd, false, props.arg) // Send the command to the browser
+      }}
+    >
+      {props.name || props.cmd}
+    </button>
+  )
+}
+
 
 const StyledToolsPanelContainer = styled('div', {
   length: '',

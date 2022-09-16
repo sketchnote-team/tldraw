@@ -123,7 +123,8 @@ export interface TDSnapshot {
     },
     defaultOpen: boolean,
     isTemplateLibrary: boolean,
-    selectedStickyText: string
+    selectedStickyText: string,
+    currentTemplate: string
   }
   document: TDDocument
   room?: {

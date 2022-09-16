@@ -64,7 +64,6 @@ export class StickerUtil extends TDShapeUtil<T, E> {
 
       return (
         <HTMLContainer ref={ref} {...events}>
-
           <Wrapper
             ref={rWrapper}
           >          
@@ -76,7 +75,6 @@ export class StickerUtil extends TDShapeUtil<T, E> {
             
             />
           </Wrapper>
- 
         </HTMLContainer>
       )
     }
@@ -110,5 +108,6 @@ export class StickerUtil extends TDShapeUtil<T, E> {
 const Wrapper = styled('div', {
   width:'45px',
   height:'45px',
+  pointerEvents:'all'
 })
 
