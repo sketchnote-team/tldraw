@@ -403,9 +403,14 @@ const InnerTldraw = React.memo(function InnerTldraw({
 
   const hideCloneHandles =
     isInSession || !isSelecting || !settings.showCloneHandles || pageState.camera.zoom < 0.2
+  
 
   return (
-    <StyledLayout ref={rWrapper} tabIndex={-0} className={settings.isDarkMode ? dark : ''}>
+    <StyledLayout
+      ref={rWrapper}
+      tabIndex={-0}
+      className={settings.isDarkMode ? dark : ''}
+    >
       <Loading />
       <OneOff focusableRef={rWrapper} autofocus={autofocus} />
       <ContextMenu>
@@ -503,8 +508,8 @@ const InnerTldraw = React.memo(function InnerTldraw({
               />
               <StyledSpacer />
               {showTools && !readOnly && <ToolsPanel />}
-              { (selectedIds.length > 0) && < SelectedPanel selectedIds={selectedIds} /> }
-              { activeTool === 'sticker'&& <CursorSVG sticker={selectedSticker} />  }
+              {selectedIds.length > 0 && <SelectedPanel selectedIds={selectedIds} />}
+              {activeTool === 'sticker' && <CursorSVG sticker={selectedSticker} />}
             </>
           )}
         </StyledUI>

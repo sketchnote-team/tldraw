@@ -78,12 +78,12 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectStickerTool = React.useCallback(() => {
-    app.selectSticker(ReactDOM.renderToString(svg))
+    // app.selectSticker(ReactDOM.renderToString(svg))
     // app.selectTool(TDShapeType.Sticker)
     // app.selectTool(TDShapeType.Comment)
     // app.setDefaultOpen(true)
     // app.createTemplateAtPoint(template1)
-    app.selectTool(TDShapeType.Sticker)
+    app.selectTool('move')
   }, [app])
 
   const svg = (
@@ -565,6 +565,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     //   1,
     //   `zoomed_to_content`
     // )
+    app.selectTool(TDShapeType.Section)
   }
 
   return (

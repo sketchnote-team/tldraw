@@ -182,6 +182,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         if (isEditing) {
           rTextContent.current = shape.text
           rIsMounted.current = true
+          rText?.current?.focus()
         }
       }, [isEditing])
 
@@ -268,8 +269,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
               onChange={handleTextChange}
               onBlur={sanitize}
               spellCheck={true}
-              {...events}
-              // onPointerDown={handlePointerDown}
+              onPointerDown={handlePointerDown}
             />
 
             <div

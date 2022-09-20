@@ -95,6 +95,7 @@ import { SectionTool } from './tools/SectionTool'
 import { HighlighterTool } from './tools/HighlighterTool'
 import { ConnectorTool } from './tools/ConnectorTool'
 import { CommentTool } from './tools/CommentTool'
+import { MoveTool } from './tools/MoveTool/MoveTool'
 
 const uuid = Utils.uniqueId()
 
@@ -188,6 +189,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   tools = {
     select: new SelectTool(this),
     erase: new EraseTool(this),
+    move : new MoveTool(this),
     [TDShapeType.Text]: new TextTool(this),
     [TDShapeType.Draw]: new DrawTool(this),
     [TDShapeType.Ellipse]: new EllipseTool(this),
@@ -316,6 +318,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         },
       },
     })
+  }
+
+  setForcepanningTrue = () =>{
+    this.isForcePanning = true
+    return this
   }
 
   setTemplateLibrary = (status: boolean) => {
@@ -3997,7 +4004,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
         text = document.selection.createRange().text;
     }
-    console.log(text)
     this.setSelectedText(text)
     this.isPointing = false
     if (!this.shiftKey) this.isForcePanning = false

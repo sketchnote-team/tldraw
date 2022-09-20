@@ -17,6 +17,7 @@ import { DashedRectangle } from './components/DashedRectangle'
 import { BindingIndicator } from './components/BindingIndicator'
 import { styled } from '~styles'
 import { SectionHeader } from './components/SectionHeader'
+import { useTldrawApp } from '~hooks'
 
 type T = SectionShape
 type E = HTMLDivElement
@@ -51,6 +52,7 @@ export class SectionUtil extends TDShapeUtil<T, E> {
     )
   }
 
+  
   Component = TDShapeUtil.Component<T, E, TDMeta>(
     (
       {
@@ -69,8 +71,6 @@ export class SectionUtil extends TDShapeUtil<T, E> {
     ) => {
       const { id, size, style,  labelPoint = LABEL_POINT, label = 'section'  } = shape
       const font = getFontStyle(style)
-      console.log(size,style);
-      
      
       const styles = getSectionShapeStyle(style, meta.isDarkMode)
       const Component = DashedRectangle
@@ -78,9 +78,18 @@ export class SectionUtil extends TDShapeUtil<T, E> {
         (label: string) => onShapeChange?.({ id, label }),
         [onShapeChange]
       )
+
+      // const app = useTldrawApp()
+
+      // const deleteSection = () => {
+      //   app.delete([id])
+      // }
+    
       return (
-        <FullWrapper ref={ref} {...events}>
-          <div style={{position:'absolute', top: '50%', right: '50%'}} >
+       
+        <FullWrapper ref={ref} {...events} >
+
+          <div style={{position:'absolute', top: '50%', right: '50%'}}  >
               <SectionButton  {...events} style={{bottom: bounds.height/2 }} >
                 <SectionHeader
                   isEditing={isEditing}
@@ -93,8 +102,11 @@ export class SectionUtil extends TDShapeUtil<T, E> {
                   // offsetY={(labelPoint[1] - 0.5) * bounds.height}
                 />
               </SectionButton>
-       
           </div>
+
+          {/* <DeleteButton  {...events} style={{bottom: bounds.height/2 }} onClick={deleteSection}>
+            Remove Section
+          </DeleteButton> */}
         
           <SVGContainer id={shape.id + '_svg'} opacity={0.5}>
             {isBinding && <BindingIndicator strokeWidth={styles.strokeWidth} size={size} />}
@@ -152,3 +164,4 @@ export class SectionUtil extends TDShapeUtil<T, E> {
 
 const FullWrapper = styled('div', { width: '100%', height: '100%', position:'relative' })
 const SectionButton = styled('div', {position:"absolute", height:"42px", left:"5%", zIndex:"99", pointerEvents:"all", cursor:"pointer"})
+// const DeleteButton = styled('div', {position:"absolute", height:"42px", width :"42px", right:"5%", top:0, zIndex:"99", pointerEvents:"all", cursor:"pointer"})

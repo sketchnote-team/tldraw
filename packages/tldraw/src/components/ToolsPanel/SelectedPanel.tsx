@@ -33,7 +33,6 @@ export function SelectedPanel({selectedIds}:SelectedPanelProps): JSX.Element {
           <SelectionTools />
        
   }
-  console.log(selectedStickyText);
   
   if(selectedStickyText !== '' &&  firstShape.name==='Sticky') 
     content = (

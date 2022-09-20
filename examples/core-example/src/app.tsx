@@ -37,7 +37,6 @@ export default observer(function App(): JSX.Element {
   }
 
   const onPointShape: TLPointerEventHandler = (info) => {
-    console.log('asdf',info.target);
     
     pageState.setSelectedIds(info.target)
   }

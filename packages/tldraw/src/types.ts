@@ -228,6 +228,7 @@ export enum TDStatus {
 export type TDToolType =
   | 'select'
   | 'erase'
+  | 'move'
   | TDShapeType.Text
   | TDShapeType.Draw
   | TDShapeType.Ellipse

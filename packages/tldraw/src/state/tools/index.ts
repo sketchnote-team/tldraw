@@ -14,10 +14,12 @@ import { SectionTool } from './SectionTool'
 import { HighlighterTool } from './HighlighterTool'
 import { ConnectorTool } from './ConnectorTool'
 import { CommentTool } from './CommentTool'
+import { MoveTool } from './MoveTool/MoveTool'
 
 export interface ToolsMap {
   select: typeof SelectTool
   erase: typeof EraseTool
+  move: typeof MoveTool
   [TDShapeType.Text]: typeof TextTool
   [TDShapeType.Draw]: typeof DrawTool
   [TDShapeType.Ellipse]: typeof EllipseTool
@@ -40,6 +42,7 @@ export type ArgsOfType<K extends TDToolType> = ConstructorParameters<ToolOfType<
 export const tools: { [K in TDToolType]: ToolsMap[K] } = {
   select: SelectTool,
   erase: EraseTool,
+  move: MoveTool,
   [TDShapeType.Text]: TextTool,
   [TDShapeType.Draw]: DrawTool,
   [TDShapeType.Ellipse]: EllipseTool,

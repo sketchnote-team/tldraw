@@ -356,7 +356,7 @@ const tlcss = css`
   .tl-clone-button {
     opacity: 0;
     r: calc(8px * var(--tl-scale));
-    stroke-width: calc(1.5px * var(--tl-scale));
+    stroke-width: calc(0.5px * var(--tl-scale));
     stroke: var(--tl-selectStroke);
     fill: var(--tl-background);
   }
@@ -376,7 +376,7 @@ const tlcss = css`
   .tl-bounds-center {
     fill: transparent;
     stroke: var(--tl-selectStroke);
-    stroke-width: calc(1.5px * var(--tl-scale));
+    stroke-width: calc(1px * var(--tl-scale));
   }
 
   .tl-brush {
