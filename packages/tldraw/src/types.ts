@@ -113,9 +113,6 @@ export interface TDSnapshot {
     disableAssets: boolean
     selectByContain?: boolean
     selectedSticker: string
-    sections: {
-      [key: string]: string[]
-    }
     currentStickerPoint: number[]
     user: any
     isOpen: {
@@ -125,6 +122,9 @@ export interface TDSnapshot {
     isTemplateLibrary: boolean,
     selectedStickyText: string,
     currentTemplate: string
+    isTemplateEditMode: boolean
+    stashForEditing: string,
+    currentEditingTemplate: any
   }
   document: TDDocument
   room?: {
@@ -157,12 +157,13 @@ export interface TDDocument {
 }
 
 // The shape of a single page in the Tldraw document
-export type TDPage = TLPage<TDShape, TDBinding>
+export type TDPage = TLPage<TDShape, TDBinding, any>
 
 // A partial of a TDPage, used for commands / patches
 export type PagePartial = {
   shapes: Patch<TDPage['shapes']>
   bindings: Patch<TDPage['bindings']>
+  sections: Patch<TDPage['sections']>
 }
 
 // The meta information passed to TDShapeUtil components
@@ -451,7 +452,8 @@ export interface TextShape extends TDBaseShape {
 export interface StickyShape extends TDBaseShape {
   type: TDShapeType.Sticky
   size: number[]
-  text: string
+  text: string,
+  user: string
 }
 export interface CommentShape extends TDBaseShape {
   type: TDShapeType.Comment

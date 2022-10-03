@@ -1,5 +1,5 @@
 import { TLBounds, Utils } from '@tldraw/core'
-import { SessionType, TldrawPatch, TDStatus, TldrawCommand } from '~types'
+import { SessionType, TldrawPatch, TDStatus, TldrawCommand, TDShapeType } from '~types'
 import type { TldrawApp } from '../../internal'
 import { BaseSession } from '../BaseSession'
 
@@ -80,7 +80,7 @@ export class BrushSession extends BaseSession {
 
 
           // When brushing a shape, select its top group parent.
-          if (!selectedIds.has(selectId)) {
+          if (!selectedIds.has(selectId) && shape.type !== TDShapeType.Section) {
             selectedIds.add(selectId)
           }
         } else if (selectedIds.has(selectId)) {

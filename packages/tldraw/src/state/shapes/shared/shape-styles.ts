@@ -31,6 +31,16 @@ const colors = {
   [ColorStyle.Yellow]: '#FFDA47',
 }
 
+const stickyColors = {
+  [ColorStyle.Green]: 'rgb(147, 210, 117)',
+  [ColorStyle.Blue]: 'rgb(108, 216, 250)',
+  [ColorStyle.Pink]: 'rgb(255, 206, 224)',
+  [ColorStyle.Violet]: 'rgb(123, 146, 255)',
+  [ColorStyle.Red]: 'rgb(241, 108, 127)',
+  [ColorStyle.Orange]: 'rgb(255, 157, 72)',
+  [ColorStyle.Yellow]: 'rgb(255, 249, 177)',
+}
+
 export const stickyFills: Record<Theme, Record<ColorStyle, string>> = {
   light: {
     ...(Object.fromEntries(
@@ -155,10 +165,10 @@ export function getStickyShapeStyle(style: ShapeStyles, isDarkMode = false) {
 
   const theme: Theme = isDarkMode ? 'dark' : 'light'
   const adjustedColor =
-    color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Violet : color
+    color === ColorStyle.White || color === ColorStyle.Black ? ColorStyle.Pink : color
 
   return {
-    fill: strokes[theme][adjustedColor],
+    fill: stickyColors[adjustedColor],
     stroke: strokes[theme][adjustedColor],
     color: isDarkMode ? '#1d1d1d' : '#0d0d0d',
   }

@@ -19,6 +19,8 @@ import { ShapesMenu } from './ShapesMenu'
 import { EraserIcon } from '~components/Primitives/icons'
 import Vec from '@tldraw/vec'
 import { template1 } from '~templates'
+import { PenMenu } from './PenMenu'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 const activeToolSelector = (s: TDSnapshot) => s.appState.activeTool
 const toolLockedSelector = (s: TDSnapshot) => s.appState.isToolLocked
@@ -46,8 +48,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
-  // const openComments = app.useStore(s=>s.appState.isOpen)
-  // const shapes = app.useStore(s=>s.document.pages.page.shapes)
+  const currentTemplate = app.useStore(s=>s.appState.currentTemplate)
 
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
@@ -62,7 +63,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectArrowTool = React.useCallback(() => {
-    app.selectTool(TDShapeType.Arrow)
+    app.selectTool(TDShapeType.Section)
   }, [app])
 
   const selectTextTool = React.useCallback(() => {
@@ -70,7 +71,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectStickyTool = React.useCallback(() => {
-    app.selectTool(TDShapeType.Sticky)
+    console.log(currentTemplate)
   }, [app])
 
   const selectLinkTool = React.useCallback(() => {
@@ -83,7 +84,9 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     // app.selectTool(TDShapeType.Comment)
     // app.setDefaultOpen(true)
     // app.createTemplateAtPoint(template1)
-    app.selectTool('move')
+  app.selectAll()
+  app.createTemplateCopy()
+
   }, [app])
 
   const svg = (
@@ -565,7 +568,9 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
     //   1,
     //   `zoomed_to_content`
     // )
-    app.selectTool(TDShapeType.Section)
+    // app.deleteAll()
+    // app.restoreStashedShapes()
+    app.createTemplateAtPoint(JSON.parse(currentTemplate))
   }
 
   return (

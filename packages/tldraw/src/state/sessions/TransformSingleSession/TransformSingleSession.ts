@@ -8,7 +8,7 @@ import {
   TLPerformanceMode,
 } from '@tldraw/core'
 import { Vec } from '@tldraw/vec'
-import { SessionType, TldrawCommand, TldrawPatch, TDShape, TDStatus } from '~types'
+import { SessionType, TldrawCommand, TldrawPatch, TDShape, TDStatus, TDShapeType } from '~types'
 import { TLDR } from '~state/TLDR'
 import { SLOW_SPEED, SNAP_DISTANCE } from '~constants'
 import { BaseSession } from '../BaseSession'
@@ -37,6 +37,7 @@ export class TransformSingleSession extends BaseSession {
   snapInfo: SnapInfo = { state: 'empty' }
   prevPoint = [0, 0]
   speed = 1
+  selectedShapes: string[] = []
 
   constructor(
     app: TldrawApp,
@@ -173,6 +174,47 @@ export class TransformSingleSession extends BaseSession {
       afterShape.point = Vec.snap(afterShape.point, currentGrid)
     }
 
+    if(this.app.getShape(initialShape.id).type === TDShapeType.Section){
+      const zoom = camera.zoom
+     
+      const sectionBounds = this.app.getShapeUtil(initialShape).getBounds(initialShape) 
+      const origin = [sectionBounds.minX, sectionBounds.minY]
+      const point = currentPoint
+      
+      
+      // const origin = [(originPoint[0]/zoom - this.app.pageState.camera.point[0]), (originPoint[1]/zoom - this.app.pageState.camera.point[1]) ]
+      // const point = [(currentPoint[0]/zoom - this.app.pageState.camera.point[0]), (currentPoint[1]/zoom - this.app.pageState.camera.point[1]) ]
+     
+      const shapesToTest = this.app.shapes
+      .filter(
+        (shape) =>
+          !(
+            shape.isLocked ||
+            shape.isHidden ||
+            shape.parentId !== currentPageId ||
+            shape.id === initialShape.id
+          )
+      )
+      .map((shape) => ({
+        id: shape.id,
+        bounds: this.app.getShapeUtil(shape).getBounds(shape),
+        selectId: shape.id, //TLDR.getTopParentId(data, shape.id, currentPageId),
+      }))
+
+      
+      
+      const a = shapesToTest.filter(shape1 => 
+        (shape1.bounds.minX  > Math.min(origin[0], point[0]) &&
+        shape1.bounds.maxX  < Math.max(origin[0], point[0]) &&
+        shape1.bounds.minY  > Math.min(origin[1], point[1]) &&
+        shape1.bounds.maxY  < Math.max(origin[1], point[1]))
+      )
+      
+      this.selectedShapes = a.map(a2=>a2.id);
+
+      this.app.select(...this.selectedShapes)
+    }
+
     return {
       appState: {
         snapLines,
@@ -232,13 +274,31 @@ export class TransformSingleSession extends BaseSession {
       return this.cancel()
     }
 
+    const beforeSections = this.app.document.pages[currentPageId].sections
+    beforeSections[initialShape.id ] =undefined
+
+    let afterSections = beforeSections
+
+
+    this.app.pageState.selectedIds.forEach((id) => {
+      if (id) {
+        afterSections = {...this.app.checkIfInsideSectionandReturnState(id)}
+      }
+    })
+    
+    if(this.app.getShape(initialShape.id).type === TDShapeType.Section){
+        afterSections = {
+          ...afterSections,
+          [initialShape.id]: [...this.selectedShapes]
+        }
+    }
+
     const beforeShapes = {} as Record<string, Partial<TDShape> | undefined>
     const afterShapes = {} as Record<string, Partial<TDShape>>
 
     beforeShapes[initialShape.id] = this.isCreate ? undefined : initialShape
 
     afterShapes[initialShape.id] = TLDR.onSessionComplete(this.app.getShape(initialShape.id))
-
     return {
       id: 'transform_single',
       before: {
@@ -249,6 +309,7 @@ export class TransformSingleSession extends BaseSession {
           pages: {
             [currentPageId]: {
               shapes: beforeShapes,
+              sections: beforeSections
             },
           },
           pageStates: {
@@ -268,6 +329,7 @@ export class TransformSingleSession extends BaseSession {
           pages: {
             [currentPageId]: {
               shapes: afterShapes,
+              sections: afterSections
             },
           },
           pageStates: {

@@ -471,19 +471,49 @@ export class TranslateSession extends BaseSession {
     }
   }
 
+  private arraysEqual(a:string[], b:string[]) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+    // Please note that calling sort on an array will modify that array.
+    // you might want to clone your array first.
+
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
   complete = (): TldrawPatch | TldrawCommand | undefined => {
     const {
       initialShapes,
       initialParentChildren,
       bindingsToDelete,
-      app: { currentPageId },
+      app: { currentPageId }
     } = this
 
+    const beforeSections= this.app.document.pages[currentPageId].sections
     const beforeBindings: Patch<Record<string, TDBinding>> = {}
     const beforeShapes: Patch<Record<string, TDShape>> = {}
 
+    const afterSections = beforeSections
     const afterBindings: Patch<Record<string, TDBinding>> = {}
     const afterShapes: Patch<Record<string, TDShape>> = {}
+
+    
+    this.app.pageState.selectedIds.forEach((id) => {
+      if (id) {
+        const updatedSections = this.app.checkIfInsideSectionandReturnState(id)
+        Object.keys(updatedSections).forEach(section=>{
+          if((updatedSections[section].includes(id) || afterSections[section].includes(id) )&& !this.arraysEqual(updatedSections[section],afterSections[section]) )
+            afterSections[section]= updatedSections[section]
+        })
+      }
+    }) 
+    
 
     if (this.isCloning) {
       if (this.cloneInfo.state === 'empty') {
@@ -580,6 +610,7 @@ export class TranslateSession extends BaseSession {
             [currentPageId]: {
               shapes: beforeShapes,
               bindings: beforeBindings,
+              sections: beforeSections
             },
           },
           pageStates: {
@@ -598,6 +629,7 @@ export class TranslateSession extends BaseSession {
             [currentPageId]: {
               shapes: afterShapes,
               bindings: afterBindings,
+              sections: afterSections
             },
           },
           pageStates: {

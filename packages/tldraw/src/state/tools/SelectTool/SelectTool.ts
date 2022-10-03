@@ -429,8 +429,8 @@ export class SelectTool extends BaseTool<Status> {
       if (this.app.document.pageStates.page.selectedIds) {
         const selectedShape = this.app.document.pageStates.page.selectedIds
         selectedShape.forEach((shape) => {
-          const toBeSelectedShapes = this.app.appState.sections[shape]
-            ? new Set([...this.app.appState.sections[shape], shape])
+          const toBeSelectedShapes = this.app.document.pages.page.sections[shape]
+            ? new Set([...this.app.document.pages.page.sections[shape], shape])
             : new Set([shape])
           this.app.select(...toBeSelectedShapes)
         })

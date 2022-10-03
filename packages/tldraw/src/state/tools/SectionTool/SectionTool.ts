@@ -7,7 +7,6 @@ import { BaseTool } from '../BaseTool'
 import { TLDR } from '~state/TLDR'
 import { Children } from 'react'
 
-
 enum Status {
   Idle = 'idle',
   Creating = 'creating',
@@ -27,17 +26,16 @@ enum Status {
   ClonePainting = 'clonePainting',
 }
 
-
 export class SectionTool extends BaseTool<Status> {
   type = TDShapeType.Section as const
-  shape:any = null
-  selectedShapes:string[] = []
+  shape: any = null
+  selectedShapes: string[] = []
 
   /* ----------------- Event Handlers ----------------- */
 
   onPointerDown: TLPointerEventHandler = () => {
     if (this.status !== Status.Idle) return
-    
+
     const {
       currentPoint,
       currentGrid,
@@ -45,7 +43,7 @@ export class SectionTool extends BaseTool<Status> {
       appState: { currentPageId, currentSectionStyle },
     } = this.app
 
-    const childIndex = -9999;
+    const childIndex = -9999
 
     const id = Utils.uniqueId()
 
@@ -57,9 +55,8 @@ export class SectionTool extends BaseTool<Status> {
       style: { ...currentSectionStyle },
     })
 
-    this.shape = newShape;
+    this.shape = newShape
     this.app.patchCreate([this.shape])
-
 
     this.app.startSession(
       SessionType.TransformSingle,
@@ -72,44 +69,6 @@ export class SectionTool extends BaseTool<Status> {
   }
 
   onPointerMove: TLPointerEventHandler = (info, e) => {
-    let  { origin, point } = info
-    const { currentPageId } = this.app
-
-    const zoom = this.app.pageState.camera.zoom
-
-    origin = [(origin[0]/zoom - this.app.pageState.camera.point[0]), (origin[1]/zoom - this.app.pageState.camera.point[1]) ]
-    point = [(point[0]/zoom - this.app.pageState.camera.point[0]), (point[1]/zoom - this.app.pageState.camera.point[1]) ]
-
-  
-
-    if(this.status === Status.Creating){
-      const shapesToTest = this.app.shapes
-      .filter(
-        (shape) =>
-          !(
-            shape.isLocked ||
-            shape.isHidden ||
-            shape.parentId !== currentPageId
-          )
-      )
-      .map((shape) => ({
-        id: shape.id,
-        bounds: this.app.getShapeUtil(shape).getBounds(shape),
-        selectId: shape.id, //TLDR.getTopParentId(data, shape.id, currentPageId),
-      }))
-     
-      const a = shapesToTest.filter(shapes =>
-        shapes.bounds.minX  > Math.min(origin[0], point[0]) &&
-        shapes.bounds.maxX  < Math.max(origin[0], point[0]) &&
-        shapes.bounds.minY  > Math.min(origin[1], point[1]) &&
-        shapes.bounds.maxY  < Math.max(origin[1], point[1]) 
-      )
-      
-      this.selectedShapes = a.map(a=>a.id);
-      this.app.select(...this.selectedShapes)
-
-    }
-
     this.app.updateSession()
   }
 
@@ -123,11 +82,10 @@ export class SectionTool extends BaseTool<Status> {
         this.app.selectTool('select')
       }
     }
-    if (Vec.dist(this.app.originPoint, this.app.currentPoint) > 2){  
-      this.app.setSectionAndChildren(this.shape.id, this.selectedShapes)
+    if (Vec.dist(this.app.originPoint, this.app.currentPoint) > 2) {
       this.app.select(...[...this.selectedShapes, this.shape.id])
     }
-  
+
     this.setStatus(Status.Idle)
   }
 
@@ -150,8 +108,3 @@ export class SectionTool extends BaseTool<Status> {
     })
   }
 }
-
-
-
-
-

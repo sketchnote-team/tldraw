@@ -180,12 +180,21 @@ export class DrawSession extends BaseSession {
     const { shapeId } = this
     const pageId = this.app.currentPageId
     const shape = this.app.getShape<DrawShape>(shapeId)
+    const beforeSections = this.app.document.pages.page?.sections
+
+    let afterSections = beforeSections
+    this.app.pageState.selectedIds.forEach((id) => {
+      if (id) {
+        afterSections = { ...this.app.checkIfInsideSectionandReturnState(id) }
+      }
+    })
     return {
       id: 'create_draw',
       before: {
         document: {
           pages: {
             [pageId]: {
+              sections: beforeSections,
               shapes: {
                 [shapeId]: this.isExtending ? this.initialShape : undefined,
               },
@@ -202,6 +211,7 @@ export class DrawSession extends BaseSession {
         document: {
           pages: {
             [pageId]: {
+              sections: afterSections,
               shapes: {
                 [shapeId]: {
                   ...shape,

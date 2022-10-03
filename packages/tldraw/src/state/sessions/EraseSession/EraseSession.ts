@@ -141,6 +141,11 @@ export class EraseSession extends BaseSession {
 
   complete = (): TldrawPatch | TldrawCommand | undefined => {
     const { page } = this.app
+    const beforeSections = this.app.document.pages.page?.sections
+
+    const erasedArray = [...this.erasedShapes].map((ele) => ele.id)
+
+    const afterSections = {...this.app.removeSectionFromState(erasedArray)}
 
     this.erasedShapes.forEach((shape) => {
       if (!this.app.getShape(shape.id)) {
@@ -163,11 +168,13 @@ export class EraseSession extends BaseSession {
     const before: PagePartial = {
       shapes: Object.fromEntries(erasedShapes.map((shape) => [shape.id, shape])),
       bindings: Object.fromEntries(erasedBindings.map((binding) => [binding.id, binding])),
+      sections: beforeSections
     }
 
     const after: PagePartial = {
       shapes: Object.fromEntries(erasedShapes.map((shape) => [shape.id, undefined])),
       bindings: Object.fromEntries(erasedBindings.map((binding) => [binding.id, undefined])),
+      sections: afterSections
     }
 
     // Remove references on any shape's handles to any deleted bindings

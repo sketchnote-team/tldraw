@@ -47,6 +47,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         text: '',
         rotation: 0,
         style: defaultTextStyle,
+        user:'',
       },
       props
     )
@@ -56,6 +57,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
     ({ shape, meta, events, isGhost, isBinding, isEditing, onShapeBlur, onShapeChange }, ref) => {
       const app = useTldrawApp()
       const font = getStickyFontStyle(shape.style)
+      const [initialString, setInitial] = React.useState<any>(true)
 
       const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
@@ -67,9 +69,9 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
       const rTextContent = React.useRef(shape.text)
 
-      const currentScale = React.useRef(shape.style.scale)
-
       const rIsMounted = React.useRef(false)
+
+      const prevCharCount = React.useRef(0)
 
 
       function getSelectedText() {
@@ -91,9 +93,19 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         doSomethingWithSelectedText()
       }, [])
 
+      React.useEffect(()=>{
+        setInitial(shape.text)
+      }, [])
+
       const sanitizeConf = {
-        allowedTags: ['b', 'i', 'em', 'strong'],
-      }
+        allowedTags: ['b', 'i', 'em', 'strong', 'span', 'div'],
+        allowedStyles:{ allowedStyles: {
+          '*': {
+            'color': [/./],
+            'font-style': [/./],
+            'text-decoration-line': [/./]
+          }}
+      }}
 
       const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
         e.stopPropagation()
@@ -107,8 +119,8 @@ export class StickyUtil extends TDShapeUtil<T, E> {
       }
 
       const handleTextChange = React.useCallback(
-        e => {
-          rTextContent.current = e.target.value
+         e => {
+          rTextContent.current = e.currentTarget.innerHTML
           if (!rTextContent.current) {
             onShapeChange?.({
               id: shape.id,
@@ -131,55 +143,31 @@ export class StickyUtil extends TDShapeUtil<T, E> {
         [onShapeChange]
       )
 
-      const handleKeyDown = React.useCallback(
-        (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-          if (e.key === 'Escape') return
+      const handlePaste = React.useCallback(
+        async e => {
+          e.preventDefault()
+          
+          let selObj = window.getSelection();
+          let selRange = selObj.getRangeAt(0);
+          selRange.deleteContents();                
+          const clipboard = await navigator.clipboard.readText()
+          selRange.insertNode(document.createTextNode(clipboard));
 
-          if (e.key === 'Tab' && shape.text.length === 0) {
-            e.preventDefault()
-            return
-          }
-
-          // If this keydown was just the meta key or a shortcut
-          // that includes holding the meta key like (Command+V)
-          // then leave the event untouched. We also have to explicitly
-          // Implement undo/redo for some reason in order to get this working
-          // in the vscode extension. Without the below code the following doesn't work
-          //
-          // - You can't cut/copy/paste when when text-editing/focused
-          // - You can't undo/redo when when text-editing/focused
-          // - You can't use Command+A to select all the text, when when text-editing/focused
-          if (!(e.key === 'Meta' || e.metaKey)) {
-            e.stopPropagation()
-          } else if (e.key === 'z' && e.metaKey) {
-            if (e.shiftKey) {
-              document.execCommand('redo', false)
-            } else {
-              document.execCommand('undo', false)
-            }
-            e.stopPropagation()
-            e.preventDefault()
-            return
-          }
-
-          if (e.key === 'Tab') {
-            e.preventDefault()
-            if (e.shiftKey) {
-              TextAreaUtils.unindent(e.currentTarget)
-            } else {
-              TextAreaUtils.indent(e.currentTarget)
-            }
-
-            rTextContent.current = TLDR.normalizeText(e.currentTarget.value)
-            onShapeChange?.({ ...shape, text: rTextContent.current })
-          }
-        },
-        [shape, onShapeChange]
+          console.log( rTextContent.current);
+          
+          rTextContent.current =  e.target.innerHTML
+          onShapeChange?.({
+            id: shape.id,
+            type: shape.type,
+            text: rTextContent.current,
+          })
+        }, []
       )
+      
 
       // Focus when editing changes to true
       React.useEffect(() => {
-        if (isEditing) {
+        if (isEditing ) {
           rTextContent.current = shape.text
           rIsMounted.current = true
           rText?.current?.focus()
@@ -192,27 +180,42 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
         const { size, style } = shape
         const scale = style.scale || 1
-        const { offsetHeight: currTextHeight, offsetWidth: currentWidth } = text
+        const { offsetHeight: currTextHeight, offsetWidth: currTextWidth } = text
+        
         const minTextHeight = MIN_CONTAINER_HEIGHT - PADDING * 2
+        const minTextWidth = MIN_CONTAINER_WIDTH - PADDING * 2
+        
         const prevTextHeight = size[1] - PADDING * 2
+
         // Same size? We can quit here
         if (currTextHeight === prevTextHeight) return
 
-        if (currTextHeight > minTextHeight) {
+        if (currTextHeight > minTextHeight || (currTextWidth >= minTextWidth && this.getLongestLineLength(rTextContent) <= MAXIMUM_TEXT_IN_LINE)) {
           // Snap the size to the text content if the text only when the
           // text is larger than the minimum text height.
+          if (text.textContent?.length)
+            prevCharCount.current = text.textContent?.length
+            onShapeChange?.({
+              id: shape.id,
+              style: {
+                ...shape.style,
+                scale: scale - 0.03,
+              },
+            })
+          return
+        } else if(text.textContent && text.textContent?.length < prevCharCount.current && scale < 0.97){
           onShapeChange?.({
             id: shape.id,
             style: {
               ...shape.style,
-              scale: scale - 0.03,
+              scale: scale + 0.03,
             },
           })
           return
         }
 
         const textarea = rTextArea.current
-        textarea?.focus()
+        // textarea?.focus()
       }, [shape.text, shape.size[1], shape.style])
 
       const style = {
@@ -222,6 +225,11 @@ export class StickyUtil extends TDShapeUtil<T, E> {
           ? `0.5px 0.5px 2px rgba(255, 255, 255,.25)`
           : `0.5px 0.5px 2px rgba(255, 255, 255,.5)`,
       }
+
+      let whiteSpace = 'nowrap'
+
+      if(this.getLongestLineLength(rTextContent) > MAXIMUM_TEXT_IN_LINE )
+        whiteSpace = 'pre-line'
 
       return (
         <HTMLContainer ref={ref} {...events}>
@@ -252,26 +260,29 @@ export class StickyUtil extends TDShapeUtil<T, E> {
                 }}
               />
             )}
-
-            <ContentEditable
-              innerRef={rText}
-              tagName="pre"
+            <div
+              contentEditable={true}
+              ref={rText}
               onKeyUp={handleKeyUp}
-              html={rTextContent.current}
               style={{
-                ...shape.style,
                 outline: '0px solid transparent',
                 margin: 0,
                 padding: 0,
                 whiteSpace: 'pre-line',
                 overflow: 'hidden',
+                width: 'fit-content',
+                maxWidth: MIN_CONTAINER_WIDTH - PADDING * 2,
+                minWidth: '5px',
+                pointerEvents: isEditing?'all':'none',
+                lineHeight: 'normal'
               }}
-              onChange={handleTextChange}
-              onBlur={sanitize}
+              onInput={handleTextChange}
+              onPaste={handlePaste}
+              onFocus={()=>document.execCommand('selectAll',false, undefined)}
               spellCheck={true}
-              onPointerDown={handlePointerDown}
+              onPointerDown={handlePointerDown} 
+              dangerouslySetInnerHTML={{__html:initialString}}
             />
-
             <div
               style={{
                 position: 'absolute',
@@ -283,7 +294,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
                 color: '#878A92',
                 pointerEvents:'none'
               }}
-            >{app.appState.user.user.name}</div>
+            >{shape.user}</div>
           </StyledStickyContainer>
         </HTMLContainer>
       )
@@ -330,6 +341,11 @@ export class StickyUtil extends TDShapeUtil<T, E> {
     return shape
   }
 
+  getLongestLineLength = (rTextContent) =>{
+    return rTextContent.current.replace(/<\/div>/g,'').split('<div>').reduce((a, b) =>  a.length > b.length ? a : b).length
+  }
+
+
   getSvgElement = (shape: T): SVGElement | void => {
     const bounds = this.getBounds(shape)
     const textBounds = Utils.expandBounds(bounds, -PADDING)
@@ -359,6 +375,8 @@ export class StickyUtil extends TDShapeUtil<T, E> {
 
 const PADDING = 16
 const MIN_CONTAINER_HEIGHT = 200
+const MIN_CONTAINER_WIDTH = 200
+const MAXIMUM_TEXT_IN_LINE = 10
 
 
 
@@ -373,17 +391,3 @@ const StyledStickyContainer = styled('div', {
   borderRadius: '3px',
   perspective: '800px',
 })
-
-const commonTextWrapping = {
-  whiteSpace: 'pre-wrap',
-  overflowWrap: 'break-word',
-}
-
-// stikcer pointer selection
-// stroke on shapes selection
-// bring to front and back
-// section top on left
-// cursor icon change
-// share link on public should not be visible
-// alignment of icon with search
-// icons on file shape

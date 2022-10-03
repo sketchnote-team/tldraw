@@ -20,6 +20,11 @@ export function deleteShapes(
   } = app
   const { before, after, assetsToRemove } = removeShapesFromPage(app.state, ids, pageId)
   const afterAssets = removeAssetsFromDocument(beforeAssets, assetsToRemove)
+  const beforeSections = app.document.pages.page?.sections
+  const afterSections = app.removeSectionFromState(ids)
+  before['sections'] = beforeSections
+  after['sections'] = afterSections
+
 
   return {
     id: 'delete',

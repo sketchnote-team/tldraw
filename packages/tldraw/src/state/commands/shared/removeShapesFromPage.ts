@@ -5,11 +5,13 @@ export function removeShapesFromPage(data: TDSnapshot, ids: string[], pageId: st
   const before: PagePartial = {
     shapes: {},
     bindings: {},
+    sections: {}
   }
 
   const after: PagePartial = {
     shapes: {},
     bindings: {},
+    sections: {}
   }
 
   const parentsToUpdate: GroupShape[] = []

@@ -43,6 +43,7 @@ export class StickyTool extends BaseTool {
         childIndex,
         point: showGrid ? Vec.snap(currentPoint, currentGrid) : currentPoint,
         style: { ...currentStickyStyle },
+        user: this.app.appState.user.user.name
       })
 
       const bounds = Sticky.getBounds(newShape)

@@ -13,6 +13,8 @@ export enum TLPerformanceMode {
 
 export type TLAssets = Record<string, TLAsset>
 
+export type TLSection = string[]
+
 export interface TLAsset {
   id: string
   type: string
@@ -25,12 +27,13 @@ export type TLForwardedRef<T> =
   | React.MutableRefObject<T | null>
   | null
 
-export interface TLPage<T extends TLShape = TLShape, B extends TLBinding = TLBinding> {
+export interface TLPage<T extends TLShape = TLShape, B extends TLBinding = TLBinding, S extends TLSection = TLSection> {
   id: string
   name?: string
   childIndex?: number
   shapes: Record<string, T>
   bindings: Record<string, B>
+  sections: Record<string, S>
 }
 
 export interface TLPageState {

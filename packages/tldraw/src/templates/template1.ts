@@ -372,6 +372,7 @@ export const template1 = {
   ],
   bindings: [],
   assets: [],
+  sections:[],
   zoom: 0.75,
 }
 

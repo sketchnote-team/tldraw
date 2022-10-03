@@ -76,8 +76,6 @@ export class HighlighterTool extends BaseTool {
 
   onPointerUp: TLPointerEventHandler = () => {
     this.app.completeSession()
-    if (this.lastShapeId)
-      this.app.checkIfInsideSectionandAddToState(this.lastShapeId)
     this.setStatus(Status.Idle)
   }
 }

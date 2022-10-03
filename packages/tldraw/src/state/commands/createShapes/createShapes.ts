@@ -4,18 +4,26 @@ import type { TldrawApp } from '../../internal'
 export function createShapes(
   app: TldrawApp,
   shapes: TDShape[],
-  bindings: TDBinding[] = []
+  bindings: TDBinding[] = [],
+  sections: any[] = []
 ): TldrawCommand {
   const { currentPageId } = app
-
   const beforeShapes: Record<string, Patch<TDShape> | undefined> = {}
   const afterShapes: Record<string, Patch<TDShape> | undefined> = {}
+  const beforeSections: Record<string, string[] | undefined> = {}
+  const afterSections: Record<string, string[] | undefined> = {}
 
   shapes.forEach((shape) => {
     beforeShapes[shape.id] = undefined
     afterShapes[shape.id] = shape
   })
 
+  Object.keys(sections).forEach((section) => {
+    beforeSections[section] = undefined
+    afterSections[section] = sections[section]
+  })
+  
+  
   const beforeBindings: Record<string, Patch<TDBinding> | undefined> = {}
   const afterBindings: Record<string, Patch<TDBinding> | undefined> = {}
 
@@ -32,6 +40,7 @@ export function createShapes(
           [currentPageId]: {
             shapes: beforeShapes,
             bindings: beforeBindings,
+            sections: beforeSections
           },
         },
         pageStates: {
@@ -47,6 +56,7 @@ export function createShapes(
           [currentPageId]: {
             shapes: afterShapes,
             bindings: afterBindings,
+            sections: afterSections
           },
         },
         pageStates: {
