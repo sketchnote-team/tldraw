@@ -43,7 +43,7 @@ export class TextUtil extends TDShapeUtil<T, E> {
         text: ' ',
         style: defaultTextStyle,
         textAreaWidth: 100,
-        hasResized: false
+        hasResized: false,
       },
       props
     )
@@ -55,7 +55,6 @@ export class TextUtil extends TDShapeUtil<T, E> {
     ({ shape, isBinding, isGhost, isEditing, onShapeBlur, onShapeChange, meta, events }, ref) => {
       const { text, style, textAreaWidth, hasResized } = shape
 
-      
       const styles = getShapeStyle(style, meta.isDarkMode)
       const font = getFontStyle(shape.style)
       const fontStyle = font.split(' ')
@@ -277,26 +276,32 @@ export class TextUtil extends TDShapeUtil<T, E> {
       const fontStyle = font.split(' ')
       const fontSize = parseInt(fontStyle[0].split('/')[0], 10)
 
-      
       // In tests, offsetWidth and offsetHeight will be 0
-      let height = melm.offsetHeight 
-  
+      let height = melm.offsetHeight
+
       // if (shape.style.textWeight === 'bold' || shape.style.fontStyle === 'italic') {
       //   width = width + 0.1 * width
       // }
       // if (shape.style.listType !== ListType.None) {
       //   width = width + 15 + 0.4 * width
       // }
-      
-      let newWidth =  shape.textAreaWidth * shape.style.bounds[0] 
 
-      if(!shape.hasResized && shape.text !== ' '){
+      let newWidth = shape.textAreaWidth * shape.style.bounds[0]
 
-        newWidth = melm.offsetWidth ? melm.offsetWidth  +  fontSize : 1
-        
-        if(newWidth > 1200)
-          newWidth = 1200
+      if (!shape.hasResized && shape.text !== ' ') {
+        newWidth = melm.offsetWidth ? melm.offsetWidth + fontSize : 1
+
+        if (newWidth > 1000) newWidth = 1000
       }
+
+      if (newWidth < 100 && newWidth < 100 * shape.style.bounds[0])
+        newWidth = 100 * shape.style.bounds[0]
+
+      if (isNaN(height)) {
+        height = 100
+      }
+
+      if (shape.style.bounds[0] < 0.5) newWidth = 50
 
       if (shape.style.textWeight === 'bold' || shape.style.fontStyle === 'italic') {
         newWidth = newWidth + 0.1 * newWidth
@@ -305,20 +310,17 @@ export class TextUtil extends TDShapeUtil<T, E> {
         newWidth = newWidth + 15 + 0.4 * newWidth
       }
 
-      if(shape.style.bounds[1] > 1)
-        height = height * shape.style.bounds[1]
-    // if (newWidth< 140)
-    //   newWidth = 140
-    const numberOfLines = Math.ceil((melm.offsetWidth ) / (newWidth - fontSize))
+      if (shape.style.bounds[1] > 1) height = height * shape.style.bounds[1]
+      // if (newWidth< 140)
+      //   newWidth = 140
+      const numberOfLines = Math.ceil(melm.offsetWidth / (newWidth - fontSize))
 
-    if (numberOfLines>1){
-      height = height - 5
-      height = height * numberOfLines 
-      
-      if ( numberOfLines > 5 )
-        height = height - numberOfLines/5 * 20
-    }
+      if (numberOfLines > 1) {
+        height = height - 5
+        height = height * numberOfLines
 
+        if (numberOfLines > 5) height = height - (numberOfLines / 5) * 20
+      }
 
       return {
         minX: 0,
@@ -368,9 +370,9 @@ export class TextUtil extends TDShapeUtil<T, E> {
     { initialShape, scaleX, scaleY, type }: TransformInfo<T>
   ): Partial<T> | void => {
     const {
-      style: { scale = 1, bounds: indicatorBounds  },
+      style: { scale = 1, bounds: indicatorBounds },
     } = initialShape
-    
+
     let finalScale = scale
     let finalIndicatorBounds = indicatorBounds
     let hasResized = shape.hasResized
@@ -387,44 +389,39 @@ export class TextUtil extends TDShapeUtil<T, E> {
       case TLBoundsEdge.Top:
         // if(scaleY > 0)
         //   finalIndicatorBounds = [indicatorBounds[0], indicatorBounds[1] * scaleY]
-          break
+        break
       case TLBoundsEdge.Left:
-      case TLBoundsEdge.Right: 
+      case TLBoundsEdge.Right:
         hasResized = true
-        if(scaleX > 0)
-          finalIndicatorBounds = [indicatorBounds[0] * scaleX, indicatorBounds[1]]
-          break
-      
+        if (scaleX > 0) finalIndicatorBounds = [indicatorBounds[0] * scaleX, indicatorBounds[1]]
+        break
     }
     let textAreaWidth = shape.textAreaWidth
     if (!shape.hasResized)
-    if(melm.offsetWidth < 1000)
-      textAreaWidth = melm.offsetWidth
-      else
-      textAreaWidth = 1000
-
+      if (melm.offsetWidth < 1000) textAreaWidth = melm.offsetWidth
+      else textAreaWidth = 1000
 
     return {
       point: Vec.toFixed([bounds.minX, bounds.minY]),
       style: {
         ...initialShape.style,
         scale: finalScale,
-        bounds: finalIndicatorBounds
+        bounds: finalIndicatorBounds,
       },
       hasResized,
-      textAreaWidth
+      textAreaWidth,
     }
   }
 
-  getTextWidth(text:string, font:string):number {
+  getTextWidth(text: string, font: string): number {
     // re-use canvas object for better performance
-    const canvas = this.getTextWidth.canvas || (this.getTextWidth.canvas = document.createElement("canvas"));
-    const context = canvas.getContext("2d");
-    context.font = font;
-    const metrics = context.measureText(text);
-    return metrics.width;
+    const canvas =
+      this.getTextWidth.canvas || (this.getTextWidth.canvas = document.createElement('canvas'))
+    const context = canvas.getContext('2d')
+    context.font = font
+    const metrics = context.measureText(text)
+    return metrics.width
   }
-  
 
   onDoubleClickBoundsHandle = (shape: T) => {
     const center = this.getCenter(shape)
