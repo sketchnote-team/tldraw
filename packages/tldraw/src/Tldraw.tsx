@@ -404,6 +404,10 @@ const InnerTldraw = React.memo(function InnerTldraw({
   const hideCloneHandles =
     isInSession || !isSelecting || !settings.showCloneHandles || pageState.camera.zoom < 0.2
   
+    const setPreviewFalse= () => {
+      if(app.appState.isPreview)
+      app.setPreview(false)
+    }
 
   return (
     <StyledLayout
@@ -414,6 +418,9 @@ const InnerTldraw = React.memo(function InnerTldraw({
       <Loading />
       <OneOff focusableRef={rWrapper} autofocus={autofocus} />
       <ContextMenu>
+        <div style={{
+          opacity: app.appState.isPreview ? '43%' : '100%'
+        }} onClick={setPreviewFalse}>
         <Renderer
           id={id}
           containerRef={rWrapper}
@@ -490,6 +497,7 @@ const InnerTldraw = React.memo(function InnerTldraw({
           onDrop={app.onDrop}
           activeUsers={[]}
         />
+        </div>
       </ContextMenu>
       {showUI && (
         <StyledUI>

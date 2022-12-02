@@ -258,6 +258,7 @@ export const defaultTextStyle: TextShapeStyles = {
   listType: ListType.None,
   textDecoration: 'none',
   fontStyle: 'normal',
+  bounds: [1,1]
 }
 
 export const defaultUser = {

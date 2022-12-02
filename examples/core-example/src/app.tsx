@@ -19,6 +19,7 @@ const page = new Page({
     },
   },
   bindings: {},
+  sections: {}
 })
 
 const pageState = new PageState()

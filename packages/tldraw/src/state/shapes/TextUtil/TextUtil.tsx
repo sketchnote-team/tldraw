@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from 'react'
-import { Utils, HTMLContainer, TLBounds } from '@tldraw/core'
+import { Utils, HTMLContainer, TLBounds, TLBoundsCorner, TLBoundsEdge } from '@tldraw/core'
 import { defaultTextStyle, getShapeStyle, getFontStyle } from '../shared/shape-styles'
 import { TextShape, TDMeta, TDShapeType, TransformInfo, AlignStyle, ListType } from '~types'
 import { BINDING_DISTANCE, GHOSTED_OPACITY, LETTER_SPACING } from '~constants'
@@ -20,7 +20,7 @@ type E = HTMLDivElement
 export class TextUtil extends TDShapeUtil<T, E> {
   type = TDShapeType.Text as const
 
-  isAspectRatioLocked = true
+  isAspectRatioLocked = false
 
   canEdit = true
 
@@ -42,6 +42,8 @@ export class TextUtil extends TDShapeUtil<T, E> {
         rotation: 0,
         text: ' ',
         style: defaultTextStyle,
+        textAreaWidth: 100,
+        hasResized: false
       },
       props
     )
@@ -51,7 +53,9 @@ export class TextUtil extends TDShapeUtil<T, E> {
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
     ({ shape, isBinding, isGhost, isEditing, onShapeBlur, onShapeChange, meta, events }, ref) => {
-      const { text, style } = shape
+      const { text, style, textAreaWidth, hasResized } = shape
+
+      
       const styles = getShapeStyle(style, meta.isDarkMode)
       const font = getFontStyle(shape.style)
       const fontStyle = font.split(' ')
@@ -269,31 +273,60 @@ export class TextUtil extends TDShapeUtil<T, E> {
       melm.style.font = getFontStyle(shape.style)
       melm.textContent = this.texts.get(shape.id) ?? shape.text
 
+      const font = getFontStyle(shape.style)
+      const fontStyle = font.split(' ')
+      const fontSize = parseInt(fontStyle[0].split('/')[0], 10)
+
+      
       // In tests, offsetWidth and offsetHeight will be 0
-      let width = melm.offsetWidth || 1
-      let height = melm.offsetHeight || 1
+      let height = melm.offsetHeight 
+  
+      // if (shape.style.textWeight === 'bold' || shape.style.fontStyle === 'italic') {
+      //   width = width + 0.1 * width
+      // }
+      // if (shape.style.listType !== ListType.None) {
+      //   width = width + 15 + 0.4 * width
+      // }
+      
+      let newWidth =  shape.textAreaWidth * shape.style.bounds[0] 
+
+      if(!shape.hasResized && shape.text !== ' '){
+
+        newWidth = melm.offsetWidth ? melm.offsetWidth  +  fontSize : 1
+        
+        if(newWidth > 1200)
+          newWidth = 1200
+      }
 
       if (shape.style.textWeight === 'bold' || shape.style.fontStyle === 'italic') {
-        width = width + 0.1 * width
+        newWidth = newWidth + 0.1 * newWidth
       }
       if (shape.style.listType !== ListType.None) {
-        width = width + 15 + 0.4 * width
+        newWidth = newWidth + 15 + 0.4 * newWidth
       }
-    //   if (width > 500) {       
-    //     const heightIcrementor = Math.floor(width / 500) + 0.6
-    //     height = heightIcrementor * 29
-    // }
-    if(melm.textContent.length>69){
-      const heightIncrementor = Math.floor(melm.textContent.length/69)-1
-      height = height + heightIncrementor * height
+
+      if(shape.style.bounds[1] > 1)
+        height = height * shape.style.bounds[1]
+    // if (newWidth< 140)
+    //   newWidth = 140
+    const numberOfLines = Math.ceil((melm.offsetWidth ) / (newWidth - fontSize))
+
+    if (numberOfLines>1){
+      height = height - 5
+      height = height * numberOfLines 
+      
+      if ( numberOfLines > 5 )
+        height = height - numberOfLines/5 * 20
     }
-      width = width>500?500:width
+
+
       return {
         minX: 0,
-        maxX: width,
+        maxX: newWidth,
         minY: 0,
         maxY: height,
-        width,
+        width: newWidth,
+        // width,
         height,
       }
     })
@@ -332,20 +365,66 @@ export class TextUtil extends TDShapeUtil<T, E> {
   transformSingle = (
     shape: T,
     bounds: TLBounds,
-    { initialShape, scaleX, scaleY }: TransformInfo<T>
+    { initialShape, scaleX, scaleY, type }: TransformInfo<T>
   ): Partial<T> | void => {
     const {
-      style: { scale = 1 },
+      style: { scale = 1, bounds: indicatorBounds  },
     } = initialShape
+    
+    let finalScale = scale
+    let finalIndicatorBounds = indicatorBounds
+    let hasResized = shape.hasResized
+    switch (type) {
+      case TLBoundsCorner.TopLeft:
+      case TLBoundsCorner.TopRight:
+      case TLBoundsCorner.BottomRight:
+      case TLBoundsCorner.BottomLeft: {
+        finalScale = scale * Math.max(Math.abs(scaleY), Math.abs(scaleX))
+        finalIndicatorBounds = [indicatorBounds[0] * scaleX, indicatorBounds[1]]
+        break
+      }
+      case TLBoundsEdge.Bottom:
+      case TLBoundsEdge.Top:
+        // if(scaleY > 0)
+        //   finalIndicatorBounds = [indicatorBounds[0], indicatorBounds[1] * scaleY]
+          break
+      case TLBoundsEdge.Left:
+      case TLBoundsEdge.Right: 
+        hasResized = true
+        if(scaleX > 0)
+          finalIndicatorBounds = [indicatorBounds[0] * scaleX, indicatorBounds[1]]
+          break
+      
+    }
+    let textAreaWidth = shape.textAreaWidth
+    if (!shape.hasResized)
+    if(melm.offsetWidth < 1000)
+      textAreaWidth = melm.offsetWidth
+      else
+      textAreaWidth = 1000
+
 
     return {
       point: Vec.toFixed([bounds.minX, bounds.minY]),
       style: {
         ...initialShape.style,
-        scale: scale * Math.max(Math.abs(scaleY), Math.abs(scaleX)),
+        scale: finalScale,
+        bounds: finalIndicatorBounds
       },
+      hasResized,
+      textAreaWidth
     }
   }
+
+  getTextWidth(text:string, font:string):number {
+    // re-use canvas object for better performance
+    const canvas = this.getTextWidth.canvas || (this.getTextWidth.canvas = document.createElement("canvas"));
+    const context = canvas.getContext("2d");
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
+  }
+  
 
   onDoubleClickBoundsHandle = (shape: T) => {
     const center = this.getCenter(shape)
@@ -497,5 +576,4 @@ const TextArea = styled('textarea', {
   userSelect: 'text',
   WebkitUserSelect: 'text',
   ...commonTextWrapping,
-  minWidth: '140px',
 })

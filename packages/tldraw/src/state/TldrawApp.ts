@@ -163,7 +163,8 @@ export interface TDCallbacks {
     app: TldrawApp,
     shapes: Record<string, TDShape | undefined>,
     bindings: Record<string, TDBinding | undefined>,
-    assets: Record<string, TDAsset | undefined>
+    assets: Record<string, TDAsset | undefined>,
+    sections: Record<string, string[] | undefined>
   ) => void
   /**
    * (optional) A callback to run when the user creates a new project.
@@ -258,6 +259,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     shapes: TDShape[]
     bindings: TDBinding[]
     assets: TDAsset[]
+    sections: any
   }
 
   rotationInfo = {
@@ -310,6 +312,15 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+
+  setPreview = (isPreview: boolean) => {
+    this.patchState({
+      appState: {
+        isPreview
+      },
+    })
+  }
+
   restoreStashedShapes = () => {
     const shapes = JSON.parse(this.appState.stashForEditing)
     if (Object.keys(shapes).length) this.createTemplateAtPoint(shapes)
@@ -350,6 +361,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         bindings: copyingBindings,
         assets: copyingAssets,
         zoom: this.pageState.camera.zoom,
+        sections: this.page.sections 
       })
 
       this.patchState({
@@ -807,6 +819,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   private prevShapes = this.page.shapes
   private prevBindings = this.page.bindings
   private prevAssets = this.document.assets
+  private prevSections = this.page.sections
 
   private broadcastPageChanges = () => {
     const visited = new Set<string>()
@@ -814,6 +827,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const changedShapes: Record<string, TDShape | undefined> = {}
     const changedBindings: Record<string, TDBinding | undefined> = {}
     const changedAssets: Record<string, TDAsset | undefined> = {}
+    const changedSections: Record<string, string[] | undefined> = {}
 
     this.shapes.forEach((shape) => {
       visited.add(shape.id)
@@ -857,17 +871,35 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       .forEach((id) => {
         changedAssets[id] = undefined
       })
+    
+    Object.keys(this.sections).forEach((section) => {
+      visited.add(section)
+      if (this.prevSections[section] !== section) {
+        changedSections[section] = this.sections[section]
+      }
+    })
+    
+    Object.keys(this.prevSections)
+    .filter((id) => !visited.has(id))
+    .forEach((id) => {
+      // After visiting all the current shapes, if we haven't visited a
+      // previously present shape, then it was deleted
+      changedSections[id] = undefined
+    })
 
     // Only trigger update if shapes or bindings have changed
     if (
       Object.keys(changedBindings).length > 0 ||
       Object.keys(changedShapes).length > 0 ||
-      Object.keys(changedAssets).length > 0
+      Object.keys(changedAssets).length > 0 ||
+      Object.keys(changedSections).length > 0 
+      
     ) {
       this.justSent = true
-      this.callbacks.onChangePage?.(this, changedShapes, changedBindings, changedAssets)
+      this.callbacks.onChangePage?.(this, changedShapes, changedBindings, changedAssets, changedSections)
       this.prevShapes = this.page.shapes
       this.prevBindings = this.page.bindings
+      this.prevSections = this.page.sections
       this.prevAssets = this.document.assets
     }
   }
@@ -935,6 +967,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     shapes: Record<string, TDShape>,
     bindings: Record<string, TDBinding>,
     assets: Record<string, TDAsset>,
+    sections: Record<string, string[]>,
     pageId = this.currentPageId
   ): this => {
     if (this.justSent) {
@@ -1006,6 +1039,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       this.prevShapes = shapes
       this.prevBindings = bindings
       this.prevAssets = assets
+      this.prevSections = sections
 
       const nextShapes = {
         ...shapes,
@@ -1024,6 +1058,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         ...assets,
       }
 
+      const nextSections = {
+        ...sections
+      }
+
       const next: TDSnapshot = {
         ...current,
         document: {
@@ -1033,6 +1071,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
               ...current.document.pages[pageId],
               shapes: nextShapes,
               bindings: nextBindings,
+              sections: nextSections
             },
           },
           assets: nextAssets,
@@ -1874,6 +1913,12 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     return Object.values(this.page.shapes)
   }
 
+  get sections(): any {
+    // console.log('this.page', Object.values(this.page.sections));
+    
+    return this.page.sections
+  }
+
   /**
    * The current page's bindings.
    */
@@ -1980,10 +2025,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         return this.document.assets[shape.assetId]
       })
       .filter(Boolean) as TDAsset[]
+
+      const copyingSections = this.document.pages.page.sections
+      
     this.clipboard = {
       shapes: copyingShapes,
       bindings: copyingBindings,
       assets: copyingAssets,
+      sections: copyingSections
     }
     try {
       const text = JSON.stringify({
@@ -2023,7 +2072,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
    */
   paste = (point?: number[]) => {
     if (this.readOnly) return
-    const pasteInCurrentPage = (shapes: TDShape[], bindings: TDBinding[], assets: TDAsset[]) => {
+    const pasteInCurrentPage = (shapes: TDShape[], bindings: TDBinding[], assets: TDAsset[], sections:any) => {
       const idsMap: Record<string, string> = {}
       const newAssets = assets.filter((asset) => this.document.assets[asset.id] === undefined)
       if (newAssets.length) {
@@ -2062,9 +2111,11 @@ export class TldrawApp extends StateManager<TDSnapshot> {
           return copy
         })
       const sectionsToPaste: Record<string, string[]> = {}
+      console.log('*******)909sections', sections);
+      
       shapes.forEach((shape) => {
-        if (this.getShape(shape.id).type === TDShapeType.Section) {
-          sectionsToPaste[idsMap[shape.id]] = this.document.pages.page.sections[shape.id].map(
+        if (shape.type === TDShapeType.Section) {
+          sectionsToPaste[idsMap[shape.id]] = sections[shape.id].map(
             (shap) => idsMap[shap]
           )
         }
@@ -2105,10 +2156,15 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       )
     }
 
+
     if (!('clipboard' in navigator && navigator.clipboard.readText)) {
       TLDR.warn('This browser does not support the Clipboard API!')
+      console.log('this.clipboard',this.clipboard);
+      
       if (this.clipboard) {
-        pasteInCurrentPage(this.clipboard.shapes, this.clipboard.bindings, this.clipboard.assets)
+        console.log('this.clipboard.sections', this.clipboard.sections);
+        
+        pasteInCurrentPage(this.clipboard.shapes, this.clipboard.bindings, this.clipboard.assets, this.clipboard.sections)
       }
       return
     }
@@ -2121,9 +2177,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
           shapes: TDShape[]
           bindings: TDBinding[]
           assets: TDAsset[]
+          sections: any
         } = JSON.parse(result)
         if (data.type === 'tldr/clipboard') {
-          pasteInCurrentPage(data.shapes, data.bindings, data.assets)
+          pasteInCurrentPage(data.shapes, data.bindings, data.assets, data.sections)
         } else {
           TLDR.warn('The selected shape was not a tldraw shape, treating as text.')
           const shapeId = Utils.uniqueId()
@@ -2141,7 +2198,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       .catch(() => {
         TLDR.warn('Read permissions denied!')
         if (this.clipboard) {
-          pasteInCurrentPage(this.clipboard.shapes, this.clipboard.bindings, this.clipboard.assets)
+          pasteInCurrentPage(this.clipboard.shapes, this.clipboard.bindings, this.clipboard.assets, this.clipboard.sections)
         }
       })
     return this
@@ -3101,12 +3158,15 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       })
       .filter(Boolean) as TDAsset[]
 
+    const copyingSections = this.document.pages.page.sections
+
     try {
       const text = JSON.stringify({
         type: 'tldr/clipboard',
         shapes: copyingShapes,
         bindings: copyingBindings,
         assets: copyingAssets,
+        sections: copyingSections
       })
 
       this.patchState({
@@ -3132,7 +3192,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
   }
 
   createTemplateAtPoint(templateObject: any) {
-    const { shapes, assets, bindings } = templateObject
+    if (this.readOnly) return
+    const { shapes, assets, bindings, sections } = templateObject
     const idsMap: Record<string, string> = {}
     const newAssets = assets?.filter((asset) => this.document.assets[asset.id] === undefined)
     if (newAssets.length) {
@@ -3171,10 +3232,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         return copy
       })
     const sectionsToPaste: Record<string, string[]> = {}
-    shapes.forEach((shape) => {
-      if (this.getShape(shape.id) && this.getShape(shape.id).type === TDShapeType.Section) {
-        sectionsToPaste[idsMap[shape.id]] = this.document.pages.page.sections[shape.id].map(
-          (shap) => idsMap[shap]
+    shapes.forEach((shape:any) => {
+      if (shape && shape.type === TDShapeType.Section) {
+        sectionsToPaste[idsMap[shape.id]] = sections[shape.id].map(
+          (shap:any) => idsMap[shap]
         )
       }
     })
@@ -3186,22 +3247,12 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     }))
     const commonBounds = Utils.getCommonBounds(shapesToPaste.map(TLDR.getBounds))
     let center = Vec.toFixed(this.getPagePoint(this.centerPoint))
-    if (
-      Vec.dist(center, this.pasteInfo.center) < 2 ||
-      Vec.dist(center, Vec.toFixed(Utils.getBoundsCenter(commonBounds))) < 2
-    ) {
-      center = Vec.add(center, this.pasteInfo.offset)
-      this.pasteInfo.offset = Vec.add(this.pasteInfo.offset, [GRID_SIZE, GRID_SIZE])
-    } else {
-      this.pasteInfo.center = center
-      this.pasteInfo.offset = [0, 0]
-    }
+    this.pasteInfo.offset = [0, 0]
     const centeredBounds = Utils.centerBounds(commonBounds, center)
     const delta = Vec.sub(
       Utils.getBoundsCenter(centeredBounds),
       Utils.getBoundsCenter(commonBounds)
     )
-    this.zoomTo(templateObject.zoom)
     this.create(
       shapesToPaste.map((shape) =>
         TLDR.getShapeUtil(shape.type).create({
@@ -4565,6 +4616,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       isTemplateEditMode: false,
       stashForEditing: '{}',
       currentEditingTemplate: null,
+      isPreview: false
     },
     document: TldrawApp.defaultDocument,
   }

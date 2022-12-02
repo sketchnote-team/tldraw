@@ -124,7 +124,8 @@ export interface TDSnapshot {
     currentTemplate: string
     isTemplateEditMode: boolean
     stashForEditing: string,
-    currentEditingTemplate: any
+    currentEditingTemplate: any,
+    isPreview: Boolean
   }
   document: TDDocument
   room?: {
@@ -623,6 +624,7 @@ export type TextShapeStyles = {
   listType: ListType
   textDecoration: string
   fontStyle: string
+  bounds: number[]
 }
 
 export enum TDAssetType {

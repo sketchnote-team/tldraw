@@ -13,6 +13,7 @@ import type {
   TLUsers,
   TLAssets,
   TLPerformanceMode,
+  TLSection,
 } from '../../types'
 import { Canvas } from '../Canvas'
 import { Inputs } from '../../inputs'
@@ -27,7 +28,7 @@ export interface RendererProps<T extends TLShape, M = any> extends Partial<TLCal
   /**
    * The current page, containing shapes and bindings.
    */
-  page: TLPage<T, TLBinding>
+  page: TLPage<T, TLBinding, TLSection>
   /**
    * The current page state.
    */

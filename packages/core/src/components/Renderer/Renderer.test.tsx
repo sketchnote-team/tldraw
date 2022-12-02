@@ -67,6 +67,7 @@ describe('When passing observables', () => {
         },
       } as Record<string, BoxShape>
       bindings = {}
+      sections = {}
 
       constructor() {
         makeAutoObservable(this)
