@@ -3205,9 +3205,16 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
   createTemplateAtPoint(templateObject: any) {
     if (this.readOnly) return
+    console.log(templateObject)
     const { shapes, assets, bindings, sections } = templateObject
+    console.log(shapes,assets,bindings,sections)
+    const templateAssets  = assets ? Object.values(assets) : []
+    const templateShapes  = shapes ? Object.values(shapes) : []
+    const templateBindings  = bindings ? Object.values(bindings) : []
+    const templateSections  = sections ? Object.values(sections) : []
+
     const idsMap: Record<string, string> = {}
-    const newAssets = assets?.filter((asset) => this.document.assets[asset.id] === undefined)
+    const newAssets = templateAssets?.filter((asset) => this.document.assets[asset.id] === undefined)
     if (newAssets.length) {
       this.patchState({
         document: {
@@ -3215,10 +3222,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         },
       })
     }
-    shapes?.forEach((shape) => (idsMap[shape.id] = Utils.uniqueId()))
-    bindings?.forEach((binding) => (idsMap[binding.id] = Utils.uniqueId()))
+    templateShapes?.forEach((shape) => (idsMap[shape.id] = Utils.uniqueId()))
+    templateBindings?.forEach((binding) => (idsMap[binding.id] = Utils.uniqueId()))
     let startIndex = TLDR.getTopChildIndex(this.state, this.currentPageId)
-    const shapesToPaste = shapes
+    const shapesToPaste = templateShapes
       .sort((a, b) => a.childIndex - b.childIndex)
       .map((shape) => {
         const parentShapeId = idsMap[shape.parentId]
@@ -3244,14 +3251,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
         return copy
       })
     const sectionsToPaste: Record<string, string[]> = {}
-    shapes.forEach((shape:any) => {
+    templateShapes.forEach((shape:any) => {
       if (shape && shape.type === TDShapeType.Section) {
         sectionsToPaste[idsMap[shape.id]] = sections[shape.id].map(
           (shap:any) => idsMap[shap]
         )
       }
     })
-    const bindingsToPaste = bindings.map((binding) => ({
+    const bindingsToPaste = templateBindings.map((binding) => ({
       ...binding,
       id: idsMap[binding.id],
       toId: idsMap[binding.toId],
