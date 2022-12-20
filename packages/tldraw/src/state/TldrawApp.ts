@@ -979,8 +979,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const page = this.document.pages[this.currentPageId]
 
     Object.values(shapes).forEach((shape) => {
-      console.log(shape)
-      if(shape.type=TDShapeType.Text){
+      if(shape.type===TDShapeType.Text){
         if(!shape.hasOwnProperty('textAreaWidth'))
           {
             shape.textAreaWidth = 100;
@@ -988,7 +987,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
             shape.style.bounds = [1,1]
           }
       }
-      console.log(shape)
       if (shape.parentId !== pageId && !(page.shapes[shape.parentId] || shapes[shape.parentId])) {
         console.warn('Added a shape without a parent on the page')
         shape.parentId = pageId
@@ -3205,9 +3203,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
 
   createTemplateAtPoint(templateObject: any) {
     if (this.readOnly) return
-    console.log(templateObject)
     const { shapes, assets, bindings, sections } = templateObject
-    console.log(shapes,assets,bindings,sections)
     const templateAssets  = assets ? Object.values(assets) : []
     const templateShapes  = shapes ? Object.values(shapes) : []
     const templateBindings  = bindings ? Object.values(bindings) : []
