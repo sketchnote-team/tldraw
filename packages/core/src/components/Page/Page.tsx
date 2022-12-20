@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import type { TLAssets, TLBinding, TLPage, TLPageState, TLShape } from '~types'
+import type { TLAssets, TLBinding, TLPage, TLPageState, TLSection, TLShape } from '~types'
 import { useSelection, useShapeTree, useTLContext } from '~hooks'
 import { Bounds } from '~components/Bounds'
 import { BoundsBg } from '~components/Bounds/BoundsBg'
@@ -12,7 +12,7 @@ import type { TLShapeUtil } from '~TLShapeUtil'
 import { WhiteboardUser } from '~components/WhiteboardUser'
 
 interface PageProps<T extends TLShape, M extends Record<string, unknown>> {
-  page: TLPage<T, TLBinding>
+  page: TLPage<T, TLBinding, TLSection>
   pageState: TLPageState
   assets: TLAssets
   hideBounds: boolean

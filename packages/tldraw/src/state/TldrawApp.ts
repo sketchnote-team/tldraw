@@ -15,7 +15,7 @@ import {
   Utils,
   TLBounds,
   TLDropEventHandler,
-} from '@tldraw/core'
+} from 'sn-wb-tldraw-core'
 import {
   FlipType,
   TDDocument,
@@ -979,11 +979,23 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const page = this.document.pages[this.currentPageId]
 
     Object.values(shapes).forEach((shape) => {
+      console.log(shape)
+      if(shape.type=TDShapeType.Text){
+        if(!shape.hasOwnProperty('textAreaWidth'))
+          {
+            shape.textAreaWidth = 100;
+            shape.hasResized = false;
+            shape.style.bounds = [1,1]
+          }
+      }
+      console.log(shape)
       if (shape.parentId !== pageId && !(page.shapes[shape.parentId] || shapes[shape.parentId])) {
         console.warn('Added a shape without a parent on the page')
         shape.parentId = pageId
       }
     })
+
+
 
     this.useStore.setState((current) => {
       const { hoveredId, editingId, bindingId, selectedIds } = current.document.pageStates[pageId]

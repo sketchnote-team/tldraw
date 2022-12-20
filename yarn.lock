@@ -11042,6 +11042,17 @@ smartwrap@^1.2.3:
     wcwidth "^1.0.1"
     yargs "^15.1.0"
 
+sn-wb-tldraw-core@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.npmjs.org/sn-wb-tldraw-core/-/sn-wb-tldraw-core-1.7.0.tgz#f52aeccfdd982ab84c03406da02837a2db3b53bd"
+  integrity sha512-N5uH7TA+rRpvClUsTK4SppLDOe9cYg/74o5FRyMeG/XIlHrZ6JF040dbi4cqdAQCmpM5lYMi2X47zGDVIznhWQ==
+  dependencies:
+    "@tldraw/intersect" "^1.7.1"
+    "@tldraw/vec" "^1.7.0"
+    "@use-gesture/react" "^10.2.4"
+    mobx-react-lite "^3.2.3"
+    resize-observer-polyfill "^1.5.1"
+
 socks-proxy-agent@6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/socks-proxy-agent/-/socks-proxy-agent-6.1.1.tgz#e664e8f1aaf4e1fb3df945f09e3d94f911137f87"

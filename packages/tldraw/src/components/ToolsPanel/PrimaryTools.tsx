@@ -49,6 +49,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
   const isPreview = app.useStore(s=>s.appState.isPreview)
+  console.log(app.useStore(s=>s.document.pages.page.shapes))
 
 
   const selectSelectTool = React.useCallback(() => {
@@ -197,6 +198,81 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
       >
         {isPreview?'previewing':'show preview'}
       </ToolButtonWithTooltip>
+      <ToolButtonWithTooltip
+        kbd={'0'}
+        label={TDShapeType.Comment}
+        onClick={()=>app.replacePageContent(shapes,{},{},{})}
+        isActive={activeTool === TDShapeType.Comment}
+        id="TD-PrimaryTools-Pencil2"
+      >
+        Replace Content
+      </ToolButtonWithTooltip>
     </Panel>
   )
 })
+
+const shapes = {
+    "525583ca-9a15-4811-3368-2bd8507c2add": {
+        "id": "525583ca-9a15-4811-3368-2bd8507c2add",
+        "type": "text",
+        "name": "Text",
+        "parentId": "page",
+        "childIndex": 2,
+        "point": [
+          177,
+          169.5
+        ],
+        "rotation": 0,
+        "text": "Inclusion",
+        "style": {
+          "color": "black",
+          "size": "small",
+          "isFilled": false,
+          "dash": "draw",
+          "scale": 1,
+          "font": "Graphik Web",
+          "textAlign": "start",
+          "textWeight": "normal",
+          "listType": "none",
+          "textDecoration": "none",
+          "fontStyle": "normal",
+        },
+      }
+}
+const shape2 = {
+    "8f60ef51-1f89-4e84-0cf9-7adf4c590f40": {
+        "id": "8f60ef51-1f89-4e84-0cf9-7adf4c590f40",
+        "type": "text",
+        "name": "Text",
+        "parentId": "page",
+        "childIndex": 1,
+        "point": [
+            294,
+            310.9
+        ],
+        "rotation": 0,
+        "text": "hello",
+        "style": {
+            "color": "black",
+            "size": "small",
+            "isFilled": false,
+            "dash": "draw",
+            "scale": 1,
+            "font": "Graphik Web",
+            "textAlign": "start",
+            "textWeight": "normal",
+            "listType": "none",
+            "textDecoration": "none",
+            "fontStyle": "normal",
+            "bounds": [
+                1,
+                1
+            ]
+        },
+        "textAreaWidth": 100,
+        "hasResized": false
+    }
+}
+
+
+
