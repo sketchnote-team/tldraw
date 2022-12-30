@@ -120,6 +120,7 @@ export interface TDSnapshot {
     },
     defaultOpen: boolean,
     isTemplateLibrary: boolean,
+    showTimer:boolean,
     selectedStickyText: string,
     currentTemplate: string
     isTemplateEditMode: boolean

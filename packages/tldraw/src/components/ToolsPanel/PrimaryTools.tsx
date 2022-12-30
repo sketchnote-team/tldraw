@@ -44,13 +44,14 @@ const video = {
   ],
 }
 
+
+
 export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const app = useTldrawApp()
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
   const isPreview = app.useStore(s=>s.appState.isPreview)
-  console.log(app.useStore(s=>s.document.pages.page.shapes))
-
+//   console.log(app.useStore(s=>s.document.pages.page.shapes))
 
   const selectSelectTool = React.useCallback(() => {
     app.selectTool('select')
@@ -183,7 +184,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
       <ToolButtonWithTooltip
         kbd={'0'}
         label={TDShapeType.Comment}
-        onClick={createTemplateCopy}
+        onClick={()=>app.selectTool(TDShapeType.Sticky)}
         isActive={activeTool === TDShapeType.Comment}
         id="TD-PrimaryTools-Pencil2"
       >

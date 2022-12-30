@@ -415,6 +415,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+  setTimer = (status: boolean) => {
+    this.patchState({
+      appState: {
+        showTimer: status,
+      },
+    })
+  }
+
   setSelectedText = (text: string) => {
     this.patchState({
       appState: {
@@ -968,14 +976,15 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     bindings: Record<string, TDBinding>,
     assets: Record<string, TDAsset>,
     sections: Record<string, string[]>,
-    pageId = this.currentPageId
+    pageId = this.currentPageId,
+    isInitial= false,
   ): this => {
+
     if (this.justSent) {
       // The incoming update was caused by an update that the client sent, noop.
       this.justSent = false
       return this
     }
-
     const page = this.document.pages[this.currentPageId]
 
     Object.values(shapes).forEach((shape) => {
@@ -990,6 +999,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       if (shape.parentId !== pageId && !(page.shapes[shape.parentId] || shapes[shape.parentId])) {
         console.warn('Added a shape without a parent on the page')
         shape.parentId = pageId
+      }
+
+      if(isInitial){
+        this.zoomToFit()
       }
     })
 
@@ -4626,6 +4639,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       isOpen: {},
       defaultOpen: false,
       isTemplateLibrary: false,
+      showTimer:false,
       selectedStickyText: '',
       currentTemplate: '',
       isTemplateEditMode: false,
