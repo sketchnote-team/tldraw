@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useTLContext } from '~hooks'
 import type { TLBounds } from '~types'
 
+
 const ROTATIONS = {
   right: 0,
   bottomRight: 45,
@@ -27,6 +28,7 @@ export const CloneButton = observer<CloneButtonProps>(function CloneButton({
   targetSize,
   size,
 }: CloneButtonProps) {
+
   const s = targetSize * 2
   const h = targetSize / 2
   const x = {
@@ -72,7 +74,7 @@ export const CloneButton = observer<CloneButtonProps>(function CloneButton({
       >
         <circle className="tl-transparent" r={targetSize} />
         <path
-          className="tl-clone-button"
+          className=""
           style={{transform:`scale(1.5)`}}
           d={`M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z`}
           strokeLinejoin="round"

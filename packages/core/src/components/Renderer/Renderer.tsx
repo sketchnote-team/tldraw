@@ -118,7 +118,8 @@ export interface RendererProps<T extends TLShape, M = any> extends Partial<TLCal
    * (optional) A callback that is fired when the editor's client bounding box changes.
    */
   onBoundsChange?: (bounds: TLBounds) => void
-  activeUsers: any[]
+  activeUsers: any[],
+  status: any
 }
 
 /**
@@ -137,6 +138,7 @@ export const Renderer = observer(function _Renderer<
   shapeUtils,
   page,
   pageState,
+  status,
   assets = EMPTY_OBJECT,
   users,
   userId,
@@ -191,6 +193,7 @@ export const Renderer = observer(function _Renderer<
     }))
   }, [])
 
+
   return (
     <TLContext.Provider value={context as unknown as TLContextType<TLShape>}>
       <Canvas
@@ -216,6 +219,7 @@ export const Renderer = observer(function _Renderer<
         performanceMode={performanceMode}
         meta={meta}
         activeUsers={activeUsers}
+        status={status}
       />
     </TLContext.Provider>
   )

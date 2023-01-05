@@ -24,6 +24,8 @@ type E = HTMLDivElement
 export class RectangleUtil extends TDShapeUtil<T, E> {
   type = TDShapeType.Rectangle as const
 
+  showCloneHandles = true
+
   canBind = true
 
   canClone = true

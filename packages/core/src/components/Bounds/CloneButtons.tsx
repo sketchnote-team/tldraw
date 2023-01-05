@@ -6,9 +6,11 @@ export interface CloneButtonsProps {
   bounds: TLBounds
   targetSize: number
   size: number
+  status: any
 }
 
-export function CloneButtons({ targetSize, size, bounds }: CloneButtonsProps) {
+export function CloneButtons({ targetSize, size, bounds, status }: CloneButtonsProps) {
+  if(status!=='idle') return <></>
   return (
     <>
       <CloneButton targetSize={targetSize} size={size} bounds={bounds} side="top" />

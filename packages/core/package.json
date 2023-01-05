@@ -1,6 +1,6 @@
 {
-  "version": "1.9.1",
-  "name": "@tldraw/core",
+  "version": "1.7.0",
+  "name": "sn-wb-tldraw-core",
   "description": "The tldraw core renderer and utilities.",
   "author": "@steveruizok",
   "repository": {

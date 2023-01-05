@@ -347,11 +347,10 @@ const tlcss = css`
   .tl-clone-button-target {
     cursor: pointer;
     pointer-events: all;
-  }
-
-  .tl-clone-button-target:hover .tl-clone-button {
     fill: var(--tl-selectStroke);
   }
+
+  
 
   .tl-clone-button {
     opacity: 0;

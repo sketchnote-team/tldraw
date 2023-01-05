@@ -23,7 +23,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
 
   isAspectRatioLocked = true
 
-  showCloneHandles = true
+  showCloneHandles = false
 
   getShape = (props: Partial<T>): T => {
     return Utils.deepMerge<T>(

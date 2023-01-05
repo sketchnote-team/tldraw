@@ -74,7 +74,7 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   }, [app])
 
   const selectSectionTool = React.useCallback(() => {
-    app.selectTool(TDShapeType.Section)
+    app.selectTool(TDShapeType.Sticky)
   }, [app])
 
   const selectLinkTool = React.useCallback(() => {

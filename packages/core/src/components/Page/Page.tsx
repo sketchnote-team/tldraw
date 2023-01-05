@@ -24,6 +24,7 @@ interface PageProps<T extends TLShape, M extends Record<string, unknown>> {
   hideResizeHandles: boolean
   meta?: M
   activeUsers: any[]
+  status: any
 }
 
 /**
@@ -42,6 +43,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
   hideResizeHandles,
   meta,
   activeUsers,
+  status,
 }: PageProps<T, M>): JSX.Element {
   const { bounds: rendererBounds, shapeUtils } = useTLContext()
 
@@ -56,6 +58,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
     camera: { zoom },
   } = pageState
 
+
   let _hideIndicators = hideIndicators
   let _hideCloneHandles = true
   let _isEditing = false
@@ -68,7 +71,10 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
   if (selectedShapes.length === 1) {
     const shape = selectedShapes[0]
     _isEditing = editingId === shape.id
-    if (_isEditing) _hideIndicators = true
+    if (_isEditing) {
+      _hideIndicators = true
+      status='editing'
+    }
     const utils = shapeUtils[shape.type] as TLShapeUtil<any, any>
     _hideCloneHandles = !utils.showCloneHandles
     if (shape.handles !== undefined && !_isEditing) {
@@ -113,6 +119,7 @@ export const Page = observer(function _Page<T extends TLShape, M extends Record<
           hideResizeHandles={hideResizeHandles}
           hideBindingHandles={hideBindingHandles || !isLinked}
           hideCloneHandles={_hideCloneHandles}
+          status= {status}
         />
       )}
       {!hideHandles && shapeWithHandles && <Handles shape={shapeWithHandles} zoom={zoom} />}

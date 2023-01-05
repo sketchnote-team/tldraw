@@ -54,7 +54,8 @@ interface CanvasProps<T extends TLShape, M extends Record<string, unknown>> {
   meta?: M
   id?: string
   onBoundsChange: (bounds: TLBounds) => void
-  activeUsers: any[]
+  activeUsers: any[],
+  status: any,
 }
 
 export const Canvas = observer(function _Canvas<
@@ -82,7 +83,8 @@ export const Canvas = observer(function _Canvas<
   hideRotateHandle,
   hideGrid,
   onBoundsChange,
-  activeUsers
+  activeUsers,
+  status
 }: CanvasProps<T, M>): JSX.Element {
   const rCanvas = React.useRef<HTMLDivElement>(null)
   const rContainer = React.useRef<HTMLDivElement>(null)
@@ -124,6 +126,7 @@ export const Canvas = observer(function _Canvas<
             hideRotateHandle={hideRotateHandle}
             meta={meta}
             activeUsers={activeUsers}
+            status={status}
           />
           
           {users && userId && (

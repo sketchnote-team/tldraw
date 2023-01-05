@@ -22,6 +22,7 @@ interface BoundsProps {
   hideResizeHandles: boolean
   viewportWidth: number
   children?: React.ReactElement
+  status:any
 }
 
 export const Bounds = observer<BoundsProps>(function Bounds({
@@ -35,6 +36,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
   hideResizeHandles,
   hideRotateHandle,
   hideBindingHandles,
+  status
 }: BoundsProps) {
   // Touch target size
   const targetSize = (viewportWidth < 768 ? 16 : 8) / zoom
@@ -125,7 +127,7 @@ export const Bounds = observer<BoundsProps>(function Bounds({
             isHidden={!showEdgeHandles}
           />
         )}
-        {showCloneHandles && <CloneButtons bounds={bounds} targetSize={targetSize} size={size} />}
+        {showCloneHandles && <CloneButtons status={status} bounds={bounds} targetSize={targetSize} size={size} />}
         {!hideBindingHandles && (
           <LinkHandle
             targetSize={targetSize}

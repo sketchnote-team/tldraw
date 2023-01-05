@@ -23,6 +23,8 @@ type M = TDMeta
 export class EllipseUtil extends TDShapeUtil<T, E> {
   type = TDShapeType.Ellipse as const
 
+  showCloneHandles = true
+
   canBind = true
 
   canClone = true

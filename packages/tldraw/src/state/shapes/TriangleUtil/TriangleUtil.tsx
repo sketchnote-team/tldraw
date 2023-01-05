@@ -31,6 +31,8 @@ export class TriangleUtil extends TDShapeUtil<T, E> {
 
   canBind = true
 
+  showCloneHandles = true
+
   canClone = true
 
   canEdit = true

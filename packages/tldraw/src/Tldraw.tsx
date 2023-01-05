@@ -187,6 +187,7 @@ export function Tldraw({
 
   // Update the document if the `document` prop changes but the ids,
   // are the same, or else load a new document if the ids are different.
+
   React.useEffect(() => {
     if (!document) return
     if (document.id === app.document.id) {
@@ -426,6 +427,7 @@ const InnerTldraw = React.memo(function InnerTldraw({
           containerRef={rWrapper}
           shapeUtils={shapeUtils}
           page={page}
+          status={appState.status}
           pageState={pageState}
           assets={assets}
           snapLines={appState.snapLines}
