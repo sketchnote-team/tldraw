@@ -154,9 +154,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
 
       }
 
-      const deleteComment = (shapeId = shape.id) => {
-        console.log(shapeId)
-      }
+      const deleteComment = (shapeId = shape.id) => app.delete([shapeId])
       const deleteCommentbyId = (id: string) => {
         const newComments = shape.comments.filter((comment) => comment.id !== id)
 
