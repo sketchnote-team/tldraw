@@ -342,7 +342,6 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                                     backgroundSize: 'cover',
                                   }}
                                   src={entry.avatar}
-                                  alt={entry.id}
                                 />
                                 <div
                                   {...events}

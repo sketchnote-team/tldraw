@@ -34,13 +34,16 @@ export default {
     },
     suggestions: {
       list: {
+        position:'absolute',
+        left:'-50px',
+        top:'17px',
         backgroundColor: 'white',
         borderRadius: '4px',
         boxShadow: '0px 2px 12px rgba(19, 23, 32, 0.08)',
         fontFamily:'Graphik Web',
         overflow:'auto',
+        maxHeight:'280px',
         pointerEvents: 'all',
-
       },
       item: {
         pointerEvents: 'all',
