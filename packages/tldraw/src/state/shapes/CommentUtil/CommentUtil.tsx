@@ -21,11 +21,9 @@ import { Tooltip } from '~components'
 import { Comment } from './components/comment'
 import mentionInputStyle from './mentionInputStyle'
 
-
-
 const defaultMentionStyle = {
-  backgroundColor: '#cee4e5'
-};
+  backgroundColor: '#cee4e5',
+}
 
 type T = CommentShape
 type E = HTMLDivElement
@@ -82,7 +80,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       const app = useTldrawApp()
       const pageState = app.document.pageStates.page
       const user = app.appState.user
-      const isOpen = app.useStore((s) => s.appState.isOpen[shape.id])
+      const isOpen = app.useStore(s => s.appState.isOpen[shape.id])
       const members = app.appState.members
       const [commentValue, setCommentValue] = React.useState('')
       // const defaultOpen = app.useStore((s) => s.appState.defaultOpen)
@@ -114,27 +112,29 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       }
 
       const addComment = () => {
-        if(commentValue.trim()==='') return
-        const regex = /[^{}]+(?=})/g;
-        const comments =commentValue.split('}uxB)')
-      
-        const mentions = commentValue.match(regex)?.filter(c=>!c.includes('uxB'))
-        const mentionedUsers = members.filter(member=>{
-          if(mentions?.includes(member.id)) return member
-          return false
-        }).map((m)=>m.id)
-        
-        if(mentions && mentions.length){
+        if (commentValue.trim() === '') return
+        const regex = /[^{}]+(?=})/g
+        const comments = commentValue.split('}uxB)')
+
+        const mentions = commentValue.match(regex)?.filter(c => !c.includes('uxB'))
+        const mentionedUsers = members
+          .filter(member => {
+            if (mentions?.includes(member.id)) return member
+            return false
+          })
+          .map(m => m.id)
+
+        if (mentions && mentions.length) {
           app.setMention(true)
         }
         app.setMentionedUsers(mentionedUsers)
-        const newCommentArray = comments.map(comment=>{
-          if(comment.includes('[@')){
+        const newCommentArray = comments.map(comment => {
+          if (comment.includes('[@')) {
             return `<span style="color:#254DDA;">@${comment.split('[@')[1].split(' ')[0]}</span>`
           }
           return comment
         })
-        const comment =newCommentArray.join('')
+        const comment = newCommentArray.join('')
         setCommentValue('')
         const newComments = [
           ...shape.comments,
@@ -151,12 +151,11 @@ export class CommentUtil extends TDShapeUtil<T, E> {
           comments: newComments,
           currentComment: '',
         })
-
       }
 
       const deleteComment = (shapeId = shape.id) => app.delete([shapeId])
       const deleteCommentbyId = (id: string) => {
-        const newComments = shape.comments.filter((comment) => comment.id !== id)
+        const newComments = shape.comments.filter(comment => comment.id !== id)
 
         onShapeChange?.({
           ...shape,
@@ -279,7 +278,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                         />
                       ))}
                     </div>
-                    <StyledCommentInputWrapper   {...events}>
+                    <StyledCommentInputWrapper {...events}>
                       <StyledAvatar
                         style={{ backgroundImage: `url(${user.user.avatar})` }}
                       ></StyledAvatar>
@@ -306,10 +305,90 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                         type="text"
                       >
                         <Mention
-                        markup="}uxB)[@__display__]{__id__}uxB)"
-                        trigger="@"
-                        data={members}
-                        style={defaultMentionStyle}
+                          markup="}uxB)[@__display__]{__id__}uxB)"
+                          trigger="@"
+                          data={members}
+                          style={defaultMentionStyle}
+                          renderSuggestion={(entry:any) => {
+                            
+                            return (
+                              <div
+                                {...events}
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  gap: '10px',
+                                  alignItems: 'center',
+                                  position: 'relative',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    fontWeight: '500',
+                                    fontSize: '12px',
+                                    lineHeight: '18px',
+                                    height: '18px',
+                                    color: '#55585E',
+                                    top:'10px',
+                                    right:'3px'
+                                  }}
+                                >{entry.role}</div>
+                                <img
+                                  style={{
+                                    height: '28px',
+                                    width: '28px',
+                                    borderRadius: '9999px',
+                                    backgroundSize: 'cover',
+                                  }}
+                                  src={entry.avatar}
+                                  alt={entry.id}
+                                />
+                                <div
+                                  {...events}
+                                  style={{ display: 'flex', flexDirection: 'column' }}
+                                >
+                                  <div
+                                    style={{
+                                      fontWeight: '400',
+                                      fontSize: '14px',
+                                      lineHeight: '20px',
+                                      height: '20px',
+                                      color: '#131720',
+                                      position: 'relative',
+                                      whiteSpace: 'nowrap',
+                                    }}
+                                  >
+                                    {entry.display}
+                                  </div>
+                                  <div
+                                    style={{
+                                      fontWeight: '400',
+                                      fontSize: '10px',
+                                      lineHeight: '16px',
+                                      height: '16px',
+                                      color: '#55585E',
+                                    }}
+                                  >
+                                    {entry.id}
+                                  </div>
+                                </div>
+                                <div
+                                  style={{
+                                    fontWeight: '500',
+                                    fontSize: '12px',
+                                    lineHeight: '18px',
+                                    height: '18px',
+                                    color: '#55585E',
+                                    marginLeft: '10px',
+                                    visibility: 'hidden',
+                                  }}
+                                >
+                                  {entry.role}
+                                </div>
+                              </div>
+                            )
+                          }}
                         />
                       </MentionsInput>
                       <button

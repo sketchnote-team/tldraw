@@ -263,17 +263,25 @@ export function Tldraw({
       {
         id: 'isaac@gmail.cpm',
         display: 'issac newton',
+        avatar: "https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c",
+        role: 'member'
       },
       {
         id: 'sam@gmail.com',
         display: 'Sam Victor',
+        avatar: "https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c",
+        role: 'member'
       },
       {
         id: 'emmanuel',
-        display: 'emmanuel stones'
+        display: 'emmanuel stones',
+        avatar: "https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c",
+        role: 'member'
       }, {
         id: 'Watson',
-        display: 'Watson Lvandoski'
+        display: 'Watson Lvandoski',
+        avatar: "https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c",
+        role: 'member'
       }
     ]
     )

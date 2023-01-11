@@ -38,7 +38,6 @@ export default {
         borderRadius: '4px',
         boxShadow: '0px 2px 12px rgba(19, 23, 32, 0.08)',
         fontFamily:'Graphik Web',
-        maxHeight:'197px',
         overflow:'auto',
         pointerEvents: 'all',
 
