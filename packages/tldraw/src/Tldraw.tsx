@@ -259,6 +259,24 @@ export function Tldraw({
   ])
 
   React.useLayoutEffect(() => {
+    app.setMembers([
+      {
+        id: 'isaac@gmail.cpm',
+        display: 'issac newton',
+      },
+      {
+        id: 'sam@gmail.com',
+        display: 'Sam Victor',
+      },
+      {
+        id: 'emmanuel',
+        display: 'emmanuel stones'
+      }, {
+        id: 'Watson',
+        display: 'Watson Lvandoski'
+      }
+    ]
+    )
     if (typeof window === 'undefined') return
     if (!window.document?.fonts) return
 

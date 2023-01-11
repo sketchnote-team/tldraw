@@ -407,10 +407,26 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     return this
   }
 
-  setTemplateLibrary = (status: boolean) => {
+  setMention = (status: boolean) => {
     this.patchState({
       appState: {
-        isTemplateLibrary: status,
+        hasMention: status,
+      },
+    })
+  }
+
+  setMentionedUsers = (users: any) => {
+    this.patchState({
+      appState: {
+        mentionedUsers: users,
+      },
+    })
+  }
+
+  setMembers = (members:any) => {
+    this.patchState({
+      appState: {
+        members: members,
       },
     })
   }
@@ -4645,7 +4661,10 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       isTemplateEditMode: false,
       stashForEditing: '{}',
       currentEditingTemplate: null,
-      isPreview: false
+      isPreview: false,
+      members: [],
+      hasMention: false,
+      mentionedUsers:[]
     },
     document: TldrawApp.defaultDocument,
   }

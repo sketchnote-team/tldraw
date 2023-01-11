@@ -10,8 +10,8 @@ export interface CommentProps {
   message: string
   time: string
   style: any
-  deleteCommentbyId:any
-  onPointerDown:any
+  deleteCommentbyId: any
+  onPointerDown: any
 }
 
 export const Comment = React.memo(function Comment({
@@ -21,10 +21,10 @@ export const Comment = React.memo(function Comment({
   time,
   style,
   deleteCommentbyId,
-  onPointerDown
+  onPointerDown,
 }: CommentProps) {
   const app = useTldrawApp()
-  const user = app.useStore(s=>s.appState.user)
+  const user = app.useStore(s => s.appState.user)
   return (
     <StyledCommentWrapper style={{ ...style }}>
       <div
@@ -43,11 +43,24 @@ export const Comment = React.memo(function Comment({
               lineHeight: '20px',
               height: '20px',
               color: 'black',
-              position:"relative"
+              position: 'relative',
             }}
           >
             {userName}
-            {user.user.avatar===avatar && <div style={{color:'#F4381F', position:'absolute',right:"0", top:'10px', cursor:'pointer' }} onPointerDown={deleteCommentbyId}>Delete</div>}
+            {user.user.avatar === avatar && (
+              <div
+                style={{
+                  color: '#F4381F',
+                  position: 'absolute',
+                  right: '0',
+                  top: '10px',
+                  cursor: 'pointer',
+                }}
+                onPointerDown={deleteCommentbyId}
+              >
+                Delete
+              </div>
+            )}
           </StyledHeader>
           <div
             style={{
@@ -62,7 +75,18 @@ export const Comment = React.memo(function Comment({
           </div>
         </StyledUserName>
       </div>
-      <StyledMessage>{message}</StyledMessage>
+      <div
+        style={{
+          fontWeight: '400',
+          fontSize: '14px',
+          lineHeight: '20px',
+          letterSpacing: '-0.1px',
+          verticalAlign: 'top',
+          margin: '0px',
+          wordWrap: 'break-word',
+        }}
+        dangerouslySetInnerHTML={{ __html: message }}
+      ></div>
     </StyledCommentWrapper>
   )
 })
@@ -81,12 +105,3 @@ const StyledUserName = styled('div', {
   flexDirection: 'column',
 })
 
-const StyledMessage = styled('div', {
-  fontWeight: '400',
-  fontSize: '14px',
-  lineHeight: '20px',
-  letterSpacing: '-0.1px',
-  verticalAlign: 'top',
-  margin: '0px',
-  wordWrap: 'break-word',
-})

@@ -152,9 +152,7 @@ export class StickyUtil extends TDShapeUtil<T, E> {
           selRange.deleteContents();                
           const clipboard = await navigator.clipboard.readText()
           selRange.insertNode(document.createTextNode(clipboard));
-
-          console.log( rTextContent.current);
-          
+    
           rTextContent.current =  e.target.innerHTML
           onShapeChange?.({
             id: shape.id,

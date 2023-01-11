@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { Mention, MentionsInput } from 'react-mentions'
+import MentionInputStyle from './mentionInputStyle'
 import { Utils, HTMLContainer, TLBounds } from '@tldraw/core'
 import { defaultTextStyle } from '../shared/shape-styles'
 import { StyledHeader, StyledParagraph, StyledButton } from '../LessonUtil'
@@ -17,6 +19,13 @@ import { stopPropagation } from '~components/stopPropagation'
 import { useTldrawApp } from '~hooks'
 import { Tooltip } from '~components'
 import { Comment } from './components/comment'
+import mentionInputStyle from './mentionInputStyle'
+
+
+
+const defaultMentionStyle = {
+  backgroundColor: '#cee4e5'
+};
 
 type T = CommentShape
 type E = HTMLDivElement
@@ -74,6 +83,8 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       const pageState = app.document.pageStates.page
       const user = app.appState.user
       const isOpen = app.useStore((s) => s.appState.isOpen[shape.id])
+      const members = app.appState.members
+      const [commentValue, setCommentValue] = React.useState('')
       // const defaultOpen = app.useStore((s) => s.appState.defaultOpen)
       // using this will cause every comment shape to render on default open change so avoid it
       // if needed make key value pair to store every default open for each comment
@@ -86,6 +97,11 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         shapeStyle['border'] = '1px solid #254DDA'
       }
 
+      const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        setCommentValue(value)
+      }
+
       const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onShapeChange?.({
           ...shape,
@@ -93,11 +109,33 @@ export class CommentUtil extends TDShapeUtil<T, E> {
         })
       }
 
-      const handleKeyDown = (e) => {
+      const handleKeyDown = (e: any) => {
         if (e.key === 'Enter') addComment()
       }
 
       const addComment = () => {
+        if(commentValue.trim()==='') return
+        const regex = /[^{}]+(?=})/g;
+        const comments =commentValue.split('}uxB)')
+      
+        const mentions = commentValue.match(regex)?.filter(c=>!c.includes('uxB'))
+        const mentionedUsers = members.filter(member=>{
+          if(mentions?.includes(member.id)) return member
+          return false
+        }).map((m)=>m.id)
+        
+        if(mentions && mentions.length){
+          app.setMention(true)
+        }
+        app.setMentionedUsers(mentionedUsers)
+        const newCommentArray = comments.map(comment=>{
+          if(comment.includes('[@')){
+            return `<span style="color:#254DDA;">@${comment.split('[@')[1].split(' ')[0]}</span>`
+          }
+          return comment
+        })
+        const comment =newCommentArray.join('')
+        setCommentValue('')
         const newComments = [
           ...shape.comments,
           {
@@ -105,7 +143,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
             userName: user.user.name,
             time: getTodayDate(),
             avatar: user.user.avatar,
-            message: shape.currentComment,
+            message: comment,
           },
         ]
         onShapeChange?.({
@@ -113,9 +151,12 @@ export class CommentUtil extends TDShapeUtil<T, E> {
           comments: newComments,
           currentComment: '',
         })
+
       }
 
-      const deleteComment = (shapeId = shape.id) => app.delete([shapeId])
+      const deleteComment = (shapeId = shape.id) => {
+        console.log(shapeId)
+      }
       const deleteCommentbyId = (id: string) => {
         const newComments = shape.comments.filter((comment) => comment.id !== id)
 
@@ -149,7 +190,11 @@ export class CommentUtil extends TDShapeUtil<T, E> {
       return (
         <HTMLContainer ref={ref} {...events}>
           <StyledCommentContainer ref={rContainer} style={{ ...shapeStyle }}>
-            <DropdownMenu.Root modal={false} dir="ltr" open={app.appState.defaultOpen ? true : isOpen}>
+            <DropdownMenu.Root
+              modal={false}
+              dir="ltr"
+              open={app.appState.defaultOpen ? true : isOpen}
+            >
               <DropdownMenu.Trigger asChild>
                 <StyledAvatar
                   {...events}
@@ -198,7 +243,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                       {/* <Tooltip side="left" label="Mark as resolved"> */}
                       <div
                         {...events}
-                        onClick={deleteComment}
+                        // onClick = {deleteComment}
                         style={{
                           background: '#F6F7F9',
                           border: '2px solid #D5D7DD',
@@ -236,11 +281,11 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                         />
                       ))}
                     </div>
-                    <StyledCommentInputWrapper>
+                    <StyledCommentInputWrapper   {...events}>
                       <StyledAvatar
                         style={{ backgroundImage: `url(${user.user.avatar})` }}
                       ></StyledAvatar>
-                      <input
+                      {/* <input
                         placeholder="Add a Comment..."
                         style={{
                           marginLeft: '2px',
@@ -252,7 +297,23 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                         onChange={handleTextChange}
                         value={shape.currentComment}
                         onKeyDown={handleKeyDown}
-                      ></input>
+                      ></input> */}
+                      <MentionsInput
+                        singleLine
+                        value={commentValue}
+                        onChange={onChangeText}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Add a Comment..."
+                        style={MentionInputStyle}
+                        type="text"
+                      >
+                        <Mention
+                        markup="}uxB)[@__display__]{__id__}uxB)"
+                        trigger="@"
+                        data={members}
+                        style={defaultMentionStyle}
+                        />
+                      </MentionsInput>
                       <button
                         style={{
                           padding: '6px 16px',

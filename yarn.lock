@@ -898,12 +898,26 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@7.4.5":
+  version "7.4.5"
+  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
+  integrity sha512-TuI4qpWZP6lGOGIuGWtp9sPluqYICmbk8T/1vpSysqJxRPkudh/ofFWyqdcMsDf2s7KvDL4/YHgKyvcS3g9CJQ==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.16.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.17.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.2.tgz#66f68591605e59da47523c631416b18508779941"
   integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
   dependencies:
     regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.3.4":
+  version "7.20.7"
+  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.20.7.tgz#fcb41a5a70550e04a7b708037c7c32f7f356d8fd"
+  integrity sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==
+  dependencies:
+    regenerator-runtime "^0.13.11"
 
 "@babel/template@^7.16.7", "@babel/template@^7.3.3":
   version "7.16.7"
@@ -3185,6 +3199,23 @@
     perfect-freehand "^1.1.0"
     resize-observer-polyfill "^1.5.1"
 
+"@tldraw/core@^1.6.1", "@tldraw/core@^1.9.1":
+  version "1.20.3"
+  resolved "https://registry.npmjs.org/@tldraw/core/-/core-1.20.3.tgz#dac5b478606cce541de941e87221de90777dfcfe"
+  integrity sha512-R/HqtQOg8yedcN70m75ekdm2u6dAHQpg3uxmzd7/TsdUnbfZc5UMp3TakYlTD6JwSSRV0n2huI4AD8D/NJ5jEw==
+  dependencies:
+    "@tldraw/intersect" "^1.8.0"
+    "@tldraw/vec" "^1.8.0"
+    "@use-gesture/react" "^10.2.19"
+    perfect-freehand "^1.1.0"
+
+"@tldraw/intersect@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.npmjs.org/@tldraw/intersect/-/intersect-1.8.0.tgz#40b07b87129a3233bf2c6d6756eaedf49ccd4e8f"
+  integrity sha512-0UarshNpyq2+O4o0xHMJIBgF0E630mes5CkMoO+D5xgYppSBIkeqYDcv0ujsmAhMKX1O6Y0ShuuHeflBEULUoQ==
+  dependencies:
+    "@tldraw/vec" "^1.8.0"
+
 "@tldraw/tldraw@*", "@tldraw/tldraw@^1.6.1", "@tldraw/tldraw@^1.9.3":
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/@tldraw/tldraw/-/tldraw-1.20.0.tgz#4fa22ab83010a92de2fa40260dd6f84b60658b30"
@@ -3214,6 +3245,11 @@
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@tldraw/vec/-/vec-1.7.1.tgz#5bfac9a56e11ad890cbd1c620293d7fcb23bf1ea"
   integrity sha512-qM6Z9RvkLFFEzr91mmsA4HI14msyDgDDOu36csIzG5BYu2bFmEz5siQ8WntHgDtUjzJHP+VSSOTbAXhklEZHLA==
+
+"@tldraw/vec@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.npmjs.org/@tldraw/vec/-/vec-1.8.0.tgz#4eea7e4ff4c4067ac0e966d4d5bdab5f90d53a34"
+  integrity sha512-GiS5Df3CzXY/fPBFcM0CKFERZfI4Cg1X33VPZX+NLo7Fwm/h9zu/aU24N1mG75Q9LuMnwKm7woxKr8BiUXGYCg==
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -3673,6 +3709,11 @@
   resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.18.tgz#fa022a6383ee11d7170953681e50e16cd63b3f81"
   integrity sha512-O+qxBlKxPtYM/LyRnK/U5MhVA9kKHj4C2yHsUurDxNO0a8D1PHLz9YmMPh2UXGQE4wtSke03GsLqRsHbUvN9nw==
 
+"@use-gesture/core@10.2.23":
+  version "10.2.23"
+  resolved "https://registry.npmjs.org/@use-gesture/core/-/core-10.2.23.tgz#ed5892e86b4ad537613b6ab83111ca58341e40c0"
+  integrity sha512-Ynap/Uh6RX1Vgn3zNmFTyKapapdf7Av+GzAe6h+RsBZaxMF1z3cK6aohHPJP6T1hLrPyH/yehxa7RBqyESG9RA==
+
 "@use-gesture/core@10.2.6":
   version "10.2.6"
   resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.6.tgz#12bdab107501798334ae28a6d193ef6ccd7a8930"
@@ -3684,6 +3725,13 @@
   integrity sha512-MJQ5q/huXIER3st3bsmuWA7lxcdwZd28KJoBPFPNxKFenjF47smaiCCf+dLjUBiTV0DiIYAN4pXK19KxwfnUgg==
   dependencies:
     "@use-gesture/core" "10.2.18"
+
+"@use-gesture/react@^10.2.19":
+  version "10.2.23"
+  resolved "https://registry.npmjs.org/@use-gesture/react/-/react-10.2.23.tgz#744f7fb68e904721a2bf3d8bffd40e446b86c82a"
+  integrity sha512-anj9j3Lm4l+/s60Jv1FD2m13r+T+aYstSHUT62hTugojM64LPe9XatfEVHRyWOrGjRU2buQhlm03xN8oxkg/OQ==
+  dependencies:
+    "@use-gesture/core" "10.2.23"
 
 "@use-gesture/react@^10.2.4":
   version "10.2.6"
@@ -10085,7 +10133,7 @@ promzard@^0.3.0:
   dependencies:
     read "1"
 
-prop-types@^15.7.1, prop-types@^15.7.2:
+prop-types@^15.5.8, prop-types@^15.7.1, prop-types@^15.7.2:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -10298,6 +10346,16 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-mentions@^4.4.7:
+  version "4.4.7"
+  resolved "https://registry.npmjs.org/react-mentions/-/react-mentions-4.4.7.tgz#af8dce00f50ed8be23e46040e7c6f3f3e7a79c13"
+  integrity sha512-VNriu2h/uOB+RS0mwZgPG2Vf+UtdDvRh5zbXa2TNc1WqacKuNDgTdhlbo9LEOZRBxRzIeTUYQmYJ7p9M9rDHqQ==
+  dependencies:
+    "@babel/runtime" "7.4.5"
+    invariant "^2.2.4"
+    prop-types "^15.5.8"
+    substyle "^9.1.0"
+
 react-remove-scroll-bar@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/react-remove-scroll-bar/-/react-remove-scroll-bar-2.2.0.tgz#d4d545a7df024f75d67e151499a6ab5ac97c8cdd"
@@ -10491,6 +10549,11 @@ regenerate@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
+
+regenerator-runtime@^0.13.11, regenerator-runtime@^0.13.2:
+  version "0.13.11"
+  resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
+  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 regenerator-runtime@^0.13.4:
   version "0.13.9"
@@ -11042,17 +11105,6 @@ smartwrap@^1.2.3:
     wcwidth "^1.0.1"
     yargs "^15.1.0"
 
-sn-wb-tldraw-core@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/sn-wb-tldraw-core/-/sn-wb-tldraw-core-1.7.0.tgz#f52aeccfdd982ab84c03406da02837a2db3b53bd"
-  integrity sha512-N5uH7TA+rRpvClUsTK4SppLDOe9cYg/74o5FRyMeG/XIlHrZ6JF040dbi4cqdAQCmpM5lYMi2X47zGDVIznhWQ==
-  dependencies:
-    "@tldraw/intersect" "^1.7.1"
-    "@tldraw/vec" "^1.7.0"
-    "@use-gesture/react" "^10.2.4"
-    mobx-react-lite "^3.2.3"
-    resize-observer-polyfill "^1.5.1"
-
 socks-proxy-agent@6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/socks-proxy-agent/-/socks-proxy-agent-6.1.1.tgz#e664e8f1aaf4e1fb3df945f09e3d94f911137f87"
@@ -11387,6 +11439,14 @@ stylus-lookup@^3.0.1:
   dependencies:
     commander "^2.8.1"
     debug "^4.1.0"
+
+substyle@^9.1.0:
+  version "9.4.1"
+  resolved "https://registry.npmjs.org/substyle/-/substyle-9.4.1.tgz#6a4647f363bc14fecc51aac371d4dbeda082aa50"
+  integrity sha512-VOngeq/W1/UkxiGzeqVvDbGDPM8XgUyJVWjrqeh+GgKqspEPiLYndK+XRcsKUHM5Muz/++1ctJ1QCF/OqRiKWA==
+  dependencies:
+    "@babel/runtime" "^7.3.4"
+    invariant "^2.2.4"
 
 sumchecker@^3.0.1:
   version "3.0.1"

@@ -127,6 +127,9 @@ export interface TDSnapshot {
     stashForEditing: string,
     currentEditingTemplate: any,
     isPreview: Boolean
+    members: any,
+    hasMention: boolean,
+    mentionedUsers: any
   }
   document: TDDocument
   room?: {

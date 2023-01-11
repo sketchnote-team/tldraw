@@ -1,6 +1,6 @@
 {
   "name": "sn-wb-tldraw",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "description": "A tiny little drawing app (editor)",
   "author": "@steveruizok",
   "repository": {
@@ -58,6 +58,7 @@
     "react-contenteditable": "^3.3.6",
     "react-hotkey-hook": "^1.0.2",
     "react-hotkeys-hook": "^3.4.4",
+    "react-mentions": "^4.4.7",
     "sanitize-html": "^2.7.1",
     "sn-wb-tldraw-core": "^1.7.0",
     "tslib": "^2.3.1",

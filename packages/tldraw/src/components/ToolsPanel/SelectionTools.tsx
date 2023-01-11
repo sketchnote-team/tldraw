@@ -10,7 +10,6 @@ export const SelectionTools = React.memo(function SelectionTools(): JSX.Element 
   app.useStore(s=>s.appState.currentStyle)
   const selectedId = app.useStore(s=>s.document.pageStates.page.selectedIds)
   const scale = app.getShape(selectedId[0]).style.scale || 1
-  console.log('selected id scale', scale)
   return ( 
    <>
     <StyledToolBarContainer>
