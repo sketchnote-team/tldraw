@@ -394,6 +394,15 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+  setTemplateLibrary = (status: boolean) => {
+    this.patchState({
+      appState: {
+        isTemplateLibrary: status,
+      },
+    })
+  }
+
+
   setTemplateEditMode = (status: boolean) => {
     this.patchState({
       appState: {
