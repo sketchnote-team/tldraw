@@ -51,7 +51,9 @@ export const PrimaryTools = React.memo(function PrimaryTools(): JSX.Element {
   const activeTool = app.useStore(activeToolSelector)
   const isToolLocked = app.useStore(toolLockedSelector)
   const isPreview = app.useStore(s=>s.appState.isPreview)
-  console.log(app.useStore(s=>s.appState.mentionedUsers))
+//   console.log(app.useStore(s=>s.appState.mentionedUsers))
+//   console.log(app.useStore(s=>s.appState.hasMention))
+//   console.log(app.useStore(s=>s.appState.commentMessage))
 //   console.log(app.useStore(s=>s.document.pages.page.shapes))
 
   const selectSelectTool = React.useCallback(() => {

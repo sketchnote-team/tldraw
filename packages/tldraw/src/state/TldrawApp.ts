@@ -424,6 +424,14 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     })
   }
 
+  setMessage = (message: string) => {
+    this.patchState({
+      appState: {
+        commentMessage: message,
+      },
+    })
+  }
+
   setMentionedUsers = (users: any) => {
     this.patchState({
       appState: {
@@ -4673,7 +4681,8 @@ export class TldrawApp extends StateManager<TDSnapshot> {
       isPreview: false,
       members: [],
       hasMention: false,
-      mentionedUsers:[]
+      mentionedUsers:[],
+      commentMessage: ''
     },
     document: TldrawApp.defaultDocument,
   }

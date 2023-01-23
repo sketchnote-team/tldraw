@@ -129,7 +129,8 @@ export interface TDSnapshot {
     isPreview: Boolean
     members: any,
     hasMention: boolean,
-    mentionedUsers: any
+    mentionedUsers: any,
+    commentMessage: string
   }
   document: TDDocument
   room?: {

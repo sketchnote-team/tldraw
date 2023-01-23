@@ -126,6 +126,13 @@ export class CommentUtil extends TDShapeUtil<T, E> {
 
         if (mentions && mentions.length) {
           app.setMention(true)
+          const currentMessage = comments.map(comment => {
+            if (comment.includes('[@')) {
+              return ``
+            }
+            return comment
+          }).join('');
+          app.setMessage(currentMessage)
         }
         app.setMentionedUsers(mentionedUsers)
         const newCommentArray = comments.map(comment => {
@@ -369,7 +376,7 @@ export class CommentUtil extends TDShapeUtil<T, E> {
                                       color: '#55585E',
                                     }}
                                   >
-                                    {entry.id}
+                                    {entry.email}
                                   </div>
                                 </div>
                                 <div

@@ -261,16 +261,18 @@ export function Tldraw({
   React.useLayoutEffect(() => {
     app.setMembers([
       {
-        id: 'isaac@gmail.cpm',
+        id: '1232415',
         display: 'issac newton',
         avatar: "https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c",
-        role: 'member'
+        role: 'member',
+        email: 'issac@gmail.com'
       },
       {
-        id: 'sam@gmail.com',
+        id: 's41415',
         display: 'Sam Victor',
         avatar: "https://lh3.googleusercontent.com/a/AItbvmkxSDlPkw8aevUuUYOqVJBBf9QYo4MEugPtpdCx=s96-c",
-        role: 'member'
+        role: 'member',
+        email:'asfa@aga.com'
       },
       {
         id: 'emmanuel',
