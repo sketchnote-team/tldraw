@@ -21,7 +21,7 @@ export function CursorSVG({sticker}:CursorSVGProps): JSX.Element {
   return <StyledCursorSVGWrapper style={{ 
     transform: `translate(${pointX}px, ${pointY}px)`
   }}>
-    <div dangerouslySetInnerHTML={{__html:sticker}}></div>
+    <img src={sticker}/>
   </StyledCursorSVGWrapper>
 }
 

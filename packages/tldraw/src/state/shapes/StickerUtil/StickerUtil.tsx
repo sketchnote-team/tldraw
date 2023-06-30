@@ -38,7 +38,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
         rotation: 0,
         style: { ...defaultStyle, isFilled: true },
         assetId: 'assetId',
-        svg:''
+        svg: '',
       },
       props
     )
@@ -49,8 +49,6 @@ export class StickerUtil extends TDShapeUtil<T, E> {
       const { size, style } = shape
       const rImage = React.useRef<HTMLImageElement>(null)
       const rWrapper = React.useRef<HTMLDivElement>(null)
-      
-
 
       React.useLayoutEffect(() => {
         const wrapper = rWrapper.current
@@ -60,20 +58,38 @@ export class StickerUtil extends TDShapeUtil<T, E> {
         wrapper.style.height = `${height}px`
       }, [size])
 
-      
-
       return (
         <HTMLContainer ref={ref} {...events}>
-          <Wrapper
-            ref={rWrapper}
-          >          
-            <div style={{
-              display:"flex",
-              justifyContent:"center",
-              alignItems:"center",
-            }} dangerouslySetInnerHTML={{__html: shape.svg}}
-            
-            />
+          <Wrapper ref={rWrapper}>
+            {shape.svg.startsWith('<svg') ? (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                dangerouslySetInnerHTML={{ __html: shape.svg }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: '100%',
+                  height: 0,
+                  paddingBottom: '100%',
+                  position: 'relative',
+                }}
+              >
+                <img
+                  src={shape.svg}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+              </div>
+            )}
           </Wrapper>
         </HTMLContainer>
       )
@@ -101,13 +117,10 @@ export class StickerUtil extends TDShapeUtil<T, E> {
   transform = transformRectangle
 
   transformSingle = transformSingleRectangle
-
-
 }
 
 const Wrapper = styled('div', {
-  width:'45px',
-  height:'45px',
-  pointerEvents:'all'
+  width: '45px',
+  height: '45px',
+  pointerEvents: 'all',
 })
-
