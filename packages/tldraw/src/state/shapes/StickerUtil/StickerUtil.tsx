@@ -77,6 +77,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
                   height: 0,
                   paddingBottom: '100%',
                   position: 'relative',
+                  pointerEvents: 'none',
                 }}
               >
                 <img
@@ -86,6 +87,7 @@ export class StickerUtil extends TDShapeUtil<T, E> {
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
+                    pointerEvents: 'none',
                   }}
                 />
               </div>
